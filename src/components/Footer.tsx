@@ -21,7 +21,7 @@ const Footer = () => {
 
                 {/* Middle: Disclaimer (Hidden on very small screens or abbreviated) */}
                 <p className="text-xs text-gray-600 max-w-md hidden md:block text-center mx-auto leading-tight">
-                    Meowflix does not host any content on our servers.
+                    Meowly does not host any content on our servers.
                 </p>
 
                 {/* Right: Credits */}
@@ -30,7 +30,7 @@ const Footer = () => {
                         &copy; {new Date().getFullYear()} <span className="hidden sm:inline">•</span> Made by <span className="text-gray-300 font-medium">Utkarsh Gupta</span>
                     </span>
                     <a
-                        href="https://github.com/utkarshgupta188"
+                        href="https://github.com/utkarshgupta188/meowly"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:text-white transition-colors"
