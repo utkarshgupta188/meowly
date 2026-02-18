@@ -2,7 +2,7 @@
 
 A premium, Prime Video-inspired streaming platform built with Next.js and TMDB.
 
-**Live Demo:** [https://meowflix-one.vercel.app](https://meowflix-one.vercel.app)
+**Live Demo:** [https://meowly.vercel.app](https://meowly.vercel.app)
 
 ## ✨ Features
 
