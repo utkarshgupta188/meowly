@@ -50,7 +50,7 @@ const Navbar = () => {
                 <div className="flex items-center space-x-12">
                     <Link href="/" className="group flex items-center space-x-1">
                         <span className="text-2xl font-bold tracking-tighter text-white group-hover:scale-105 transition-transform duration-300">
-                            meow<span className="text-prime-blue italic">flix</span>
+                            meow<span className="text-prime-blue italic">ly</span>
                         </span>
                     </Link>
 

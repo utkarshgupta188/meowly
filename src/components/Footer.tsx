@@ -11,7 +11,7 @@ const Footer = () => {
                 {/* Left: Brand & Links */}
                 <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
                     <span className="font-bold tracking-tighter text-prime-blue uppercase">
-                        Meow<span className="text-white">flix</span>
+                        Meow<span className="text-white">ly</span>
                     </span>
                     <nav className="flex gap-4">
                         <Link href="/" className="hover:text-white transition-colors">Home</Link>

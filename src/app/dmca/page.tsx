@@ -12,16 +12,16 @@ export default function DMCA() {
                 <div className="space-y-4 border-b border-gray-800 pb-8">
                     <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight">DMCA Policy</h1>
                     <p className="text-lg text-gray-400">
-                        Is Meowflix Legal?
+                        Is Meowly Legal?
                     </p>
                 </div>
 
                 <section className="space-y-4">
                     <p>
-                        Meowflix operates in a legal gray area. Copyright laws vary significantly from country to country, and the legality of streaming services can be complex and subject to interpretation.
+                        Meowly operates in a legal gray area. Copyright laws vary significantly from country to country, and the legality of streaming services can be complex and subject to interpretation.
                     </p>
                     <p>
-                        Meowflix does not host any content on our servers. We simply provide links to media hosted on third-party services that are publicly available on the internet.
+                        Meowly does not host any content on our servers. We simply provide links to media hosted on third-party services that are publicly available on the internet.
                     </p>
                 </section>
 
@@ -31,7 +31,7 @@ export default function DMCA() {
                         Copyright laws vary by jurisdiction. In some countries, streaming content may be considered legal for personal use, while in others it may be prohibited.
                     </p>
                     <p>
-                        Users should be aware of the copyright laws in their respective countries and use Meowflix at their own discretion and risk.
+                        Users should be aware of the copyright laws in their respective countries and use Meowly at their own discretion and risk.
                     </p>
                 </section>
 

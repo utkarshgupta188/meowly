@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Meowflix | Watch Movies & TV Shows",
+  title: "Meowly | Watch Movies & TV Shows",
   description: "Unlimited movies and TV shows for free. Inspired by Prime Video.",
 };
 
