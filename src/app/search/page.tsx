@@ -18,7 +18,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
             <div className="pt-24 px-4 md:px-12">
                 <h1 className="text-2xl md:text-3xl font-bold mb-8 transition-all animate-in fade-in slide-in-from-left duration-500">
-                    {query ? `Search results for "${query}"` : "Search Meowflix"}
+                    {query ? `Search results for "${query}"` : "Search Meowly"}
                 </h1>
 
                 {results.length > 0 ? (

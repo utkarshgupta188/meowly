@@ -58,7 +58,7 @@ export default function DMCA() {
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold text-white">Disclaimer</h2>
                     <p>
-                        Meowflix is not responsible for and has no control over the content of any third-party website. We do not host any content and have no control over the nature, content, or availability of those sites.
+                        Meowly is not responsible for and has no control over the content of any third-party website. We do not host any content and have no control over the nature, content, or availability of those sites.
                     </p>
                     <p>
                         The inclusion of any links does not necessarily imply a recommendation or endorsement of the views expressed within them.
