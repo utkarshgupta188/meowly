@@ -22,13 +22,13 @@ const SERVERS = [
         useSandbox: true
     },
     {
-        name: "Server 2", // Previously Server 3
-        movie: (id: string) => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-        show: (id: string, s: number, e: number) => `https://multiembed.mov/?video_id=${id}&s=${s}&e=${e}`,
-        useSandbox: false
+        name: "Server 2",
+        movie: (id: string) => `https://www.vidking.net/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://www.vidking.net/embed/tv/${id}/${s}/${e}`,
+        useSandbox: true
     },
     {
-        name: "Server 3", // Previously Server 4
+        name: "Server 3",
         movie: (id: string) => `https://vidlink.pro/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}`,
         useSandbox: false
@@ -110,13 +110,6 @@ export default function VideoPlayer({
                         <button
                             key={server.name}
                             onClick={() => {
-                                if (idx === 1) { // Current Server 2 (multiembed.mov)
-                                    const url = type === "movie"
-                                        ? server.movie(id)
-                                        : server.show(id, currentSeason, currentEpisode);
-                                    window.open(url, "_blank");
-                                    return;
-                                }
                                 setSelectedServer(idx);
                             }}
                             className={cn(
@@ -126,7 +119,7 @@ export default function VideoPlayer({
                                     : "bg-prime-hover text-gray-400 hover:text-white hover:bg-prime-hover/80"
                             )}
                         >
-                            {server.name} {idx === 1 && "↗"}
+                            {server.name}
                         </button>
                     ))}
                 </div>
