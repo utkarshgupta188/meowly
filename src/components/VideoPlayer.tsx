@@ -25,7 +25,7 @@ const SERVERS = [
         name: "Server 2",
         movie: (id: string) => `https://www.vidking.net/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://www.vidking.net/embed/tv/${id}/${s}/${e}`,
-        useSandbox: true
+        useSandbox: false
     },
     {
         name: "Server 3",
