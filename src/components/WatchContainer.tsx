@@ -14,11 +14,15 @@ interface WatchContainerProps {
     type: "movie" | "tv";
     id: string;
     tmdbData: any;
+    initialSeason?: number;
+    initialEpisode?: number;
+    startPlaying?: boolean;
 }
 
-export default function WatchContainer({ type, id, tmdbData }: WatchContainerProps) {
-    const [season, setSeason] = useState(1);
-    const [episode, setEpisode] = useState(1);
+export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, initialEpisode = 1, startPlaying = false }: WatchContainerProps) {
+    const [season, setSeason] = useState(initialSeason);
+    const [episode, setEpisode] = useState(initialEpisode);
+    const [isPlaying, setIsPlaying] = useState(startPlaying);
     const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details">(type === "movie" ? "details" : "episodes");
     const [showAllCast, setShowAllCast] = useState(false);
 
@@ -45,7 +49,7 @@ export default function WatchContainer({ type, id, tmdbData }: WatchContainerPro
             overview: `Description for episode ${i + 1}`,
             still_path: null,
             runtime: 45,
-            air_date: new Date().toISOString()
+            air_date: "2024-01-01"
         }))
         : []);
 
@@ -63,7 +67,6 @@ export default function WatchContainer({ type, id, tmdbData }: WatchContainerPro
     );
 
     // Playback state
-    const [isPlaying, setIsPlaying] = useState(false);
 
     return (
         <div className="flex flex-col animate-in fade-in duration-700">

@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import MovieRow from "@/components/MovieRow";
 import { tmdb } from "@/lib/tmdb";
+import RecentlyPlayedRow from "@/components/RecentlyPlayedRow";
 
 export default async function Home() {
   const [
@@ -30,6 +31,7 @@ export default async function Home() {
       {trending && trending.length > 0 && <Hero movies={trending} />}
 
       <div className="relative z-40 -mt-12 md:-mt-24 space-y-12 transition-all duration-500">
+        <RecentlyPlayedRow />
         <MovieRow title="Trending Now" movies={trending} />
         <MovieRow title="Popular Movies" movies={popularMovies} />
         <MovieRow title="Top Rated" movies={topRated} />

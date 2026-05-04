@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Monitor, Server, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { saveToRecentlyPlayed } from "@/lib/storage";
 
 interface VideoPlayerProps {
     type: "movie" | "tv";
@@ -69,6 +70,25 @@ export default function VideoPlayer({
         }
     };
 
+    // Save to recently played
+    React.useEffect(() => {
+        if (tmdbData) {
+            saveToRecentlyPlayed({
+                id,
+                type,
+                title: tmdbData.title || tmdbData.name,
+                poster_path: tmdbData.poster_path,
+                backdrop_path: tmdbData.backdrop_path,
+                vote_average: tmdbData.vote_average,
+                release_date: tmdbData.release_date,
+                first_air_date: tmdbData.first_air_date,
+                last_played: Date.now(),
+                season: type === "tv" ? currentSeason : undefined,
+                episode: type === "tv" ? currentEpisode : undefined,
+            });
+        }
+    }, [id, type, tmdbData, currentSeason, currentEpisode]);
+
     const currentServer = SERVERS[selectedServer];
     const playerUrl = type === "movie"
         ? currentServer.movie(id)
@@ -99,7 +119,7 @@ export default function VideoPlayer({
             </div>
 
             {/* Control Bar */}
-            <div className="bg-prime-card/80 backdrop-blur-md p-4 sticky bottom-0 z-40 border-t border-gray-800 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-prime-card p-4 border-t border-gray-800 flex flex-wrap items-center justify-between gap-4">
                 {/* Server Selector */}
                 <div className="flex items-center space-x-2 overflow-x-auto scrollbar-hide">
                     <div className="flex items-center text-gray-400 mr-2">

@@ -78,6 +78,8 @@ export type Movie = {
     first_air_date?: string;
     vote_average: number;
     media_type: "movie" | "tv";
+    season?: number;
+    episode?: number;
 };
 
 export const tmdb = {

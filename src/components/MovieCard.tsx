@@ -11,9 +11,10 @@ interface MovieCardProps {
     movie: Movie;
     className?: string;
     isFluid?: boolean;
+    isResume?: boolean;
 }
 
-const MovieCard = ({ movie, className, isFluid = false }: MovieCardProps) => {
+const MovieCard = ({ movie, className, isFluid = false, isResume = false }: MovieCardProps) => {
     // Prefer backdrop for wide cards, user can override with CSS
     const imageUrl = movie.backdrop_path
         ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
@@ -27,7 +28,7 @@ const MovieCard = ({ movie, className, isFluid = false }: MovieCardProps) => {
             isFluid ? "w-full" : "flex-none w-[200px] h-[112px] md:w-[280px] md:h-[160px]",
             className
         )}>
-            <Link href={`/watch/${movie.media_type || 'movie'}/${movie.id}`}>
+            <Link href={`/watch/${movie.media_type || 'movie'}/${movie.id}${movie.season ? `?s=${movie.season}&e=${movie.episode || 1}${isResume ? '&resume=true' : ''}` : (isResume ? '?resume=true' : '')}`}>
                 <div className="relative w-full h-full rounded-md overflow-hidden bg-prime-card shadow-lg ring-1 ring-white/5 group-hover:ring-prime-blue/50 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all">
                     {imageUrl ? (
                         <img
@@ -61,6 +62,12 @@ const MovieCard = ({ movie, className, isFluid = false }: MovieCardProps) => {
 
                         <div className="flex items-center space-x-2 text-[10px] text-gray-400 mt-1">
                             <span>{movie.release_date?.split("-")[0] || movie.first_air_date?.split("-")[0]}</span>
+                            {movie.season && (
+                                <>
+                                    <span className="text-gray-600">•</span>
+                                    <span className="text-prime-blue font-medium">S{movie.season} E{movie.episode || 1}</span>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

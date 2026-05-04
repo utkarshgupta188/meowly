@@ -9,10 +9,16 @@ interface WatchPageProps {
         type: "movie" | "tv";
         id: string;
     }>;
+    searchParams: Promise<{
+        s?: string;
+        e?: string;
+        resume?: string;
+    }>;
 }
 
-export default async function WatchPage({ params }: WatchPageProps) {
+export default async function WatchPage({ params, searchParams }: WatchPageProps) {
     const { type, id } = await params;
+    const { s, e, resume } = await searchParams;
     const movie = await tmdb.getDetails(type, id);
 
     if (!movie || !movie.id) {
@@ -32,7 +38,14 @@ export default async function WatchPage({ params }: WatchPageProps) {
     return (
         <main className="min-h-screen bg-prime-dark pb-20">
             <Navbar />
-            <WatchContainer type={type} id={id} tmdbData={movie} />
+            <WatchContainer 
+                type={type} 
+                id={id} 
+                tmdbData={movie} 
+                initialSeason={s ? parseInt(s) : 1}
+                initialEpisode={e ? parseInt(e) : 1}
+                startPlaying={resume === "true" || !!(s || e)}
+            />
         </main>
     );
 }

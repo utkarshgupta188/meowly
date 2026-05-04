@@ -10,9 +10,10 @@ interface MovieRowProps {
     title: string;
     movies: Movie[];
     className?: string;
+    isResume?: boolean;
 }
 
-const MovieRow = ({ title, movies, className }: MovieRowProps) => {
+const MovieRow = ({ title, movies, className, isResume = false }: MovieRowProps) => {
     const rowRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: "left" | "right") => {
@@ -41,7 +42,7 @@ const MovieRow = ({ title, movies, className }: MovieRowProps) => {
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {movies.map((movie) => (
-                        <MovieCard key={movie.id} movie={movie} />
+                        <MovieCard key={`${movie.id}-${movie.media_type}`} movie={movie} isResume={isResume} />
                     ))}
                 </div>
 
