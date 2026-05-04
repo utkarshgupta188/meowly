@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import MovieCard from "@/components/MovieCard";
+import SearchGrid from "@/components/SearchGrid";
 import { tmdb } from "@/lib/tmdb";
 
 interface SearchPageProps {
@@ -22,11 +23,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 </h1>
 
                 {results.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                        {results.map((movie) => (
-                            <MovieCard key={movie.id} movie={movie} isFluid={true} />
-                        ))}
-                    </div>
+                    <SearchGrid results={results} />
                 ) : (
                     <div className="flex flex-col items-center justify-center py-40 text-center">
                         <p className="text-gray-400 text-lg mb-4">

@@ -1,4 +1,4 @@
-const API_KEY = process.env.TMDB_API_KEY;
+const API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 
@@ -34,21 +34,30 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
     while (attempt < MAX_RETRIES) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
             const res = await fetch(url.toString(), {
                 next: { revalidate: 3600 },
-                headers: { "Accept": "application/json" },
+                headers: { 
+                    "Accept": "application/json",
+                    "User-Agent": "MeowlyApp/1.0"
+                },
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
 
             if (!res.ok) {
                 if (res.status === 429) { // Rate limit
-                    await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+                    console.warn(`Rate limited for ${cleanEndpoint}. Waiting...`);
+                    await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1)));
                     throw new Error(`Rate limited: ${res.status}`);
                 }
                 console.error(`TMDB error [${res.status}]: ${res.statusText} for ${cleanEndpoint}`);
+                // If it's a 401, the API key is definitely wrong
+                if (res.status === 401) {
+                    console.error("TMDB API Key is invalid (401 Unauthorized). Check your .env.local file.");
+                    return null;
+                }
                 return null;
             }
 
@@ -56,12 +65,14 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
             return data;
         } catch (error: any) {
             attempt++;
-            console.warn(`TMDB Fetch Attempt ${attempt} failed for ${cleanEndpoint}: ${error.message}`);
+            const isAbort = error.name === 'AbortError';
+            console.warn(`TMDB Fetch Attempt ${attempt} failed for ${cleanEndpoint}: ${isAbort ? 'Timeout' : error.message}`);
+            
             if (attempt >= MAX_RETRIES) {
-                console.error(`TMDB Final Failure for ${cleanEndpoint}`);
+                console.error(`TMDB Final Failure for ${cleanEndpoint}. Last error: ${error.message}`);
                 return null;
             }
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retry
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Increased wait between retries
         }
     }
     return null;

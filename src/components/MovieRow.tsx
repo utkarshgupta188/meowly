@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import MovieCard from "./MovieCard";
 import { Movie } from "@/lib/tmdb";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface MovieRowProps {
     title: string;
@@ -25,7 +26,13 @@ const MovieRow = ({ title, movies, className, isResume = false }: MovieRowProps)
     };
 
     return (
-        <div className={cn("space-y-4 px-8 md:px-12 group/row", className)}>
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className={cn("space-y-4 px-8 md:px-12 group/row", className)}
+        >
             <h2 className="text-xl md:text-2xl font-bold text-gray-200">{title}</h2>
 
             <div className="relative group/nav">
@@ -53,7 +60,7 @@ const MovieRow = ({ title, movies, className, isResume = false }: MovieRowProps)
                     <ChevronRight className="h-8 w-8 text-white" />
                 </button>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

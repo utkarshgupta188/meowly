@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getRecentlyPlayed, RecentItem } from "@/lib/storage";
 import MovieRow from "./MovieRow";
 import { Movie } from "@/lib/tmdb";
+import { motion } from "framer-motion";
 
 const RecentlyPlayedRow = () => {
     const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
@@ -40,9 +41,13 @@ const RecentlyPlayedRow = () => {
     }));
 
     return (
-        <div className="animate-in fade-in slide-in-from-left-4 duration-500">
+        <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+        >
             <MovieRow title="Recently Played" movies={movies} isResume={true} />
-        </div>
+        </motion.div>
     );
 };
 

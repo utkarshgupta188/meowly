@@ -1,6 +1,7 @@
 "use client";
 
 const RECENTLY_PLAYED_KEY = "meowly_recently_played";
+const WATCHLIST_KEY = "meowly_watchlist";
 const MAX_RECENT = 20;
 
 export interface RecentItem {
@@ -52,6 +53,69 @@ export function getRecentlyPlayed(): RecentItem[] {
         return stored ? JSON.parse(stored) : [];
     } catch (error) {
         console.error("Error getting recently played:", error);
+        return [];
+    }
+}
+
+// Watchlist Functions
+export function addToWatchlist(item: RecentItem) {
+    if (typeof window === "undefined") return;
+
+    try {
+        const stored = localStorage.getItem(WATCHLIST_KEY);
+        let items: RecentItem[] = stored ? JSON.parse(stored) : [];
+
+        // Check if already in watchlist
+        const exists = items.some(i => i.id === item.id && i.type === item.type);
+        if (exists) return;
+
+        items.unshift({ ...item, last_played: Date.now() });
+        localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
+        window.dispatchEvent(new Event("watchlistUpdated"));
+    } catch (error) {
+        console.error("Error adding to watchlist:", error);
+    }
+}
+
+export function removeFromWatchlist(id: string, type: string) {
+    if (typeof window === "undefined") return;
+
+    try {
+        const stored = localStorage.getItem(WATCHLIST_KEY);
+        if (!stored) return;
+
+        let items: RecentItem[] = JSON.parse(stored);
+        items = items.filter(i => !(i.id === id && i.type === type));
+
+        localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
+        window.dispatchEvent(new Event("watchlistUpdated"));
+    } catch (error) {
+        console.error("Error removing from watchlist:", error);
+    }
+}
+
+export function isInWatchlist(id: string, type: string): boolean {
+    if (typeof window === "undefined") return false;
+
+    try {
+        const stored = localStorage.getItem(WATCHLIST_KEY);
+        if (!stored) return false;
+
+        const items: RecentItem[] = JSON.parse(stored);
+        return items.some(i => i.id === id && i.type === type);
+    } catch (error) {
+        return false;
+    }
+}
+
+export function getWatchlist(): RecentItem[] {
+    if (typeof window === "undefined") return [];
+
+    try {
+        const stored = localStorage.getItem(WATCHLIST_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        console.error("Error getting watchlist:", error);
         return [];
     }
 }

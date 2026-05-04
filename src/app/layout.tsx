@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 };
 
 import Footer from "@/components/Footer";
-
-// ... existing imports
+import PageTransition from "@/components/PageTransition";
 
 export default function RootLayout({
   children,
@@ -20,9 +19,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased flex flex-col min-h-screen`}>
+      <body className={`${inter.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white`}>
         <div className="flex-grow">
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </div>
         <Footer />
       </body>
