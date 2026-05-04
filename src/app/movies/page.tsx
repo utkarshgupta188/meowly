@@ -16,7 +16,7 @@ export default async function MoviesPage() {
         <main className="min-h-screen pb-20 overflow-x-hidden">
             <Navbar />
             {trending.length > 0 && <Hero movies={trending} />}
-            <div className="relative z-10 -mt-6 md:-mt-10 space-y-12">
+            <div className="relative z-40 mt-4 md:-mt-10 space-y-12 transition-all duration-500">
                 <MovieRow title="Trending Movies" movies={trending} />
                 <MovieRow title="Popular Now" movies={popular} />
                 <MovieRow title="Top Rated" movies={topRated} />

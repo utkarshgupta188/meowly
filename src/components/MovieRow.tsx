@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MovieCard from "./MovieCard";
 import { Movie } from "@/lib/tmdb";
@@ -33,7 +34,15 @@ const MovieRow = ({ title, movies, className, isResume = false }: MovieRowProps)
             transition={{ duration: 0.6, ease: "easeOut" }}
             className={cn("space-y-4 px-8 md:px-12 group/row", className)}
         >
-            <h2 className="text-xl md:text-2xl font-bold text-gray-200">{title}</h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">{title}</h2>
+                <Link 
+                    href={`/search?q=${encodeURIComponent(title.toLowerCase())}`} 
+                    className="text-xs md:text-sm font-semibold text-gray-500 hover:text-white transition-colors flex items-center"
+                >
+                    See All <ChevronRight className="h-4 w-4 ml-0.5" />
+                </Link>
+            </div>
 
             <div className="relative group/nav">
                 <button

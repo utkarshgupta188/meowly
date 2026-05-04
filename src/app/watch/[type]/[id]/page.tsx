@@ -36,7 +36,7 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
     }
 
     return (
-        <main className="min-h-screen bg-prime-dark pb-20">
+        <main className="min-h-screen bg-black pb-20">
             <Navbar />
             <WatchContainer 
                 type={type} 

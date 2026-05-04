@@ -2,38 +2,38 @@
 
 @theme inline {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --color-prime-blue: #00A8E1;
-  --color-prime-dark: #0F171E;
-  --color-prime-card: #19232e;
-  /* Slightly lighter than background */
-  --color-prime-hover: #293645;
-  /* Distinct hover state */
-  --color-background: #0F171E;
+  --color-background: #000000;
   --color-foreground: #ffffff;
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --color-glass-dark: rgba(0, 0, 0, 0.6);
+  --color-accent: #FBBF24;
+  --color-prime-dark: #000000;
+  --color-prime-card: #0a0a0a;
 }
 
 :root {
-  --background: #0F171E;
+  --background: #000000;
   --foreground: #ffffff;
-  --prime-blue: #00A8E1;
+  --accent: #FBBF24;
+  --prime-dark: #000000;
+  --prime-card: #0a0a0a;
 }
 
 body {
   background-color: var(--background);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(251, 191, 36, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-select option {
-  background-color: #1a242f;
-  color: white;
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -41,35 +41,32 @@ select option {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #425265;
-  border-radius: 4px;
+  background: #333333;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5a6b80;
+  background: #444444;
 }
 
-/* Prime Video Style Gradients */
-.prime-gradient-overlay {
+/* Cinematic Gradients */
+.cinematic-overlay {
   background: linear-gradient(to top,
-      #0F171E 0%,
-      rgba(15, 23, 30, 0.95) 15%,
-      rgba(15, 23, 30, 0.6) 40%,
-      rgba(15, 23, 30, 0) 100%);
+      #000000 0%,
+      rgba(0, 0, 0, 0.9) 20%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
-.prime-side-gradient {
+.cinematic-side {
   background: linear-gradient(to right,
-      #0F171E 0%,
-      rgba(15, 23, 30, 0.8) 30%,
-      rgba(15, 23, 30, 0) 100%);
+      #000000 0%,
+      rgba(0, 0, 0, 0.8) 30%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
-.prime-nav-gradient {
-  background: linear-gradient(to bottom,
-      rgba(15, 23, 30, 0.9) 0%,
-      rgba(15, 23, 30, 0.5) 60%,
-      transparent 100%);
+.glass-pill {
+  @apply bg-black/40 backdrop-blur-xl border border-white/10 rounded-full;
 }
 
 @layer utilities {

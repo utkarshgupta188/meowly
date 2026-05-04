@@ -6,6 +6,7 @@ import MovieCard from "@/components/MovieCard";
 import { getWatchlist } from "@/lib/storage";
 import { Movie } from "@/lib/tmdb";
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
 
 export default function WatchlistPage() {
     const [watchlist, setWatchlist] = useState<any[]>([]);
@@ -36,10 +37,10 @@ export default function WatchlistPage() {
     }));
 
     return (
-        <main className="min-h-screen bg-prime-dark pb-20">
+        <main className="min-h-screen bg-black pb-20">
             <Navbar />
             
-            <div className="pt-32 px-4 md:px-12 max-w-7xl mx-auto">
+            <div className="pt-40 md:pt-32 px-4 md:px-12 max-w-7xl mx-auto">
                 <header className="mb-12">
                     <motion.h1 
                         initial={{ opacity: 0, y: -20 }}
@@ -64,10 +65,8 @@ export default function WatchlistPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         className="flex flex-col items-center justify-center py-32 text-center"
                     >
-                        <div className="bg-prime-card/50 p-8 rounded-full mb-6 ring-1 ring-white/10">
-                            <svg className="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                        <div className="bg-white/5 p-8 rounded-full mb-6 ring-1 ring-white/10">
+                            <Plus className="w-16 h-16 text-gray-700" />
                         </div>
                         <h2 className="text-2xl font-bold text-white mb-2">Your list is empty</h2>
                         <p className="text-gray-400 max-w-md">
@@ -75,7 +74,7 @@ export default function WatchlistPage() {
                         </p>
                     </motion.div>
                 ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                         {movies.map((movie) => (
                             <MovieCard key={`${movie.id}-${movie.media_type}`} movie={movie} isFluid={true} />
                         ))}

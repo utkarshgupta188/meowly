@@ -5,10 +5,10 @@ import Footer from '@/components/Footer';
 
 export default function DMCA() {
     return (
-        <main className="min-h-screen bg-prime-dark text-gray-300">
+        <main className="min-h-screen bg-black text-gray-300">
             <Navbar />
 
-            <div className="max-w-3xl mx-auto px-6 py-24 md:py-32 space-y-8">
+            <div className="max-w-3xl mx-auto px-6 pt-40 md:pt-32 pb-24 space-y-8">
                 <div className="space-y-4 border-b border-gray-800 pb-8">
                     <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight">DMCA Policy</h1>
                     <p className="text-lg text-gray-400">

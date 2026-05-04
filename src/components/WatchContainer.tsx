@@ -40,6 +40,13 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
         }
     }, [id, season, type]);
 
+    // Sync state with props for navigation
+    React.useEffect(() => {
+        setIsPlaying(startPlaying);
+        setSeason(initialSeason);
+        setEpisode(initialEpisode);
+    }, [id, type, startPlaying, initialSeason, initialEpisode]);
+
     // Use fetched season data or fallback to basic placeholders if loading/failed
     const episodesList = seasonData?.episodes || (tmdbData.seasons?.find((s: any) => s.season_number === season)
         ? Array.from({ length: tmdbData.seasons.find((s: any) => s.season_number === season).episode_count || 10 }, (_, i) => ({
@@ -57,12 +64,12 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const TabButton = ({ name, label }: { name: typeof activeTab, label: string }) => (
         <button
             onClick={() => setActiveTab(name)}
-            className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 ${activeTab === name ? "text-prime-blue" : "text-gray-400 hover:text-white"
+            className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 ${activeTab === name ? "text-accent" : "text-gray-400 hover:text-white"
                 }`}
         >
             {label}
             {activeTab === name && (
-                <span className="absolute bottom-0 left-0 w-full h-1 bg-prime-blue rounded-t-full shadow-[0_0_10px_#00A8E1]" />
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_10px_#FBBF24]" />
             )}
         </button>
     );
@@ -77,7 +84,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             className="flex flex-col"
         >
             {/* Hero / Player Section */}
-            <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
+            <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "pt-36 md:pt-24 md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
 
                 {!isPlaying ? (
                     <DetailsHero
@@ -193,7 +200,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                         {tmdbData.credits?.cast?.slice(0, showAllCast ? 100 : 6).map((person: any) => (
                                             <Link href={`/person/${person.id}`} key={person.id} className="flex items-center space-x-4 group cursor-pointer hover:bg-white/5 p-3 rounded-lg transition-all border border-transparent hover:border-white/10">
-                                                <div className="w-16 h-16 rounded-full bg-gray-700 overflow-hidden border-2 border-transparent group-hover:border-prime-blue transition-colors flex-shrink-0">
+                                                <div className="w-16 h-16 rounded-full bg-gray-700 overflow-hidden border-2 border-transparent group-hover:border-accent transition-colors flex-shrink-0">
                                                     {person.profile_path ? (
                                                         <img src={`https://image.tmdb.org/t/p/w200${person.profile_path}`} className="w-full h-full object-cover" />
                                                     ) : (
@@ -201,7 +208,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <p className="text-white text-base font-bold group-hover:text-prime-blue transition-colors">{person.name}</p>
+                                                    <p className="text-white text-base font-bold group-hover:text-accent transition-colors">{person.name}</p>
                                                     <p className="text-gray-500 text-sm">{person.character}</p>
                                                 </div>
                                             </Link>
@@ -212,7 +219,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                         <div className="mt-8 text-center md:text-left">
                                             <button
                                                 onClick={() => setShowAllCast(!showAllCast)}
-                                                className="text-prime-blue text-sm font-bold hover:underline"
+                                                className="text-accent text-sm font-bold hover:underline"
                                             >
                                                 {showAllCast ? "Show less" : "Show more"}
                                             </button>

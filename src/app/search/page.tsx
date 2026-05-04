@@ -14,10 +14,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     const results = query ? await tmdb.search(query) : [];
 
     return (
-        <main className="min-h-screen bg-prime-dark pb-20">
+        <main className="min-h-screen bg-black pb-20">
             <Navbar />
 
-            <div className="pt-24 px-4 md:px-12">
+            <div className="pt-40 md:pt-32 px-4 md:px-12">
                 <h1 className="text-2xl md:text-3xl font-bold mb-8 transition-all animate-in fade-in slide-in-from-left duration-500">
                     {query ? `Search results for "${query}"` : "Search Meowly"}
                 </h1>

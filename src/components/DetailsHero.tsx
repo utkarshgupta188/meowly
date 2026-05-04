@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
-import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown } from "lucide-react";
+import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, ArrowLeft } from "lucide-react";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
@@ -77,31 +77,39 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     };
 
     return (
-        <div className="relative w-full h-[85vh] md:h-screen min-h-[600px] flex items-center overflow-hidden">
+        <div className="relative w-full min-h-screen flex items-center overflow-hidden bg-black pb-12">
+            {/* Background Blur */}
             <div className="absolute inset-0 z-0">
                 {backdropUrl && (
                     <img
                         src={backdropUrl}
                         alt={tmdbData.title || tmdbData.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover opacity-30 blur-3xl"
                     />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-r from-prime-dark via-prime-dark/60 to-transparent z-10" />
-                <div className="absolute inset-0 bg-gradient-to-t from-prime-dark via-transparent to-transparent z-10" />
             </div>
 
-            <div className="relative z-20 w-full px-4 md:px-12 max-w-7xl mx-auto pt-20 md:pt-0">
+            {/* Go Back Button */}
+            <button 
+                onClick={() => window.history.back()}
+                className="absolute top-28 left-6 md:left-12 z-50 p-3 glass-pill hover:bg-white/10 transition-all group"
+            >
+                <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
+            </button>
+
+            <div className="relative z-40 mt-0 md:-mt-10 w-full px-6 md:px-12 max-w-7xl mx-auto pt-40 md:pt-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                {/* Left Side: Info */}
                 <motion.div 
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="max-w-2xl space-y-6"
+                    className="space-y-6"
                 >
                     <motion.h1 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 0.6 }}
-                        className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-none drop-shadow-2xl"
+                        transition={{ delay: 0.2 }}
+                        className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter"
                     >
                         {tmdbData.title || tmdbData.name}
                     </motion.h1>
@@ -110,52 +118,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4 }}
-                        className="text-[#00E054] font-bold text-sm md:text-base tracking-wide"
-                    >
-                        #{tmdbData.id ? (tmdbData.id % 10) + 1 : 1} in {tmdbData.genres?.[0]?.name || "Trends"}
-                    </motion.div>
-
-                    {type === 'tv' && (
-                        <motion.div 
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="relative inline-block group"
-                        >
-                            <button className="bg-gray-800/80 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-bold text-xl flex items-center space-x-3 transition-colors border-2 border-gray-600 hover:border-white shadow-lg">
-                                <span>{seasonName}</span>
-                                <ChevronDown className="w-5 h-5" />
-                            </button>
-                            <select
-                                onChange={(e) => onSeasonChange(Number(e.target.value))}
-                                value={currentSeason}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            >
-                                {tmdbData.seasons?.filter((s: any) => s.season_number > 0).map((s: any) => (
-                                    <option key={s.id} value={s.season_number}>
-                                        {s.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </motion.div>
-                    )}
-
-                    <motion.p 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className="text-lg md:text-xl text-white font-medium drop-shadow-md line-clamp-3 leading-relaxed"
-                    >
-                        {tmdbData.overview}
-                    </motion.p>
-
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.7 }}
                         className="flex flex-wrap items-center gap-3 text-gray-300 font-medium text-sm md:text-base"
                     >
-                        <span className="flex items-center text-gray-400">IMDb <span className="text-white ml-1">{rating}</span></span>
+                        <span className="flex items-center text-gray-400">IMDb <span className="text-white ml-1 font-bold">{rating}</span></span>
                         <span>{year}</span>
                         <span>{runTime}</span>
 
@@ -171,6 +136,15 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         <AudioWaveform className="w-5 h-5 text-gray-400" />
                     </motion.div>
 
+                    <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="text-lg md:text-xl text-gray-300 font-medium drop-shadow-md line-clamp-4 leading-relaxed max-w-2xl"
+                    >
+                        {tmdbData.overview}
+                    </motion.p>
+
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -179,11 +153,11 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                     >
                         <button
                             onClick={onPlay}
-                            className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-prime-dark px-8 py-4 rounded-[4px] font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
+                            className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
                         >
                             <Play className="fill-current w-7 h-7" />
-                            <div className="flex flex-col items-start leading-none">
-                                <span className="text-[10px] uppercase font-black tracking-wider text-prime-dark/70">
+                            <div className="flex flex-col items-start leading-none text-left">
+                                <span className="text-[10px] uppercase font-black tracking-wider text-black/70">
                                     {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
                                 </span>
                                 <span>{type === 'tv' ? "Continue watching" : "Watch now"}</span>
@@ -194,35 +168,72 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             <button
                                 onClick={handleWatchlistToggle}
                                 className={cn(
-                                    "w-12 h-12 rounded-full backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110 border-2",
+                                    "w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
                                     inWatchlist 
-                                        ? "bg-prime-blue border-prime-blue text-white shadow-lg shadow-prime-blue/20" 
-                                        : "bg-gray-600/40 hover:bg-gray-500/60 border-transparent hover:border-white/20 text-gray-100"
+                                        ? "bg-accent border-accent text-black shadow-lg shadow-accent/20" 
+                                        : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                 )}
                                 title={inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
                             >
-                                {inWatchlist ? <Check className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+                                {inWatchlist ? <Check className="w-7 h-7" /> : <Plus className="w-7 h-7" />}
                             </button>
-
-                            {tmdbData.videos?.results?.find((v: any) => v.type === "Trailer" && v.site === "YouTube") && (
-                                <button
-                                    onClick={() => window.open(`https://www.youtube.com/watch?v=${tmdbData.videos.results.find((v: any) => v.type === "Trailer" && v.site === "YouTube").key}`, "_blank")}
-                                    className="flex items-center space-x-2 bg-gray-600/40 hover:bg-gray-500/60 backdrop-blur-sm text-gray-100 px-6 py-3 rounded-md font-bold text-lg transition-all hover:scale-105 border-2 border-transparent hover:border-white/20"
-                                >
-                                    <Play className="w-6 h-6 fill-current" />
-                                    <span>Trailer</span>
-                                </button>
-                            )}
 
                             <button
                                 onClick={handleShare}
-                                className={`w-12 h-12 rounded-full backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110 border-2 ${copied ? "bg-green-600/80 border-green-500 text-white" : "bg-gray-600/40 hover:bg-gray-500/60 border-transparent hover:border-white/20 text-gray-100"}`}
+                                className={cn(
+                                    "w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
+                                    copied ? "bg-green-600 border-green-500 text-white" : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
+                                )}
                                 title="Share"
                             >
-                                {copied ? <Check className="w-6 h-6" /> : <Share2 className="w-6 h-6" />}
+                                {copied ? <Check className="w-7 h-7" /> : <Share2 className="w-7 h-7" />}
                             </button>
                         </div>
                     </motion.div>
+
+                    {type === 'tv' && (
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1 }}
+                            className="relative inline-block pt-4"
+                        >
+                            <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-bold flex items-center space-x-3 transition-colors border border-white/10 shadow-lg">
+                                <span>{seasonName}</span>
+                                <ChevronDown className="w-5 h-5" />
+                            </button>
+                            <select
+                                onChange={(e) => onSeasonChange(Number(e.target.value))}
+                                value={currentSeason}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            >
+                                {tmdbData.seasons?.filter((s: any) => s.season_number > 0).map((s: any) => (
+                                    <option key={s.id} value={s.season_number} className="bg-prime-dark text-white">
+                                        {s.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </motion.div>
+                    )}
+                </motion.div>
+
+                {/* Right Side: Poster */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8, rotateY: 20 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className="hidden lg:flex justify-end"
+                >
+                    <div className="relative w-80 xl:w-96 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-white/20 transform perspective-1000">
+                        {tmdbData.poster_path && (
+                            <img
+                                src={`${TMDB_CONFIG.posterSizes.large}${tmdbData.poster_path}`}
+                                alt={tmdbData.title || tmdbData.name}
+                                className="w-full h-full object-cover"
+                            />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                    </div>
                 </motion.div>
             </div>
             <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-prime-dark to-transparent z-10" />

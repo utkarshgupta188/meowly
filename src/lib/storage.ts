@@ -41,7 +41,7 @@ export function saveToRecentlyPlayed(item: RecentItem) {
         // Dispatch a custom event to notify other components
         window.dispatchEvent(new Event("recentlyPlayedUpdated"));
     } catch (error) {
-        console.error("Error saving to recently played:", error);
+        // Silently fail
     }
 }
 
@@ -52,7 +52,6 @@ export function getRecentlyPlayed(): RecentItem[] {
         const stored = localStorage.getItem(RECENTLY_PLAYED_KEY);
         return stored ? JSON.parse(stored) : [];
     } catch (error) {
-        console.error("Error getting recently played:", error);
         return [];
     }
 }
@@ -73,7 +72,7 @@ export function addToWatchlist(item: RecentItem) {
         localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
         window.dispatchEvent(new Event("watchlistUpdated"));
     } catch (error) {
-        console.error("Error adding to watchlist:", error);
+        // Silently fail
     }
 }
 
@@ -90,7 +89,7 @@ export function removeFromWatchlist(id: string, type: string) {
         localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
         window.dispatchEvent(new Event("watchlistUpdated"));
     } catch (error) {
-        console.error("Error removing from watchlist:", error);
+        // Silently fail
     }
 }
 
@@ -115,7 +114,6 @@ export function getWatchlist(): RecentItem[] {
         const stored = localStorage.getItem(WATCHLIST_KEY);
         return stored ? JSON.parse(stored) : [];
     } catch (error) {
-        console.error("Error getting watchlist:", error);
         return [];
     }
 }

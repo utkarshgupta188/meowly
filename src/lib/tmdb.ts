@@ -19,7 +19,6 @@ export const TMDB_CONFIG = {
 
 async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) {
     if (!API_KEY || API_KEY === "your_tmdb_api_key_here") {
-        console.warn(`TMDB API Key is missing or default. Skipping fetch for ${endpoint}`);
         return null;
     }
 
@@ -48,14 +47,11 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
 
             if (!res.ok) {
                 if (res.status === 429) { // Rate limit
-                    console.warn(`Rate limited for ${cleanEndpoint}. Waiting...`);
                     await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1)));
                     throw new Error(`Rate limited: ${res.status}`);
                 }
-                console.error(`TMDB error [${res.status}]: ${res.statusText} for ${cleanEndpoint}`);
                 // If it's a 401, the API key is definitely wrong
                 if (res.status === 401) {
-                    console.error("TMDB API Key is invalid (401 Unauthorized). Check your .env.local file.");
                     return null;
                 }
                 return null;
@@ -65,11 +61,8 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
             return data;
         } catch (error: any) {
             attempt++;
-            const isAbort = error.name === 'AbortError';
-            console.warn(`TMDB Fetch Attempt ${attempt} failed for ${cleanEndpoint}: ${isAbort ? 'Timeout' : error.message}`);
             
             if (attempt >= MAX_RETRIES) {
-                console.error(`TMDB Final Failure for ${cleanEndpoint}. Last error: ${error.message}`);
                 return null;
             }
             await new Promise(resolve => setTimeout(resolve, 2000)); // Increased wait between retries

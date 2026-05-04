@@ -37,7 +37,7 @@ export default function EpisodeList({ episodes, currentSeason, currentEpisode, o
                             onClick={() => onEpisodeSelect(ep.episode_number)}
                             className={cn(
                                 "group flex flex-col md:flex-row gap-4 p-4 rounded-lg cursor-pointer transition-all duration-200 border border-transparent",
-                                isCurrent ? "bg-prime-card border-prime-blue/50" : "hover:bg-prime-card/50 hover:border-white/10"
+                                isCurrent ? "bg-prime-card border-accent/50" : "hover:bg-prime-card/50 hover:border-white/10"
                             )}
                         >
                             {/* Thumbnail */}
@@ -62,7 +62,7 @@ export default function EpisodeList({ episodes, currentSeason, currentEpisode, o
                             <div className="flex-1 min-w-0 py-1">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h4 className={cn("font-bold text-base mb-1", isCurrent ? "text-prime-blue" : "text-white group-hover:text-prime-blue transition-colors")}>
+                                        <h4 className={cn("font-bold text-base mb-1", isCurrent ? "text-accent" : "text-white group-hover:text-accent transition-colors")}>
                                             {ep.episode_number}. {ep.name}
                                         </h4>
                                         <p className="text-gray-400 text-xs mb-2">

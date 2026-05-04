@@ -25,10 +25,10 @@ export default async function PersonPage({ params }: PersonPageProps) {
         : null;
 
     return (
-        <div className="min-h-screen bg-prime-dark text-white font-sans selection:bg-prime-blue selection:text-white pb-20">
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-accent selection:text-black pb-20">
             <Navbar />
 
-            <div className="pt-24 px-4 md:px-12 max-w-7xl mx-auto animate-in fade-in duration-700">
+            <div className="pt-40 md:pt-32 px-4 md:px-12 max-w-7xl mx-auto animate-in fade-in duration-700">
                 <Link href="/" className="inline-flex items-center text-gray-400 hover:text-white mb-8 transition-colors group">
                     <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
                     Back to Home

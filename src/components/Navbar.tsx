@@ -46,12 +46,18 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const handleSearch = (e?: React.FormEvent | React.KeyboardEvent) => {
+    const handleSearch = (e?: React.FormEvent | React.MouseEvent) => {
         if (e) e.preventDefault();
         if (searchQuery.trim()) {
             router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
             setIsMobileMenuOpen(false);
             setIsSearchOpen(false);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleSearch();
         }
     };
 
@@ -66,8 +72,8 @@ const Navbar = () => {
     return (
         <nav
             className={cn(
-                "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out px-4 md:px-12 py-3",
-                isScrolled ? "bg-prime-dark/95 backdrop-blur-sm shadow-xl" : "bg-transparent prime-nav-gradient"
+                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
+                isScrolled ? "bg-black/60 shadow-2xl" : "bg-black/20"
             )}
         >
             <div className="flex items-center justify-between h-14">
@@ -75,30 +81,30 @@ const Navbar = () => {
                     {isSearchOpen ? (
                         <motion.div
                             key="search-bar"
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            className="flex-1 flex items-center bg-prime-card/95 border border-white/10 rounded-full px-4 py-2"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="flex-1 flex items-center bg-white/5 border border-white/10 backdrop-blur-sm rounded-full px-2"
                         >
                             <button
                                 onClick={() => setIsSearchOpen(false)}
-                                className="mr-2 text-gray-400 hover:text-white"
+                                className="p-2 text-gray-400 hover:text-white transition-colors"
                             >
                                 <ArrowLeft className="h-5 w-5" />
                             </button>
                             <input
                                 autoFocus
                                 type="text"
-                                placeholder="Search movies, TV shows..."
+                                placeholder="Search titles..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                                className="bg-transparent border-none outline-none text-white text-base w-full placeholder-gray-500"
+                                className="bg-transparent border-none outline-none text-white text-base w-full placeholder-gray-500 py-2"
                             />
                             {searchQuery && (
                                 <button
                                     onClick={() => setSearchQuery("")}
-                                    className="ml-2 text-gray-400 hover:text-white"
+                                    className="p-2 text-gray-400 hover:text-white transition-colors"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>
@@ -112,19 +118,22 @@ const Navbar = () => {
                             exit={{ opacity: 0 }}
                             className="flex items-center justify-between w-full"
                         >
-                            <div className="flex items-center space-x-12">
-                                <Link href="/" className="group flex items-center space-x-1">
-                                    <span className="text-2xl font-bold tracking-tighter text-white group-hover:scale-105 transition-transform duration-300">
-                                        meow<span className="text-prime-blue italic">ly</span>
+                            <div className="flex items-center space-x-2 md:space-x-8">
+                                <Link href="/" className="group flex items-center">
+                                    <span className="text-xl font-black tracking-tighter text-white">
+                                        MEOW<span className="text-accent italic">LY</span>
                                     </span>
                                 </Link>
 
-                                <div className="hidden lg:flex items-center space-x-1">
+                                <div className="hidden md:flex items-center space-x-1">
                                     {navLinks.map((link) => (
                                         <Link
                                             key={link.name}
                                             href={link.href}
-                                            className="text-[17px] font-medium text-gray-300 hover:text-white px-4 py-2 rounded-md hover:bg-white/10 transition-all duration-300"
+                                            className={cn(
+                                                "text-[14px] font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-full transition-all duration-300",
+                                                pathname === link.href ? "bg-white/10 text-white" : ""
+                                            )}
                                         >
                                             {link.name}
                                         </Link>
@@ -133,29 +142,29 @@ const Navbar = () => {
                             </div>
 
                             <div className="flex items-center space-x-2 md:space-x-4">
-                                {/* Desktop Search */}
-                                <div className="relative group hidden md:block">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-prime-blue transition-colors duration-300" />
+                                 {/* Desktop Search */}
+                                <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                                     <input
                                         type="text"
-                                        placeholder="Search"
+                                        placeholder="Search Meowly..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        onKeyDown={handleSearch}
-                                        className="bg-prime-card/80 border border-gray-700/50 focus:border-white/50 rounded-lg py-2 pl-11 pr-4 text-[15px] text-white placeholder-gray-400 outline-none w-64 lg:w-72 transition-all duration-300 focus:bg-prime-hover focus:shadow-lg focus:ring-1 focus:ring-white/10"
+                                        onKeyDown={handleKeyDown}
+                                        className="bg-transparent border-none py-1 text-[13px] text-white placeholder-gray-500 outline-none w-32 focus:w-48 transition-all duration-300"
                                     />
+                                    <Search className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white transition-colors ml-2" onClick={() => handleSearch()} />
                                 </div>
 
                                 {/* Mobile Search Toggle */}
                                 <button
                                     onClick={() => setIsSearchOpen(true)}
-                                    className="md:hidden text-white p-2 hover:bg-white/10 rounded-full transition-colors"
+                                    className="md:hidden text-white p-2 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
                                 >
-                                    <Search className="h-6 w-6" />
+                                    <Search className="h-5 w-5" />
                                 </button>
 
                                 <button
-                                    className="lg:hidden text-white p-2 hover:bg-white/10 rounded-full transition-colors"
+                                    className="md:hidden text-white p-2 hover:bg-white/10 rounded-full transition-colors"
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 >
                                     {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -170,42 +179,28 @@ const Navbar = () => {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="lg:hidden bg-prime-dark/95 backdrop-blur-md absolute top-full left-0 w-full overflow-hidden border-t border-gray-800/50"
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        className="md:hidden absolute top-[calc(100%+12px)] left-0 w-full overflow-hidden bg-black/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl z-50 origin-top"
                     >
-                        <div className="flex flex-col space-y-6 p-6">
-                            {/* Mobile Search In Menu */}
-                            <form 
-                                onSubmit={handleSearch}
-                                className="relative flex items-center bg-white/5 border border-white/10 rounded-xl px-4 py-3"
-                            >
-                                <Search className="h-5 w-5 text-gray-400 mr-3" />
-                                <input
-                                    type="text"
-                                    placeholder="Search everything..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-transparent border-none outline-none text-white text-lg w-full placeholder-gray-500"
-                                />
-                            </form>
-
+                        <div className="flex flex-col p-4 space-y-2">
                             {/* Mobile Links */}
-                            <div className="flex flex-col space-y-4">
+                            <div className="grid grid-cols-1 gap-1">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.name}
                                         href={link.href}
                                         className={cn(
-                                            "text-xl font-semibold px-4 py-3 rounded-xl transition-all duration-300",
+                                            "text-[16px] font-bold px-5 py-4 rounded-2xl transition-all duration-300 flex items-center justify-between group",
                                             pathname === link.href 
-                                                ? "bg-prime-blue text-white shadow-lg shadow-prime-blue/20" 
-                                                : "text-gray-300 hover:bg-white/5 hover:text-white"
+                                                ? "bg-accent text-black" 
+                                                : "text-gray-400 hover:bg-white/5 hover:text-white"
                                         )}
                                         onClick={() => setIsMobileMenuOpen(false)}
                                     >
-                                        {link.name}
+                                        <span>{link.name}</span>
+                                        {pathname === link.href && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
                                     </Link>
                                 ))}
                             </div>

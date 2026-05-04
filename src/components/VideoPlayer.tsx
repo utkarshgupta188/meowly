@@ -120,7 +120,7 @@ export default function VideoPlayer({
                 {/* Scroll Helper - Moved to right side */}
                 <button
                     onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
-                    className="absolute bottom-4 right-4 bg-prime-blue/80 hover:bg-prime-blue text-white p-3 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition-all z-50 hidden md:flex items-center justify-center backdrop-blur-md border border-white/20"
+                    className="absolute bottom-4 right-4 bg-accent/80 hover:bg-accent text-black p-3 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition-all z-50 hidden md:flex items-center justify-center backdrop-blur-md border border-white/20"
                     title="Scroll to Details"
                 >
                     <ChevronDown className="h-6 w-6" />
@@ -145,7 +145,7 @@ export default function VideoPlayer({
                                 className={cn(
                                     "px-4 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap",
                                     selectedServer === idx
-                                        ? "bg-prime-blue text-white shadow-md"
+                                        ? "bg-accent text-black shadow-md"
                                         : "text-gray-400 hover:text-white"
                                 )}
                             >
