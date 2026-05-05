@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Monitor, Server, ChevronDown, Maximize2, Minimize2, RefreshCcw, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveToRecentlyPlayed } from "@/lib/storage";
-import { motion, AnimatePresence } from "framer-motion";
+import Dropdown from "@/components/ui/Dropdown";
 
 interface VideoPlayerProps {
     type: "movie" | "tv";
@@ -19,8 +19,8 @@ interface VideoPlayerProps {
 const SERVERS = [
     {
         name: "Server 1",
-        movie: (id: string) => `https://vsembed.ru/embed/movie?tmdb=${id}`,
-        show: (id: string, s: number, e: number) => `https://vsembed.ru/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
+        movie: (id: string) => `https://vidsrc.xyz/embed/movie?tmdb=${id}`,
+        show: (id: string, s: number, e: number) => `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
         useSandbox: false
     },
     {
@@ -36,82 +36,6 @@ const SERVERS = [
         useSandbox: false
     }
 ];
-
-interface CustomDropdownProps {
-    value: number;
-    options: { value: number; label: string }[];
-    onChange: (value: number) => void;
-    label: string;
-}
-
-function CustomDropdown({ value, options, onChange, label }: CustomDropdownProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = React.useRef<HTMLDivElement>(null);
-
-    React.useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const selectedOption = options.find(opt => opt.value === value);
-
-    return (
-        <div className="flex items-center space-x-2" ref={dropdownRef}>
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">{label}</span>
-            <div className="relative">
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all active:scale-95 group"
-                >
-                    <span className="text-xs font-bold text-white group-hover:text-accent transition-colors">
-                        {selectedOption?.label || `${label} ${value}`}
-                    </span>
-                    <ChevronDown className={cn(
-                        "h-3 w-3 text-gray-400 transition-transform duration-300",
-                        isOpen && "rotate-180 text-accent"
-                    )} />
-                </button>
-
-                <AnimatePresence>
-                    {isOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                            transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="absolute bottom-full mb-3 left-0 min-w-[160px] max-h-[300px] overflow-y-auto bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 z-50 shadow-2xl scrollbar-hide"
-                        >
-                            <div className="grid gap-1">
-                                {options.map((opt) => (
-                                    <button
-                                        key={opt.value}
-                                        onClick={() => {
-                                            onChange(opt.value);
-                                            setIsOpen(false);
-                                        }}
-                                        className={cn(
-                                            "w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold transition-all",
-                                            value === opt.value
-                                                ? "bg-white text-black"
-                                                : "text-gray-400 hover:text-white hover:bg-white/5"
-                                        )}
-                                    >
-                                        {opt.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </div>
-    );
-}
 
 export default function VideoPlayer({
     type,
@@ -176,18 +100,6 @@ export default function VideoPlayer({
         : currentServer.show(id, currentSeason, currentEpisode);
 
     const seasons = tmdbData?.seasons || [];
-    const currentSeasonData = seasons.find((s: any) => s.season_number === currentSeason);
-    const episodeCount = currentSeasonData?.episode_count || 50;
-
-    const seasonOptions = seasons.map((s: any) => ({
-        value: s.season_number,
-        label: s.name || `Season ${s.season_number}`
-    }));
-
-    const episodeOptions = Array.from({ length: episodeCount }, (_, i) => ({
-        value: i + 1,
-        label: `Episode ${i + 1}`
-    }));
 
     return (
         <div className="flex flex-col w-full h-full">
@@ -212,14 +124,14 @@ export default function VideoPlayer({
             </div>
 
             {/* Control Bar */}
-            <div className="bg-[#050505] p-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-prime-card p-4 border-t border-gray-800 flex flex-wrap items-center justify-between gap-4">
                 {/* Server Selector */}
                 <div className="flex items-center space-x-2 overflow-x-auto scrollbar-hide py-1">
-                    <div className="flex items-center text-gray-500 mr-2">
-                        <Server className="h-3.5 w-3.5 mr-1.5" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap">Source</span>
+                    <div className="flex items-center text-gray-400 mr-2">
+                        <Server className="h-4 w-4 mr-1" />
+                        <span className="text-xs font-bold uppercase whitespace-nowrap">Source</span>
                     </div>
-                    <div className="flex items-center bg-white/5 rounded-full p-1 border border-white/5">
+                    <div className="flex items-center bg-prime-hover rounded-lg p-1">
                         {SERVERS.map((server, idx) => (
                             <button
                                 key={server.name}
@@ -227,9 +139,9 @@ export default function VideoPlayer({
                                     setSelectedServer(idx);
                                 }}
                                 className={cn(
-                                    "px-5 py-1.5 rounded-full text-[11px] font-black transition-all whitespace-nowrap tracking-wider",
+                                    "px-4 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap",
                                     selectedServer === idx
-                                        ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                                        ? "bg-accent text-black shadow-md"
                                         : "text-gray-400 hover:text-white"
                                 )}
                             >
@@ -240,43 +152,58 @@ export default function VideoPlayer({
 
                     <button
                         onClick={() => setPlayerKey(prev => prev + 1)}
-                        className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-full transition-all ml-1"
+                        className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                         title="Reload Player"
                     >
-                        <RefreshCcw className="h-3.5 w-3.5" />
+                        <RefreshCcw className="h-4 w-4" />
                     </button>
                 </div>
 
-                <div className="flex items-center gap-6">
-                    {/* TV Controls */}
-                    {type === "tv" && seasons.length > 0 && (
-                        <div className="flex items-center space-x-6">
-                            <CustomDropdown
-                                label="Season"
-                                value={currentSeason}
-                                options={seasonOptions}
-                                onChange={handleSeasonChange}
-                            />
-                            <CustomDropdown
-                                label="Episode"
-                                value={currentEpisode}
-                                options={episodeOptions}
-                                onChange={handleEpisodeChange}
-                            />
-                        </div>
-                    )}
-
+                <div className="flex items-center gap-4">
                     {/* Theater Mode Toggle */}
                     <button
                         onClick={() => setIsTheaterMode(!isTheaterMode)}
-                        className="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 text-gray-400 hover:text-white transition-all border border-white/10 active:scale-95 group"
+                        className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-prime-hover text-gray-300 hover:text-white transition-all border border-white/5"
                     >
                         {isTheaterMode ? (
-                            <><Minimize2 className="h-4 w-4 group-hover:text-accent transition-colors" /> <span className="text-[11px] font-black uppercase tracking-wider">Normal</span></>
+                            <><Minimize2 className="h-4 w-4" /> <span className="text-xs font-bold">Normal</span></>
                         ) : (
-                            <><Maximize2 className="h-4 w-4 group-hover:text-accent transition-colors" /> <span className="text-[11px] font-black uppercase tracking-wider">Theater</span></>
+                            <><Maximize2 className="h-4 w-4" /> <span className="text-xs font-bold">Theater</span></>
                         )}
                     </button>
+
+                    {/* TV Controls */}
+                    {type === "tv" && seasons.length > 0 && (
+                        <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2">
+                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Season</span>
+                                <Dropdown
+                                    value={currentSeason}
+                                    onChange={(val) => handleSeasonChange(Number(val))}
+                                    options={seasons.map((s: any) => ({
+                                        value: s.season_number,
+                                        label: s.name || `Season ${s.season_number}`
+                                    }))}
+                                    className="px-4 py-2 rounded-lg text-sm bg-[#1a242f] hover:bg-[#1a242f]/80 border-none shadow-none font-bold"
+                                    menuClassName="min-w-[150px] bottom-full mb-2 mt-0 top-auto origin-bottom-left"
+                                />
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Episode</span>
+                                <Dropdown
+                                    value={currentEpisode}
+                                    onChange={(val) => handleEpisodeChange(Number(val))}
+                                    options={Array.from(
+                                        { length: seasons.find((s: any) => s.season_number === currentSeason)?.episode_count || 50 },
+                                        (_, i) => ({ value: i + 1, label: `Episode ${i + 1}` })
+                                    )}
+                                    className="px-4 py-2 rounded-lg text-sm bg-[#1a242f] hover:bg-[#1a242f]/80 border-none shadow-none font-bold"
+                                    menuClassName="min-w-[150px] bottom-full mb-2 mt-0 top-auto origin-bottom-left"
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

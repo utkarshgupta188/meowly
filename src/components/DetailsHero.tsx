@@ -5,6 +5,8 @@ import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, X
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
+import Dropdown from "@/components/ui/Dropdown";
+
 interface DetailsHeroProps {
     tmdbData: any;
     type: "movie" | "tv";
@@ -19,13 +21,13 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     const [copied, setCopied] = useState(false);
     const [showTrailer, setShowTrailer] = useState(false);
 
-    const trailer = tmdbData.videos?.results?.find((v: any) => v.type === "Trailer" && v.site === "YouTube") || 
-                   tmdbData.videos?.results?.find((v: any) => v.type === "Teaser" && v.site === "YouTube");
+    const trailer = tmdbData.videos?.results?.find((v: any) => v.type === "Trailer" && v.site === "YouTube") ||
+        tmdbData.videos?.results?.find((v: any) => v.type === "Teaser" && v.site === "YouTube");
 
     useEffect(() => {
         if (!tmdbData?.id) return;
         setInWatchlist(isInWatchlist(tmdbData.id.toString(), type));
-        
+
         const handleUpdate = () => {
             setInWatchlist(isInWatchlist(tmdbData.id.toString(), type));
         };
@@ -81,9 +83,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     };
 
     return (
-        <div className="relative w-full min-h-screen flex items-center overflow-hidden bg-black pb-12">
+        <div className="relative w-full min-h-screen flex items-center bg-black pb-12">
             {/* Background Blur */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 {backdropUrl && (
                     <img
                         src={backdropUrl}
@@ -94,7 +96,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
             </div>
             <div className="relative z-40 mt-0 md:-mt-10 w-full px-6 md:px-12 max-w-7xl mx-auto pt-40 md:pt-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {/* Left Side: Info */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
@@ -108,16 +110,15 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             className="h-24 md:h-32 lg:h-40 w-full flex items-start"
                         >
                             <img
-                                src={`${TMDB_CONFIG.imageBase}/original${
-                                    tmdbData.images.logos.find((l: any) => l.iso_639_1 === 'en')?.file_path || 
+                                src={`${TMDB_CONFIG.imageBase}/original${tmdbData.images.logos.find((l: any) => l.iso_639_1 === 'en')?.file_path ||
                                     tmdbData.images.logos[0].file_path
-                                }`}
+                                    }`}
                                 alt={tmdbData.title || tmdbData.name}
                                 className="h-full object-contain object-left drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
                             />
                         </motion.div>
                     ) : (
-                        <motion.h1 
+                        <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
@@ -127,7 +128,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         </motion.h1>
                     )}
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4 }}
@@ -149,7 +150,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         <AudioWaveform className="w-5 h-5 text-gray-400" />
                     </motion.div>
 
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.6 }}
@@ -158,7 +159,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         {tmdbData.overview}
                     </motion.p>
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8 }}
@@ -192,8 +193,8 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                 onClick={handleWatchlistToggle}
                                 className={cn(
                                     "w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
-                                    inWatchlist 
-                                        ? "bg-accent border-accent text-black shadow-lg shadow-accent/20" 
+                                    inWatchlist
+                                        ? "bg-accent border-accent text-black shadow-lg shadow-accent/20"
                                         : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                 )}
                                 title={inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
@@ -208,9 +209,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     copied ? "bg-green-600 border-green-500 text-white" : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                 )}
                                 title="Share"
-                             >
-                                 {copied ? <Check className="w-7 h-7" /> : <Share2 className="w-7 h-7" />}
-                             </button>
+                            >
+                                {copied ? <Check className="w-7 h-7" /> : <Share2 className="w-7 h-7" />}
+                            </button>
 
                             {tmdbData.homepage && (
                                 <a
@@ -241,27 +242,25 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                     </motion.div>
 
                     {type === 'tv' && (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1 }}
-                            className="relative inline-block pt-4"
+                            className="pt-4"
                         >
-                            <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-bold flex items-center space-x-3 transition-colors border border-white/10 shadow-lg">
-                                <span>{seasonName}</span>
-                                <ChevronDown className="w-5 h-5" />
-                            </button>
-                            <select
-                                onChange={(e) => onSeasonChange(Number(e.target.value))}
+                            <Dropdown
                                 value={currentSeason}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            >
-                                {tmdbData.seasons?.filter((s: any) => s.season_number > 0).map((s: any) => (
-                                    <option key={s.id} value={s.season_number} className="bg-prime-dark text-white">
-                                        {s.name}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={(val) => onSeasonChange(Number(val))}
+                                options={tmdbData.seasons
+                                    ?.filter((s: any) => s.season_number > 0)
+                                    .map((s: any) => ({
+                                        value: s.season_number,
+                                        label: s.name || `Season ${s.season_number}`
+                                    })) || []
+                                }
+                                className="bg-white/10 hover:bg-white/20 border-white/10 shadow-lg px-7 py-3.5 text-base"
+                                menuClassName="min-w-[200px]"
+                            />
                         </motion.div>
                     )}
                 </motion.div>
@@ -290,18 +289,18 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
             {/* Trailer Modal */}
             {showTrailer && trailer && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         onClick={() => setShowTrailer(false)}
                         className="absolute inset-0 bg-black/90 backdrop-blur-sm"
                     />
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10"
                     >
-                        <button 
+                        <button
                             onClick={() => setShowTrailer(false)}
                             className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors backdrop-blur-md"
                         >

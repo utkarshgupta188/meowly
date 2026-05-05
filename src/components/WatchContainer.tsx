@@ -122,7 +122,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             </button>
 
             {/* Hero / Player Section */}
-            <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
+            <div className={`relative w-full z-40 transition-all duration-700 ${isPlaying ? "md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
 
                 {!isPlaying ? (
                     <DetailsHero
@@ -441,11 +441,11 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                         {/* Production Companies */}
                                         {tmdbData.production_companies?.filter((c: any) => c.logo_path).slice(0, 4).map((company: any) => (
                                             <div key={company.id} className="group relative flex items-center gap-3">
-                                                <div className="bg-white/10 p-2.5 rounded-xl h-12 flex items-center justify-center shadow-lg group-hover:bg-white/20 transition-all hover:scale-105 border border-white/10">
+                                                <div className="bg-white/90 p-2.5 rounded-xl h-12 flex items-center justify-center shadow-lg group-hover:bg-white transition-all hover:scale-105 border border-white/20">
                                                     <img
                                                         src={`${TMDB_CONFIG.imageBase}/w200${company.logo_path}`}
                                                         alt={company.name}
-                                                        className="h-full object-contain max-w-[100px] brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity"
+                                                        className="h-full object-contain max-w-[100px] transition-all duration-300"
                                                     />
                                                 </div>
                                                 <div className="flex flex-col">
