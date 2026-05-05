@@ -100,15 +100,33 @@ const Hero = ({ movies }: HeroProps) => {
                     {/* Content */}
                     <div className="absolute inset-0 flex flex-col justify-center md:justify-center px-6 md:px-16 lg:px-24 pt-20 pb-16 md:pb-0 justify-end">
                         <div className="max-w-3xl space-y-6 z-10 pl-2">
-                            {/* Title */}
-                            <motion.h1
-                                initial={{ opacity: 0, x: -30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.6, delay: 0.2 }}
-                                className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none drop-shadow-2xl"
-                            >
-                                {heroMovies[current].title || heroMovies[current].name}
-                            </motion.h1>
+                            {/* Title / Logo */}
+                            {heroMovies[current].logos && (heroMovies[current].logos as any[]).length > 0 ? (
+                                <motion.div
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.2 }}
+                                    className="h-24 md:h-32 lg:h-40 w-full flex items-start"
+                                >
+                                    <img
+                                        src={`${TMDB_CONFIG.imageBase}/original${
+                                            (heroMovies[current].logos as any[]).find((l: any) => l.iso_639_1 === 'en')?.file_path || 
+                                            (heroMovies[current].logos as any[])[0].file_path
+                                        }`}
+                                        alt={heroMovies[current].title || heroMovies[current].name}
+                                        className="h-full object-contain object-left drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                                    />
+                                </motion.div>
+                            ) : (
+                                <motion.h1
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.2 }}
+                                    className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none drop-shadow-2xl"
+                                >
+                                    {heroMovies[current].title || heroMovies[current].name}
+                                </motion.h1>
+                            )}
 
                             {/* Metadata Row */}
                             <motion.div

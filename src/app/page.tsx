@@ -17,18 +17,27 @@ export default async function Home() {
     tmdb.getPopular("movie"),
     tmdb.getPopular("tv"),
     tmdb.getTopRated("movie"),
-    tmdb.getDiscover("movie", "28"), // Action
-    tmdb.getDiscover("movie", "35"), // Comedy
+    tmdb.getDiscover("movie", { genreId: "28" }), // Action
+    tmdb.getDiscover("movie", { genreId: "35" }), // Comedy
   ]);
 
-  // Use the first trending item for the Hero
-  const heroMovie = trending[0];
+  // Fetch logos for the top 10 for the Hero
+  const heroMovies = await Promise.all(
+    trending.slice(0, 10).map(async (m) => {
+      try {
+        const details = await tmdb.getDetails(m.media_type as any, m.id.toString());
+        return { ...m, logos: details.images?.logos || [] };
+      } catch (e) {
+        return m;
+      }
+    })
+  );
 
   return (
     <main className="min-h-screen pb-20 overflow-x-hidden">
       <Navbar />
 
-      {trending && trending.length > 0 && <Hero movies={trending} />}
+      {heroMovies && heroMovies.length > 0 && <Hero movies={heroMovies as any} />}
 
       <div className="relative z-40 mt-4 md:-mt-10 space-y-12 transition-all duration-500">
         <RecentlyPlayedRow />

@@ -100,14 +100,32 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="space-y-6"
                 >
-                    <motion.h1 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter"
-                    >
-                        {tmdbData.title || tmdbData.name}
-                    </motion.h1>
+                    {tmdbData.images?.logos?.length > 0 ? (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="h-24 md:h-32 lg:h-40 w-full flex items-start"
+                        >
+                            <img
+                                src={`${TMDB_CONFIG.imageBase}/original${
+                                    tmdbData.images.logos.find((l: any) => l.iso_639_1 === 'en')?.file_path || 
+                                    tmdbData.images.logos[0].file_path
+                                }`}
+                                alt={tmdbData.title || tmdbData.name}
+                                className="h-full object-contain object-left drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                            />
+                        </motion.div>
+                    ) : (
+                        <motion.h1 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter"
+                        >
+                            {tmdbData.title || tmdbData.name}
+                        </motion.h1>
+                    )}
 
                     <motion.div 
                         initial={{ opacity: 0 }}

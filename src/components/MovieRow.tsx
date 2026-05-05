@@ -12,10 +12,11 @@ interface MovieRowProps {
     title: string;
     movies: Movie[];
     className?: string;
+    cardClassName?: string;
     isResume?: boolean;
 }
 
-const MovieRow = ({ title, movies, className, isResume = false }: MovieRowProps) => {
+const MovieRow = ({ title, movies, className, cardClassName, isResume = false }: MovieRowProps) => {
     const rowRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: "left" | "right") => {

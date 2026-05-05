@@ -84,6 +84,7 @@ export type Movie = {
     media_type: "movie" | "tv";
     season?: number;
     episode?: number;
+    logos?: any[];
 };
 
 export const tmdb = {
@@ -100,7 +101,7 @@ export const tmdb = {
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
-        const data = await fetchTMDB(`/${type}/${id}`, { append_to_response: "videos,credits,recommendations,release_dates,content_ratings" });
+        const data = await fetchTMDB(`/${type}/${id}`, { append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images" });
         return data || {};
     },
     search: async (query: string): Promise<Movie[]> => {
@@ -111,9 +112,18 @@ export const tmdb = {
         const data = await fetchTMDB(`/genre/${type}/list`);
         return data?.genres || [];
     },
-    getDiscover: async (type: "movie" | "tv", genreId?: string): Promise<Movie[]> => {
-        const params: Record<string, string> = {};
-        if (genreId) params.with_genres = genreId;
+    getDiscover: async (type: "movie" | "tv", options: { genreId?: string, year?: string, sortBy?: string } = {}): Promise<Movie[]> => {
+        const params: Record<string, string> = {
+            sort_by: options.sortBy || "popularity.desc",
+            include_adult: "false",
+            "vote_count.gte": "100"
+        };
+        if (options.genreId) params.with_genres = options.genreId;
+        if (options.year) {
+            const key = type === "movie" ? "primary_release_year" : "first_air_date_year";
+            params[key] = options.year;
+        }
+        
         const data = await fetchTMDB(`/discover/${type}`, params);
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
