@@ -14,9 +14,10 @@ interface MovieRowProps {
     className?: string;
     cardClassName?: string;
     isResume?: boolean;
+    onRemove?: (id: string, type: string) => void;
 }
 
-const MovieRow = ({ title, movies, className, cardClassName, isResume = false }: MovieRowProps) => {
+const MovieRow = ({ title, movies, className, cardClassName, isResume = false, onRemove }: MovieRowProps) => {
     const rowRef = useRef<HTMLDivElement>(null);
 
     const scroll = (direction: "left" | "right") => {
@@ -45,7 +46,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false }:
                 </Link>
             </div>
 
-            <div className="relative group/nav">
+            <div className="relative group/nav" style={{ overflow: 'clip', overflowClipMargin: '40px' }}>
                 <button
                     onClick={() => scroll("left")}
                     className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-black/60 rounded-full opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center justify-center hover:bg-black/80 cursor-pointer -ml-6"
@@ -55,7 +56,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false }:
 
                 <div
                     ref={rowRef}
-                    className="flex space-x-4 overflow-x-scroll scrollbar-hide px-4 py-4 scroll-smooth"
+                    className="flex space-x-4 overflow-x-auto overflow-y-visible scrollbar-hide px-4 py-8 scroll-smooth"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {movies.map((movie) => (
@@ -64,6 +65,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false }:
                             movie={movie} 
                             isResume={isResume}
                             className={cardClassName}
+                            onRemove={onRemove}
                         />
                     ))}
                 </div>

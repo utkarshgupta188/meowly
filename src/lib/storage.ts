@@ -58,6 +58,23 @@ export function getRecentlyPlayed(): RecentItem[] {
     }
 }
 
+export function removeFromRecentlyPlayed(id: string, type: string) {
+    if (typeof window === "undefined") return;
+
+    try {
+        const stored = localStorage.getItem(RECENTLY_PLAYED_KEY);
+        if (!stored) return;
+
+        let items: RecentItem[] = JSON.parse(stored);
+        items = items.filter(i => !(i.id === id && i.type === type));
+
+        localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(items));
+        window.dispatchEvent(new Event("recentlyPlayedUpdated"));
+    } catch (error) {
+        // Silently fail
+    }
+}
+
 // Watchlist Functions
 export function addToWatchlist(item: RecentItem) {
     if (typeof window === "undefined") return;

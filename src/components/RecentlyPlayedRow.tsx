@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getRecentlyPlayed, RecentItem } from "@/lib/storage";
+import { getRecentlyPlayed, removeFromRecentlyPlayed, RecentItem } from "@/lib/storage";
 import MovieRow from "./MovieRow";
 import { Movie } from "@/lib/tmdb";
 import { motion } from "framer-motion";
@@ -21,6 +21,10 @@ const RecentlyPlayedRow = () => {
         window.addEventListener("recentlyPlayedUpdated", loadRecent);
         return () => window.removeEventListener("recentlyPlayedUpdated", loadRecent);
     }, []);
+
+    const handleRemove = (id: string, type: string) => {
+        removeFromRecentlyPlayed(id, type);
+    };
 
     if (recentItems.length === 0) return null;
 
@@ -47,7 +51,7 @@ const RecentlyPlayedRow = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
         >
-            <MovieRow title="Recently Played" movies={movies} isResume={true} />
+            <MovieRow title="Recently Played" movies={movies} isResume={true} onRemove={handleRemove} />
         </motion.div>
     );
 };

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Play, Plus, Check, Info } from "lucide-react";
+import { Play, Plus, Check, Info, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import { cn } from "@/lib/utils";
@@ -14,9 +14,10 @@ interface MovieCardProps {
     className?: string;
     isFluid?: boolean;
     isResume?: boolean;
+    onRemove?: (id: string, type: string) => void;
 }
 
-const MovieCard = ({ movie, className, isFluid = false, isResume = false }: MovieCardProps) => {
+const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemove }: MovieCardProps) => {
     const router = useRouter();
     const [inWatchlist, setInWatchlist] = useState(false);
 
@@ -79,6 +80,12 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false }: Movi
         router.push(isResume ? detailsUrl : watchUrl);
     };
 
+    const handleRemoveClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onRemove?.(movie.id.toString(), movie.media_type || 'movie');
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -98,6 +105,16 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false }: Movi
             onClick={handleCardClick}
         >
             <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-white/5 border border-white/10 group-hover:border-white/30 transition-all duration-300 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+                {/* Remove button for recently played */}
+                {isResume && onRemove && (
+                    <button
+                        onClick={handleRemoveClick}
+                        className="absolute top-2 right-2 z-40 w-7 h-7 bg-black/70 hover:bg-red-600 backdrop-blur-md rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 border border-white/10 hover:border-red-500"
+                        title="Remove from recently played"
+                    >
+                        <X className="h-3.5 w-3.5" />
+                    </button>
+                )}
                 {movie.poster_path ? (
                     <img
                         src={`${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`}
