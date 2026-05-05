@@ -34,7 +34,7 @@ export default async function TVPage({ searchParams }: TVPageProps) {
                     <h1 className="text-4xl font-black text-white mb-8">TV Shows</h1>
                     <FilterBar type="tv" genres={genres} />
                     <div className="mt-8">
-                        <SearchGrid movies={filteredResults} />
+                        <SearchGrid results={filteredResults} />
                     </div>
                 </div>
             </main>

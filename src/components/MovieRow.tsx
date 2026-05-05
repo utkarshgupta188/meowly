@@ -59,7 +59,12 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false }:
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {movies.map((movie) => (
-                        <MovieCard key={`${movie.id}-${movie.media_type}`} movie={movie} isResume={isResume} />
+                        <MovieCard 
+                            key={`${movie.id}-${movie.media_type}`} 
+                            movie={movie} 
+                            isResume={isResume}
+                            className={cardClassName}
+                        />
                     ))}
                 </div>
 

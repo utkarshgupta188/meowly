@@ -101,7 +101,7 @@ export const tmdb = {
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
-        const data = await fetchTMDB(`/${type}/${id}`, { append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images" });
+        const data = await fetchTMDB(`/${type}/${id}`, { append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,watch/providers" });
         return data || {};
     },
     search: async (query: string): Promise<Movie[]> => {
@@ -132,7 +132,7 @@ export const tmdb = {
         return data || {};
     },
     getPersonDetails: async (id: string) => {
-        const data = await fetchTMDB(`/person/${id}`);
+        const data = await fetchTMDB(`/person/${id}`, { append_to_response: "external_ids,images" });
         return data || {};
     },
     getPersonCredits: async (id: string) => {

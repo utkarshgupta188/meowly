@@ -34,7 +34,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
                     <h1 className="text-4xl font-black text-white mb-8">Movies</h1>
                     <FilterBar type="movie" genres={genres} />
                     <div className="mt-8">
-                        <SearchGrid movies={filteredResults} />
+                        <SearchGrid results={filteredResults} />
                     </div>
                 </div>
             </main>

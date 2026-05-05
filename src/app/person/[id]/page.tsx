@@ -40,12 +40,15 @@ export default async function PersonPage({ params }: PersonPageProps) {
         : null;
 
     return (
-        <PersonDetailsClient 
-            person={person}
-            credits={credits}
-            knownFor={knownFor}
-            backdropUrl={backdropUrl}
-            profileUrl={profileUrl}
-        />
+        <main className="min-h-screen bg-black pb-20">
+            <Navbar />
+            <PersonDetailsClient 
+                person={person}
+                credits={credits}
+                knownFor={knownFor}
+                backdropUrl={backdropUrl}
+                profileUrl={profileUrl}
+            />
+        </main>
     );
 }

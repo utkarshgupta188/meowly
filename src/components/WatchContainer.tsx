@@ -6,7 +6,7 @@ import { Movie } from "@/lib/tmdb";
 import EpisodeList from "@/components/EpisodeList";
 import MovieRow from "@/components/MovieRow";
 import DetailsHero from "@/components/DetailsHero";
-import { Star, Calendar, Clock, ArrowLeft, User } from "lucide-react";
+import { Star, Calendar, Clock, ArrowLeft, User, Play, Youtube } from "lucide-react";
 import { getSeasonDetailsAction } from "@/app/actions";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,7 +24,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [season, setSeason] = useState(initialSeason);
     const [episode, setEpisode] = useState(initialEpisode);
     const [isPlaying, setIsPlaying] = useState(startPlaying);
-    const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details">(type === "movie" ? "details" : "episodes");
+    const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips">(type === "movie" ? "details" : "episodes");
     const [showAllCast, setShowAllCast] = useState(false);
 
     // Determine current season data
@@ -127,6 +127,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                 <div className="flex items-center space-x-2 px-4 md:px-12">
                     {type === 'tv' && <TabButton name="episodes" label="Episodes" />}
                     <TabButton name="related" label="Related" />
+                    {tmdbData.videos?.results?.length > 0 && <TabButton name="clips" label="Clips" />}
                     <TabButton name="details" label="Details" />
                 </div>
             </div>
@@ -172,6 +173,51 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 title="Similar Content"
                                 movies={tmdbData.similar?.results?.slice(0, 10).map((r: any) => ({ ...r, media_type: type })) || []}
                             />
+                        </motion.div>
+                    )}
+
+                    {activeTab === "clips" && (
+                        <motion.div
+                            key="clips"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4 }}
+                            className="space-y-8"
+                        >
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {tmdbData.videos?.results?.map((video: any) => (
+                                    <div 
+                                        key={video.id} 
+                                        className="group relative bg-prime-card/40 rounded-2xl overflow-hidden border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-pointer"
+                                        onClick={() => window.open(`https://www.youtube.com/watch?v=${video.key}`, '_blank')}
+                                    >
+                                        <div className="aspect-video relative">
+                                            <img 
+                                                src={`https://img.youtube.com/vi/${video.key}/maxresdefault.jpg`} 
+                                                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                                alt={video.name}
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
+                                                }}
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                                <div className="w-12 h-12 rounded-full bg-accent/90 flex items-center justify-center scale-90 group-hover:scale-100 transition-transform shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+                                                    <Play className="w-6 h-6 text-black fill-current ml-1" />
+                                                </div>
+                                            </div>
+                                            <div className="absolute top-3 right-3 bg-red-600 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1 shadow-lg">
+                                                <Youtube className="w-3 h-3" />
+                                                {video.type}
+                                            </div>
+                                        </div>
+                                        <div className="p-4 bg-gradient-to-t from-black/80 to-transparent">
+                                            <h4 className="text-white font-bold line-clamp-1 group-hover:text-accent transition-colors">{video.name}</h4>
+                                            <p className="text-gray-400 text-xs mt-1 uppercase tracking-widest font-black">{video.site}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </motion.div>
                     )}
 
