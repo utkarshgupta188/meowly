@@ -141,5 +141,9 @@ export const tmdb = {
     getPersonCredits: async (id: string) => {
         const data = await fetchTMDB(`/person/${id}/combined_credits`);
         return data || {};
+    },
+    getCollection: async (id: string) => {
+        const data = await fetchTMDB(`/collection/${id}`);
+        return data || {};
     }
 };

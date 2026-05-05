@@ -398,9 +398,11 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     <div className="relative h-full flex flex-col justify-center p-8 md:p-12 space-y-4">
                                         <span className="text-accent text-[10px] font-black uppercase tracking-[0.3em]">Part of the Franchise</span>
                                         <h3 className="text-3xl md:text-5xl font-black text-white">{tmdbData.belongs_to_collection.name}</h3>
-                                        <button className="bg-white text-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest w-fit hover:scale-105 transition-transform active:scale-95 shadow-xl">
-                                            View Collection
-                                        </button>
+                                        <Link href={`/collection/${tmdbData.belongs_to_collection.id}`}>
+                                            <button className="bg-white text-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest w-fit hover:scale-105 transition-transform active:scale-95 shadow-xl">
+                                                View Collection
+                                            </button>
+                                        </Link>
                                     </div>
                                 </div>
                             )}

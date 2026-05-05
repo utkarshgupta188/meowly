@@ -85,9 +85,9 @@ const Navbar = () => {
     return (
         <nav
             className={cn(
-                "fixed left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
+                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
                 isScrolled ? "bg-black/60 shadow-2xl" : "bg-black/20",
-                isVisible ? "top-4" : "-top-24"
+                !isVisible && "-top-24"
             )}
         >
             <div className="flex items-center justify-between h-14">
