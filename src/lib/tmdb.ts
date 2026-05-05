@@ -101,7 +101,7 @@ export const tmdb = {
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
-        const data = await fetchTMDB(`/${type}/${id}`, { append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,watch/providers" });
+        const data = await fetchTMDB(`/${type}/${id}`, { append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords" });
         return data || {};
     },
     search: async (query: string): Promise<Movie[]> => {

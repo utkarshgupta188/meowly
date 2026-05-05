@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import VideoPlayer from "@/components/VideoPlayer";
-import { Movie } from "@/lib/tmdb";
+import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import EpisodeList from "@/components/EpisodeList";
 import MovieRow from "@/components/MovieRow";
 import DetailsHero from "@/components/DetailsHero";
@@ -251,6 +251,27 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 </div>
                             </div>
 
+                            {/* Production Studios */}
+                            {tmdbData.production_companies?.length > 0 && (
+                                <div className="bg-prime-card/40 p-8 rounded-3xl border border-white/5 shadow-xl backdrop-blur-md">
+                                    <h3 className="text-gray-500 text-xs uppercase font-black tracking-widest mb-6">Production</h3>
+                                    <div className="flex flex-wrap gap-6 items-center">
+                                        {tmdbData.production_companies.filter((c: any) => c.logo_path).slice(0, 4).map((company: any) => (
+                                            <div key={company.id} className="group relative flex items-center gap-3">
+                                                <div className="bg-white/90 p-2 rounded-lg h-10 flex items-center justify-center shadow-md group-hover:bg-white transition-colors">
+                                                    <img 
+                                                        src={`${TMDB_CONFIG.imageBase}/w200${company.logo_path}`} 
+                                                        alt={company.name}
+                                                        className="h-full object-contain max-w-[80px]"
+                                                    />
+                                                </div>
+                                                <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors hidden md:block">{company.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Cast & Crew */}
                             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                                 <div className="lg:col-span-3 space-y-8">
@@ -332,6 +353,23 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Keywords */}
+                            {(type === 'movie' ? tmdbData.keywords?.keywords : tmdbData.keywords?.results)?.length > 0 && (
+                                <div className="bg-prime-card/40 p-8 rounded-3xl border border-white/5 shadow-xl backdrop-blur-md">
+                                    <h3 className="text-gray-500 text-xs uppercase font-black tracking-widest mb-6">Tags</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {(type === 'movie' ? tmdbData.keywords?.keywords : tmdbData.keywords?.results).map((keyword: any) => (
+                                            <span 
+                                                key={keyword.id} 
+                                                className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold text-gray-400 hover:text-white transition-all cursor-default border border-white/5"
+                                            >
+                                                #{keyword.name}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>
