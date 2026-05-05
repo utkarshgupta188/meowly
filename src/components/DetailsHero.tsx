@@ -208,9 +208,35 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     copied ? "bg-green-600 border-green-500 text-white" : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                 )}
                                 title="Share"
-                            >
-                                {copied ? <Check className="w-7 h-7" /> : <Share2 className="w-7 h-7" />}
-                            </button>
+                             >
+                                 {copied ? <Check className="w-7 h-7" /> : <Share2 className="w-7 h-7" />}
+                             </button>
+
+                            {tmdbData.homepage && (
+                                <a
+                                    href={tmdbData.homepage}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
+                                    title="Official Website"
+                                >
+                                    <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                                    </svg>
+                                </a>
+                            )}
+
+                            {tmdbData.imdb_id && (
+                                <a
+                                    href={`https://www.imdb.com/title/${tmdbData.imdb_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-yellow-500/10 hover:bg-yellow-500/20 border-yellow-500/20 hover:border-yellow-500/40 text-yellow-500 font-black text-xs"
+                                    title="IMDb"
+                                >
+                                    IMDb
+                                </a>
+                            )}
                         </div>
                     </motion.div>
 

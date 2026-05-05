@@ -15,7 +15,7 @@ export default async function GenrePage({
     const genreName = resolvedSearchParams.name || "Genre";
     const type = resolvedSearchParams.type || "movie";
 
-    const movies = await tmdb.getDiscover(type, genreId);
+    const movies = await tmdb.getDiscover(type, { genreId });
 
     return (
         <main className="min-h-screen bg-black pt-40 md:pt-32 pb-20 overflow-x-hidden">

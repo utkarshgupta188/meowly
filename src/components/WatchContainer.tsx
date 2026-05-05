@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 import VideoPlayer from "@/components/VideoPlayer";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import EpisodeList from "@/components/EpisodeList";
@@ -24,8 +25,24 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [season, setSeason] = useState(initialSeason);
     const [episode, setEpisode] = useState(initialEpisode);
     const [isPlaying, setIsPlaying] = useState(startPlaying);
-    const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips">(type === "movie" ? "details" : "episodes");
+    const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips" | "photos">(type === "movie" ? "details" : "episodes");
     const [showAllCast, setShowAllCast] = useState(false);
+    const [lastScrollY, setLastScrollY] = useState(0);
+    const [showNavbar, setShowNavbar] = useState(true);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                setShowNavbar(false);
+            } else {
+                setShowNavbar(true);
+            }
+            setLastScrollY(currentScrollY);
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [lastScrollY]);
 
     // Determine current season data
     const [seasonData, setSeasonData] = useState<any>(null);
@@ -77,19 +94,25 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     // Playback state
 
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             className="flex flex-col"
         >
             {/* Go Back Button */}
-            <button 
+            <motion.button
+                initial={false}
+                animate={{
+                    y: showNavbar ? 0 : -100,
+                    opacity: showNavbar ? 1 : 0
+                }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
                 onClick={() => window.history.back()}
                 className="fixed top-8 left-6 md:left-12 z-[60] p-3 glass-pill hover:bg-white/10 transition-all group"
             >
                 <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
-            </button>
+            </motion.button>
 
             {/* Hero / Player Section */}
             <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "pt-36 md:pt-24 md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
@@ -123,11 +146,15 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             </div>
 
             {/* Tabs Navigation */}
-            <div className="bg-prime-dark/95 backdrop-blur-sm sticky top-[60px] z-30 border-b border-gray-800 shadow-md">
+            <div className={cn(
+                "bg-prime-dark/95 backdrop-blur-sm sticky z-30 border-b border-gray-800 shadow-md transition-all duration-500",
+                showNavbar ? "top-[76px]" : "top-0"
+            )}>
                 <div className="flex items-center space-x-2 px-4 md:px-12">
                     {type === 'tv' && <TabButton name="episodes" label="Episodes" />}
                     <TabButton name="related" label="Related" />
                     {tmdbData.videos?.results?.length > 0 && <TabButton name="clips" label="Clips" />}
+                    {(tmdbData.images?.backdrops?.length > 0 || tmdbData.images?.posters?.length > 0) && <TabButton name="photos" label="Photos" />}
                     <TabButton name="details" label="Details" />
                 </div>
             </div>
@@ -185,16 +212,23 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                             transition={{ duration: 0.4 }}
                             className="space-y-8"
                         >
+                            <div className="flex items-center justify-between mb-8">
+                                <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                                    <Youtube className="w-8 h-8 text-red-600" />
+                                    Trailers & Bonus Clips
+                                </h3>
+                                <span className="text-gray-500 text-xs font-black uppercase tracking-widest">{tmdbData.videos?.results?.length} Videos</span>
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {tmdbData.videos?.results?.map((video: any) => (
-                                    <div 
-                                        key={video.id} 
+                                    <div
+                                        key={video.id}
                                         className="group relative bg-prime-card/40 rounded-2xl overflow-hidden border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-pointer"
                                         onClick={() => window.open(`https://www.youtube.com/watch?v=${video.key}`, '_blank')}
                                     >
                                         <div className="aspect-video relative">
-                                            <img 
-                                                src={`https://img.youtube.com/vi/${video.key}/maxresdefault.jpg`} 
+                                            <img
+                                                src={`https://img.youtube.com/vi/${video.key}/maxresdefault.jpg`}
                                                 className="w-full h-full object-cover transition-transform group-hover:scale-105"
                                                 alt={video.name}
                                                 onError={(e) => {
@@ -221,6 +255,68 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                         </motion.div>
                     )}
 
+                    {activeTab === "photos" && (
+                        <motion.div
+                            key="photos"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4 }}
+                            className="space-y-12"
+                        >
+                            {/* Backdrops Gallery */}
+                            {tmdbData.images?.backdrops?.length > 0 && (
+                                <div className="space-y-6">
+                                    <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                                        Backdrops
+                                        <span className="text-gray-500 text-xs font-black uppercase tracking-widest">{tmdbData.images.backdrops.length}</span>
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {tmdbData.images.backdrops.map((image: any, idx: number) => (
+                                            <div
+                                                key={idx}
+                                                className="relative aspect-video rounded-2xl overflow-hidden group border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-zoom-in"
+                                                onClick={() => window.open(`${TMDB_CONFIG.imageBase}/original${image.file_path}`, '_blank')}
+                                            >
+                                                <img
+                                                    src={`${TMDB_CONFIG.imageBase}/w780${image.file_path}`}
+                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                    alt={`Backdrop ${idx + 1}`}
+                                                />
+                                                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Posters Gallery */}
+                            {tmdbData.images?.posters?.length > 0 && (
+                                <div className="space-y-6 pt-12">
+                                    <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                                        Posters
+                                        <span className="text-gray-500 text-xs font-black uppercase tracking-widest">{tmdbData.images.posters.length}</span>
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                                        {tmdbData.images.posters.slice(0, 18).map((image: any, idx: number) => (
+                                            <div
+                                                key={idx}
+                                                className="relative aspect-[2/3] rounded-xl overflow-hidden group border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-zoom-in"
+                                                onClick={() => window.open(`${TMDB_CONFIG.imageBase}/original${image.file_path}`, '_blank')}
+                                            >
+                                                <img
+                                                    src={`${TMDB_CONFIG.imageBase}/w500${image.file_path}`}
+                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                    alt={`Poster ${idx + 1}`}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
+
                     {activeTab === "details" && (
                         <motion.div
                             key="details"
@@ -236,36 +332,117 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 <p className="text-gray-300 text-lg leading-relaxed font-light">{tmdbData.overview}</p>
 
                                 <div className="flex flex-wrap gap-4 pt-4">
-                                    <div className="bg-gray-800/50 p-4 rounded-lg flex-1 min-w-[200px]">
-                                        <span className="text-gray-500 text-xs uppercase font-bold block mb-1">Genres</span>
-                                        <span className="text-white font-medium">{tmdbData.genres?.map((g: any) => g.name).join(", ")}</span>
+                                    <div className="bg-gray-800/30 p-4 rounded-2xl flex-1 min-w-[200px] border border-white/5">
+                                        <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Genres</span>
+                                        <span className="text-white font-bold">{tmdbData.genres?.map((g: any) => g.name).join(", ")}</span>
                                     </div>
-                                    <div className="bg-gray-800/50 p-4 rounded-lg flex-1 min-w-[200px]">
-                                        <span className="text-gray-500 text-xs uppercase font-bold block mb-1">Status</span>
-                                        <span className="text-white font-medium">{tmdbData.status}</span>
+                                    <div className="bg-gray-800/30 p-4 rounded-2xl flex-1 min-w-[200px] border border-white/5">
+                                        <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Status</span>
+                                        <span className="text-white font-bold">{tmdbData.status}</span>
                                     </div>
-                                    <div className="bg-gray-800/50 p-4 rounded-lg flex-1 min-w-[200px]">
-                                        <span className="text-gray-500 text-xs uppercase font-bold block mb-1">Release Date</span>
-                                        <span className="text-white font-medium">{tmdbData.release_date || tmdbData.first_air_date}</span>
+                                    <div className="bg-gray-800/30 p-4 rounded-2xl flex-1 min-w-[200px] border border-white/5">
+                                        <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Release Date</span>
+                                        <span className="text-white font-bold">{tmdbData.release_date || tmdbData.first_air_date}</span>
                                     </div>
+                                    {tmdbData.original_language && (
+                                        <div className="bg-gray-800/30 p-4 rounded-2xl flex-1 min-w-[150px] border border-white/5">
+                                            <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Language</span>
+                                            <span className="text-white font-bold uppercase">{tmdbData.original_language}</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {tmdbData.runtime > 0 && (
+                                        <div className="bg-gray-800/20 p-4 rounded-2xl border border-white/5">
+                                            <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Duration</span>
+                                            <p className="text-xl font-black text-white">{tmdbData.runtime} min</p>
+                                        </div>
+                                    )}
+                                    {tmdbData.vote_average > 0 && (
+                                        <div className="bg-gray-800/20 p-4 rounded-2xl border border-white/5">
+                                            <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">TMDB Rating</span>
+                                            <p className="text-xl font-black text-accent flex items-center gap-2">
+                                                <Star className="w-5 h-5 fill-current" />
+                                                {tmdbData.vote_average.toFixed(1)}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {type === 'tv' && tmdbData.number_of_seasons && (
+                                        <div className="bg-gray-800/20 p-4 rounded-2xl border border-white/5">
+                                            <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Seasons</span>
+                                            <p className="text-xl font-black text-white">{tmdbData.number_of_seasons}</p>
+                                        </div>
+                                    )}
+                                    {type === 'tv' && tmdbData.number_of_episodes && (
+                                        <div className="bg-gray-800/20 p-4 rounded-2xl border border-white/5">
+                                            <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">Episodes</span>
+                                            <p className="text-xl font-black text-white">{tmdbData.number_of_episodes}</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
-                            {/* Production Studios */}
-                            {tmdbData.production_companies?.length > 0 && (
-                                <div className="bg-prime-card/40 p-8 rounded-3xl border border-white/5 shadow-xl backdrop-blur-md">
-                                    <h3 className="text-gray-500 text-xs uppercase font-black tracking-widest mb-6">Production</h3>
-                                    <div className="flex flex-wrap gap-6 items-center">
-                                        {tmdbData.production_companies.filter((c: any) => c.logo_path).slice(0, 4).map((company: any) => (
-                                            <div key={company.id} className="group relative flex items-center gap-3">
-                                                <div className="bg-white/90 p-2 rounded-lg h-10 flex items-center justify-center shadow-md group-hover:bg-white transition-colors">
-                                                    <img 
-                                                        src={`${TMDB_CONFIG.imageBase}/w200${company.logo_path}`} 
-                                                        alt={company.name}
-                                                        className="h-full object-contain max-w-[80px]"
+
+                            {/* Franchise / Collection */}
+                            {tmdbData.belongs_to_collection && (
+                                <div className="relative h-64 md:h-80 w-full rounded-[2rem] overflow-hidden group shadow-2xl">
+                                    <div className="absolute inset-0">
+                                        <img
+                                            src={`${TMDB_CONFIG.imageBase}/original${tmdbData.belongs_to_collection.backdrop_path}`}
+                                            className="w-full h-full object-cover brightness-50 group-hover:scale-105 transition-transform duration-1000"
+                                            alt={tmdbData.belongs_to_collection.name}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
+                                    </div>
+                                    <div className="relative h-full flex flex-col justify-center p-8 md:p-12 space-y-4">
+                                        <span className="text-accent text-[10px] font-black uppercase tracking-[0.3em]">Part of the Franchise</span>
+                                        <h3 className="text-3xl md:text-5xl font-black text-white">{tmdbData.belongs_to_collection.name}</h3>
+                                        <button className="bg-white text-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest w-fit hover:scale-105 transition-transform active:scale-95 shadow-xl">
+                                            View Collection
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Production & Networks */}
+                            {(tmdbData.production_companies?.length > 0 || tmdbData.networks?.length > 0) && (
+                                <div className="bg-prime-card/20 p-8 rounded-[2rem] border border-white/5 shadow-xl backdrop-blur-md">
+                                    <h3 className="text-gray-500 text-[10px] uppercase font-black tracking-[0.2em] mb-8 flex items-center gap-2">
+                                        <div className="w-1.5 h-4 bg-gray-500 rounded-full" />
+                                        {type === 'tv' ? 'Networks & Studios' : 'Production Studios'}
+                                    </h3>
+                                    <div className="flex flex-wrap gap-8 items-center">
+                                        {/* Networks first for TV */}
+                                        {type === 'tv' && tmdbData.networks?.map((network: any) => (
+                                            <div key={network.id} className="group relative flex items-center gap-3">
+                                                <div className="bg-white/90 p-2.5 rounded-xl h-12 flex items-center justify-center shadow-lg group-hover:bg-white transition-all hover:scale-105 border border-white/20">
+                                                    <img
+                                                        src={`${TMDB_CONFIG.imageBase}/w200${network.logo_path}`}
+                                                        alt={network.name}
+                                                        className="h-full object-contain max-w-[100px]"
                                                     />
                                                 </div>
-                                                <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors hidden md:block">{company.name}</span>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black text-accent uppercase tracking-wider">Network</span>
+                                                    <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors hidden md:block">{network.name}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {/* Production Companies */}
+                                        {tmdbData.production_companies?.filter((c: any) => c.logo_path).slice(0, 4).map((company: any) => (
+                                            <div key={company.id} className="group relative flex items-center gap-3">
+                                                <div className="bg-white/10 p-2.5 rounded-xl h-12 flex items-center justify-center shadow-lg group-hover:bg-white/20 transition-all hover:scale-105 border border-white/10">
+                                                    <img
+                                                        src={`${TMDB_CONFIG.imageBase}/w200${company.logo_path}`}
+                                                        alt={company.name}
+                                                        className="h-full object-contain max-w-[100px] brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-wider">Studio</span>
+                                                    <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors hidden md:block">{company.name}</span>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -303,9 +480,9 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                             <div className="mt-8 text-center">
                                                 <button
                                                     onClick={() => setShowAllCast(!showAllCast)}
-                                                    className="bg-white/5 hover:bg-white/10 px-8 py-3 rounded-full text-white text-sm font-black uppercase tracking-widest transition-all border border-white/10 hover:border-white/20 active:scale-95"
+                                                    className="px-8 py-3 bg-white/5 hover:bg-white/10 rounded-full text-xs font-black uppercase tracking-widest transition-all border border-white/10 hover:border-accent"
                                                 >
-                                                    {showAllCast ? "Show less" : "View all cast"}
+                                                    {showAllCast ? "Show Less" : `View All ${tmdbData.credits.cast.length} Cast Members`}
                                                 </button>
                                             </div>
                                         )}
@@ -313,13 +490,13 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 </div>
 
                                 <div className="space-y-8">
-                                    <div className="bg-prime-card/40 p-8 rounded-3xl border border-white/5 shadow-xl backdrop-blur-md">
-                                        <h3 className="text-gray-500 text-xs uppercase font-black tracking-widest mb-8">Key Crew</h3>
-                                        <div className="space-y-8">
+                                    <div className="bg-prime-card/20 p-8 rounded-3xl border border-white/5 shadow-xl">
+                                        <h3 className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-6">Key Crew</h3>
+                                        <div className="space-y-6">
                                             {/* Director */}
                                             {tmdbData.credits?.crew?.filter((c: any) => c.job === "Director").slice(0, 2).map((person: any) => (
                                                 <Link href={`/person/${person.id}`} key={person.id} className="block group">
-                                                    <p className="text-xs font-bold text-gray-600 uppercase mb-2">Director</p>
+                                                    <p className="text-xs font-bold text-gray-600 uppercase mb-2">{person.job}</p>
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-10 h-10 rounded-lg bg-gray-800 overflow-hidden border border-white/5 group-hover:border-accent/50 transition-colors">
                                                             {person.profile_path ? (
@@ -356,13 +533,16 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
 
                             {/* Keywords */}
                             {(type === 'movie' ? tmdbData.keywords?.keywords : tmdbData.keywords?.results)?.length > 0 && (
-                                <div className="bg-prime-card/40 p-8 rounded-3xl border border-white/5 shadow-xl backdrop-blur-md">
-                                    <h3 className="text-gray-500 text-xs uppercase font-black tracking-widest mb-6">Tags</h3>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="bg-prime-card/20 p-8 rounded-[2rem] border border-white/5 shadow-xl backdrop-blur-md">
+                                    <h3 className="text-gray-500 text-xs uppercase font-black tracking-widest mb-6 flex items-center gap-2">
+                                        <div className="w-1.5 h-4 bg-accent rounded-full" />
+                                        Story Keywords
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2.5">
                                         {(type === 'movie' ? tmdbData.keywords?.keywords : tmdbData.keywords?.results).map((keyword: any) => (
-                                            <span 
-                                                key={keyword.id} 
-                                                className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold text-gray-400 hover:text-white transition-all cursor-default border border-white/5"
+                                            <span
+                                                key={keyword.id}
+                                                className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] font-bold text-gray-400 hover:text-accent transition-all cursor-default border border-white/5 shadow-sm"
                                             >
                                                 #{keyword.name}
                                             </span>

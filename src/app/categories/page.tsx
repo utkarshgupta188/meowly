@@ -11,10 +11,10 @@ export default async function CategoriesPage() {
 
     // Fetch some initial data for a few categories to make it look full
     const [action, comedy, drama, animation] = await Promise.all([
-        tmdb.getDiscover("movie", "28"),
-        tmdb.getDiscover("movie", "35"),
-        tmdb.getDiscover("tv", "18"),
-        tmdb.getDiscover("movie", "16"),
+        tmdb.getDiscover("movie", { genreId: "28" }),
+        tmdb.getDiscover("movie", { genreId: "35" }),
+        tmdb.getDiscover("tv", { genreId: "18" }),
+        tmdb.getDiscover("movie", { genreId: "16" }),
     ]);
 
     return (

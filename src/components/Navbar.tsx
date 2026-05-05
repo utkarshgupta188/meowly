@@ -9,12 +9,38 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            // Hide on scroll down, show on scroll up
+            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                setIsVisible(false);
+            } else {
+                setIsVisible(true);
+            }
+            
+            setLastScrollY(currentScrollY);
+            
+            if (currentScrollY > 0) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [lastScrollY]);
 
     // Sync search query with URL
     useEffect(() => {
@@ -32,19 +58,6 @@ const Navbar = () => {
             setIsSearchOpen(false);
         }
     }, [pathname]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 0) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
 
     const handleSearch = (e?: React.FormEvent | React.MouseEvent) => {
         if (e) e.preventDefault();
@@ -72,8 +85,9 @@ const Navbar = () => {
     return (
         <nav
             className={cn(
-                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
-                isScrolled ? "bg-black/60 shadow-2xl" : "bg-black/20"
+                "fixed left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
+                isScrolled ? "bg-black/60 shadow-2xl" : "bg-black/20",
+                isVisible ? "top-4" : "-top-24"
             )}
         >
             <div className="flex items-center justify-between h-14">
