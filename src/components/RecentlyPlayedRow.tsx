@@ -28,16 +28,17 @@ const RecentlyPlayedRow = () => {
     const movies: Movie[] = recentItems.map(item => ({
         id: parseInt(item.id),
         title: item.title,
-        name: item.title, // Use title for both
-        overview: "", // We don't store overview
-        poster_path: item.poster_path,
+        name: item.title,
+        overview: item.overview || "",
+        poster_path: item.poster_path || "",
         backdrop_path: item.backdrop_path || "",
         vote_average: item.vote_average || 0,
-        release_date: item.release_date,
-        first_air_date: item.first_air_date,
-        media_type: item.type,
+        release_date: item.release_date || item.first_air_date, // Fallback
+        first_air_date: item.first_air_date || item.release_date, // Fallback
+        media_type: item.type as "movie" | "tv",
         season: item.season,
         episode: item.episode,
+        tagline: item.tagline,
     }));
 
     return (

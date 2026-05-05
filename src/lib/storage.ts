@@ -8,6 +8,7 @@ export interface RecentItem {
     id: string;
     type: "movie" | "tv";
     title: string;
+    overview?: string;
     poster_path: string;
     backdrop_path?: string;
     vote_average?: number;
@@ -16,6 +17,7 @@ export interface RecentItem {
     last_played: number;
     season?: number;
     episode?: number;
+    tagline?: string;
 }
 
 export function saveToRecentlyPlayed(item: RecentItem) {

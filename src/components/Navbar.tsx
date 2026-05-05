@@ -87,7 +87,7 @@ const Navbar = () => {
     return (
         <nav
             className={cn(
-                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
+                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
                 isScrolled ? "bg-black/60 shadow-2xl" : "bg-black/20",
                 !isVisible && "-top-24"
             )}
@@ -132,22 +132,22 @@ const Navbar = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="flex items-center justify-between w-full"
+                            className="flex items-center justify-between w-full gap-4"
                         >
-                            <div className="flex items-center space-x-2 md:space-x-8">
-                                <Link href="/" className="group flex items-center">
+                            <div className="flex items-center gap-4 lg:gap-8 min-w-0">
+                                <Link href="/" className="group flex-shrink-0 flex items-center">
                                     <span className="text-xl font-black tracking-tighter text-white">
                                         MEOW<span className="text-accent italic">LY</span>
                                     </span>
                                 </Link>
 
-                                <div className="hidden md:flex items-center space-x-1">
+                                <div className="hidden md:flex items-center gap-0.5 lg:gap-1 min-w-0 overflow-hidden">
                                     {navLinks.map((link) => (
                                         <Link
                                             key={link.name}
                                             href={link.href}
                                             className={cn(
-                                                "text-[14px] font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-full transition-all duration-300",
+                                                "text-[13px] lg:text-[14px] font-semibold text-gray-400 hover:text-white px-2 lg:px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0",
                                                 pathname === link.href ? "bg-white/10 text-white" : ""
                                             )}
                                         >
@@ -157,7 +157,7 @@ const Navbar = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center space-x-2 md:space-x-4">
+                            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
                                  {/* Desktop Search */}
                                 <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                                     <input

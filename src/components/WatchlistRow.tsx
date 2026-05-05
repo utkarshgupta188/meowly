@@ -29,7 +29,7 @@ const WatchlistRow = () => {
         id: parseInt(item.id),
         title: item.title,
         name: item.title,
-        overview: "", 
+        overview: item.overview || "", 
         poster_path: item.poster_path,
         backdrop_path: item.backdrop_path || "",
         vote_average: item.vote_average || 0,

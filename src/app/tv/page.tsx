@@ -57,7 +57,7 @@ export default async function TVPage({ searchParams }: TVPageProps) {
             <div className="relative z-40">
                 <FilterBar type="tv" genres={genres} />
                 
-                <div className="mt-4 md:-mt-10 space-y-12 transition-all duration-500">
+                <div className="mt-10 md:mt-4 space-y-12 transition-all duration-500">
                     <MovieRow title="Trending TV Shows" movies={trending} />
                     <MovieRow title="Popular Series" movies={popular} />
                     <MovieRow title="Top Rated" movies={topRated} />

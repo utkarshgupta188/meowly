@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Monitor, Server, ChevronDown, Maximize2, Minimize2, RefreshCcw } from "lucide-react";
+import { Monitor, Server, ChevronDown, Maximize2, Minimize2, RefreshCcw, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveToRecentlyPlayed } from "@/lib/storage";
 
@@ -79,6 +79,7 @@ export default function VideoPlayer({
                 id,
                 type,
                 title: tmdbData.title || tmdbData.name,
+                overview: tmdbData.overview,
                 poster_path: tmdbData.poster_path,
                 backdrop_path: tmdbData.backdrop_path,
                 vote_average: tmdbData.vote_average,
@@ -87,6 +88,7 @@ export default function VideoPlayer({
                 last_played: Date.now(),
                 season: type === "tv" ? currentSeason : undefined,
                 episode: type === "tv" ? currentEpisode : undefined,
+                tagline: tmdbData.tagline,
             });
         }
     }, [id, type, tmdbData, currentSeason, currentEpisode]);
@@ -113,6 +115,7 @@ export default function VideoPlayer({
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     {...((currentServer as any).useSandbox ? { sandbox: "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" } : {})}
                 ></iframe>
+
 
                 {/* Theater Mode Overlay Shadow */}
                 <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.5)] opacity-0 group-hover:opacity-100 transition-opacity" />

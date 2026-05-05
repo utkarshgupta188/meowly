@@ -84,6 +84,7 @@ export type Movie = {
     media_type: "movie" | "tv";
     season?: number;
     episode?: number;
+    tagline?: string;
     logos?: any[];
 };
 

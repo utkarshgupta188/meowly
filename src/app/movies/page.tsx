@@ -57,7 +57,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
             <div className="relative z-40">
                 <FilterBar type="movie" genres={genres} />
                 
-                <div className="mt-4 md:-mt-10 space-y-12 transition-all duration-500">
+                <div className="mt-10 md:mt-4 space-y-12 transition-all duration-500">
                     <MovieRow title="Trending Movies" movies={trending} />
                     <MovieRow title="Popular Now" movies={popular} />
                     <MovieRow title="Top Rated" movies={topRated} />

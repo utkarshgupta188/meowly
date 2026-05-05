@@ -39,3 +39,20 @@ export const SectionSkeleton = () => {
         </div>
     );
 };
+
+export const MovieRowSkeleton = () => {
+    return (
+        <div className="space-y-4 px-8 md:px-12 py-4">
+            <Skeleton className="h-7 w-48 mb-6" />
+            <div className="flex space-x-4 overflow-hidden">
+                {[...Array(8)].map((_, i) => (
+                    <div key={i} className="flex-none w-[160px] md:w-[220px]">
+                        <Skeleton className="aspect-[2/3] rounded-2xl w-full mb-3" />
+                        <Skeleton className="h-4 w-3/4 mb-2" />
+                        <Skeleton className="h-3 w-1/2" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};

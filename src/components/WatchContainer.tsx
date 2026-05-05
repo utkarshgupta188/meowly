@@ -100,22 +100,17 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             transition={{ duration: 0.5 }}
             className="flex flex-col"
         >
-            {/* Go Back Button */}
-            <motion.button
-                initial={false}
-                animate={{
-                    y: isVisible ? 0 : -100,
-                    opacity: isVisible ? 1 : 0
-                }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
+            {/* Go Back Button — always visible top-left */}
+            <button
                 onClick={() => window.history.back()}
-                className="fixed top-8 left-6 md:left-12 z-[60] p-3 glass-pill hover:bg-white/10 transition-all group"
+                className="fixed top-6 left-4 md:left-8 z-[60] p-3 bg-black/50 hover:bg-black/80 backdrop-blur-md border border-white/15 rounded-full text-white transition-all hover:scale-110 group"
+                title="Go Back"
             >
-                <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
-            </motion.button>
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            </button>
 
             {/* Hero / Player Section */}
-            <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "pt-36 md:pt-24 md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
+            <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
 
                 {!isPlaying ? (
                     <DetailsHero

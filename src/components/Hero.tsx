@@ -9,6 +9,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import { getTrailerAction } from "@/app/actions";
+import TrailerModal from "./TrailerModal";
+import { Sparkles } from "lucide-react";
+import { tmdb } from "@/lib/tmdb";
 
 interface HeroProps {
     movies: Movie[];
@@ -24,6 +27,8 @@ const Hero = ({ movies }: HeroProps) => {
     const [inWatchlist, setInWatchlist] = useState(false);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [isTrailerLoading, setIsTrailerLoading] = useState(false);
+    const [isTrailerModalOpen, setIsTrailerModalOpen] = useState(false);
+    const [isSurprising, setIsSurprising] = useState(false);
 
     useEffect(() => {
         if (!validMovies.length) return;
@@ -76,42 +81,32 @@ const Hero = ({ movies }: HeroProps) => {
         setIsTrailerLoading(true);
         const url = await getTrailerAction((movie.media_type as "movie" | "tv") || 'movie', movie.id.toString());
         setTrailerUrl(url);
+        setIsTrailerModalOpen(true);
         setIsTrailerLoading(false);
+    };
+
+    const handleSurpriseMe = async () => {
+        setIsSurprising(true);
+        try {
+            const movie = await tmdb.getRandomContent();
+            if (movie) {
+                router.push(`/watch/${movie.media_type || 'movie'}/${movie.id}`);
+            }
+        } catch (error) {
+            console.error("Surprise Me failed:", error);
+        } finally {
+            setIsSurprising(false);
+        }
     };
 
     return (
         <div className="relative h-[65vh] md:h-[85vh] w-full overflow-hidden bg-black group">
-            {/* Trailer Modal */}
-            <AnimatePresence>
-                {trailerUrl && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-10"
-                    >
-                        <motion.div 
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10"
-                        >
-                            <button 
-                                onClick={() => setTrailerUrl(null)}
-                                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors"
-                            >
-                                <X className="w-6 h-6" />
-                            </button>
-                            <iframe 
-                                src={trailerUrl}
-                                className="w-full h-full"
-                                allow="autoplay; encrypted-media"
-                                allowFullScreen
-                            />
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <TrailerModal 
+                isOpen={isTrailerModalOpen}
+                onClose={() => setIsTrailerModalOpen(false)}
+                trailerUrl={trailerUrl}
+                title={heroMovies[current].title || heroMovies[current].name || ""}
+            />
 
             {/* Carousel Container */}
             <AnimatePresence mode="wait">
@@ -140,8 +135,8 @@ const Hero = ({ movies }: HeroProps) => {
                     </div>
 
                     {/* Content */}
-                    <div className="absolute inset-0 flex flex-col justify-center md:justify-center px-6 md:px-16 lg:px-24 pt-20 pb-16 md:pb-0 justify-end">
-                        <div className="max-w-3xl space-y-6 z-10 pl-2">
+                    <div className="absolute inset-0 flex flex-col px-4 md:px-12 lg:px-20 pt-20 pb-20 md:pb-32 justify-end">
+                        <div className="max-w-3xl space-y-6 z-10">
                             {/* Title / Logo */}
                             {heroMovies[current].logos && (heroMovies[current].logos as any[]).length > 0 ? (
                                 <motion.div
@@ -235,6 +230,8 @@ const Hero = ({ movies }: HeroProps) => {
                                 >
                                     {inWatchlist ? <Check className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
                                 </button>
+
+
                             </motion.div>
                         </div>
                     </div>

@@ -78,7 +78,7 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
                 tmdbData={movie} 
                 initialSeason={s ? parseInt(s) : 1}
                 initialEpisode={e ? parseInt(e) : 1}
-                startPlaying={resume === "true" || !!(s || e)}
+                startPlaying={resume === "true"}
             />
         </main>
     );

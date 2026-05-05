@@ -21,8 +21,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <Navbar />
 
             <div className="pt-40 md:pt-32 px-4 md:px-12">
-                <h1 className="text-2xl md:text-3xl font-bold mb-8 transition-all animate-in fade-in slide-in-from-left duration-500">
-                    {query ? `Search results for "${query}"` : "Search Meowly"}
+                <h1 className="text-2xl md:text-4xl font-black mb-8 transition-all animate-in fade-in slide-in-from-left duration-700 truncate max-w-full pb-2">
+                    {query ? `Results for "${query}"` : "Search Meowly"}
                 </h1>
 
                 {results.length > 0 ? (

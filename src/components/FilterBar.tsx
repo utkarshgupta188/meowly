@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 interface FilterBarProps {
     type: "movie" | "tv";
     genres: { id: number; name: string }[];
+    isFloating?: boolean;
 }
 
-const FilterBar = ({ type, genres }: FilterBarProps) => {
+const FilterBar = ({ type, genres, isFloating = true }: FilterBarProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     
@@ -48,29 +49,32 @@ const FilterBar = ({ type, genres }: FilterBarProps) => {
     const activeFiltersCount = [selectedGenre, selectedYear].filter(Boolean).length;
 
     return (
-        <div className="relative z-[60] px-6 md:px-12 max-w-7xl mx-auto -mt-8 mb-8">
+        <div className={cn(
+            "relative z-40 w-full mb-10 flex flex-col md:flex-row md:items-center gap-4",
+            isFloating ? "px-6 md:px-16 lg:px-24 -mt-12 md:-mt-16" : "px-0 mt-0"
+        )}>
             <div className="flex flex-wrap items-center gap-4">
                 {/* Filter Toggle */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
                     className={cn(
-                        "flex items-center space-x-2 px-6 py-3 rounded-full font-bold transition-all backdrop-blur-md border",
+                        "flex items-center space-x-2 px-6 py-2.5 rounded-full font-bold transition-all backdrop-blur-xl border",
                         isOpen || activeFiltersCount > 0 
                             ? "bg-accent text-black border-accent" 
-                            : "bg-white/5 text-white border-white/10 hover:bg-white/10"
+                            : "bg-black/60 text-white border-white/10 hover:bg-black/80"
                     )}
                 >
                     <Filter className="w-4 h-4" />
-                    <span>Filters</span>
+                    <span className="text-sm">Filters</span>
                     {activeFiltersCount > 0 && (
-                        <span className="ml-1 bg-black/20 px-2 py-0.5 rounded-full text-xs">
+                        <span className="ml-1 bg-black/20 px-2 py-0.5 rounded-full text-[10px]">
                             {activeFiltersCount}
                         </span>
                     )}
                 </button>
 
                 {/* Quick Sort (Always Visible) */}
-                <div className="hidden md:flex items-center bg-white/5 backdrop-blur-md rounded-full border border-white/10 p-1">
+                <div className="flex items-center bg-black/60 backdrop-blur-xl rounded-full border border-white/10 p-1">
                     {[
                         { label: "Popular", value: "popularity.desc" },
                         { label: "Newest", value: "primary_release_date.desc" },
@@ -83,7 +87,7 @@ const FilterBar = ({ type, genres }: FilterBarProps) => {
                                 updateFilters(undefined, undefined, opt.value);
                             }}
                             className={cn(
-                                "px-4 py-1.5 rounded-full text-xs font-bold transition-all",
+                                "px-5 py-1.5 rounded-full text-[11px] font-bold transition-all",
                                 selectedSort === opt.value 
                                     ? "bg-white text-black shadow-lg" 
                                     : "text-gray-400 hover:text-white"
