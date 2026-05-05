@@ -2,6 +2,29 @@ import Navbar from "@/components/Navbar";
 import { tmdb, TMDB_CONFIG } from "@/lib/tmdb";
 import MovieCard from "@/components/MovieCard";
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const collection = await tmdb.getCollection(id);
+    if (!collection) return { title: "Collection | Meowly" };
+
+    return {
+        title: `${collection.name} | Meowly`,
+        description: collection.overview,
+        openGraph: {
+            title: `${collection.name} | Meowly`,
+            description: collection.overview,
+            images: [
+                {
+                    url: `https://image.tmdb.org/t/p/w1280${collection.backdrop_path}`,
+                    width: 1280,
+                    height: 720,
+                    alt: collection.name
+                },
+            ],
+        },
+    };
+}
+
 export default async function CollectionPage({ 
     params 
 }: { 

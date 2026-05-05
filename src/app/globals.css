@@ -82,6 +82,25 @@ body {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
   }
 
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   @keyframes bounce-custom {
     from {
       transform: translateY(0);

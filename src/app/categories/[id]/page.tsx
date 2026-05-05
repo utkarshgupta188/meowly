@@ -2,13 +2,23 @@ import Navbar from "@/components/Navbar";
 import { tmdb } from "@/lib/tmdb";
 import MovieCard from "@/components/MovieCard";
 
-export default async function GenrePage({ 
-    params, 
-    searchParams 
-}: { 
-    params: Promise<{ id: string }>, 
-    searchParams: Promise<{ name: string, type: "movie" | "tv" }> 
-}) {
+interface GenrePageProps {
+    params: Promise<{ id: string }>;
+    searchParams: Promise<{ name: string; type: "movie" | "tv" }>;
+}
+
+export async function generateMetadata({ searchParams }: GenrePageProps) {
+    const { name, type } = await searchParams;
+    const genreName = name || "Genre";
+    const typeLabel = type === "tv" ? "TV Shows" : "Movies";
+    
+    return {
+        title: `${genreName} ${typeLabel} | Meowly`,
+        description: `Browse the best ${genreName} ${typeLabel.toLowerCase()} on Meowly. Watch now for free in HD.`,
+    };
+}
+
+export default async function GenrePage({ params, searchParams }: GenrePageProps) {
     const resolvedParams = await params;
     const resolvedSearchParams = await searchParams;
     const genreId = resolvedParams.id;

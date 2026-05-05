@@ -13,6 +13,29 @@ interface PersonPageProps {
     params: Promise<{ id: string }>;
 }
 
+export async function generateMetadata({ params }: PersonPageProps) {
+    const { id } = await params;
+    const person = await tmdb.getPersonDetails(id);
+    if (!person) return { title: "Person | Meowly" };
+
+    return {
+        title: `${person.name} | Meowly`,
+        description: person.biography,
+        openGraph: {
+            title: `${person.name} | Meowly`,
+            description: person.biography,
+            images: [
+                {
+                    url: `https://image.tmdb.org/t/p/w500${person.profile_path}`,
+                    width: 500,
+                    height: 750,
+                    alt: person.name
+                },
+            ],
+        },
+    };
+}
+
 export default async function PersonPage({ params }: PersonPageProps) {
     const { id } = await params;
     const person = await tmdb.getPersonDetails(id);

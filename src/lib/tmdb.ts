@@ -145,5 +145,24 @@ export const tmdb = {
     getCollection: async (id: string) => {
         const data = await fetchTMDB(`/collection/${id}`);
         return data || {};
+    },
+    getRandomContent: async (): Promise<Movie | null> => {
+        const types: ("movie" | "tv")[] = ["movie", "tv"];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const page = Math.floor(Math.random() * 5) + 1; // Randomly pick from first 5 pages
+        const data = await fetchTMDB(`/${type}/popular`, { page: page.toString() });
+        const results = data?.results || [];
+        if (results.length === 0) return null;
+        const movie = results[Math.floor(Math.random() * results.length)];
+        return { ...movie, media_type: type };
+    },
+    getTrailer: async (type: "movie" | "tv", id: string) => {
+        const data = await fetchTMDB(`/${type}/${id}/videos`);
+        const videos = data?.results || [];
+        // Priority: Trailer > Teaser > Clip
+        const trailer = videos.find((v: any) => v.type === "Trailer" && v.site === "YouTube") ||
+                       videos.find((v: any) => v.type === "Teaser" && v.site === "YouTube") ||
+                       videos.find((v: any) => v.site === "YouTube");
+        return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1` : null;
     }
 };

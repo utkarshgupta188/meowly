@@ -16,6 +16,40 @@ interface WatchPageProps {
     }>;
 }
 
+export async function generateMetadata({ params }: WatchPageProps) {
+    const { type, id } = await params;
+    const movie = await tmdb.getDetails(type, id);
+    
+    if (!movie) return { title: "Meowly" };
+
+    const title = movie.title || movie.name;
+    const year = (movie.release_date || movie.first_air_date)?.split("-")[0];
+    
+    return {
+        title: `${title} (${year}) | Meowly`,
+        description: movie.overview,
+        openGraph: {
+            title: `${title} | Meowly`,
+            description: movie.overview,
+            images: [
+                {
+                    url: `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`,
+                    width: 1280,
+                    height: 720,
+                    alt: title
+                },
+            ],
+            type: "video.movie",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: `${title} | Meowly`,
+            description: movie.overview,
+            images: [`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`],
+        }
+    };
+}
+
 export default async function WatchPage({ params, searchParams }: WatchPageProps) {
     const { type, id } = await params;
     const { s, e, resume } = await searchParams;

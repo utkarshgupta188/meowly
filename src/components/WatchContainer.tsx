@@ -27,16 +27,16 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [isPlaying, setIsPlaying] = useState(startPlaying);
     const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips" | "photos">(type === "movie" ? "details" : "episodes");
     const [showAllCast, setShowAllCast] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
-    const [showNavbar, setShowNavbar] = useState(true);
 
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
             if (currentScrollY > lastScrollY && currentScrollY > 80) {
-                setShowNavbar(false);
+                setIsVisible(false);
             } else {
-                setShowNavbar(true);
+                setIsVisible(true);
             }
             setLastScrollY(currentScrollY);
         };
@@ -104,8 +104,8 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             <motion.button
                 initial={false}
                 animate={{
-                    y: showNavbar ? 0 : -100,
-                    opacity: showNavbar ? 1 : 0
+                    y: isVisible ? 0 : -100,
+                    opacity: isVisible ? 1 : 0
                 }}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 onClick={() => window.history.back()}
@@ -148,7 +148,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             {/* Tabs Navigation */}
             <div className={cn(
                 "bg-prime-dark/95 backdrop-blur-sm sticky z-30 border-b border-gray-800 shadow-md transition-all duration-500",
-                showNavbar ? "top-[76px]" : "top-0"
+                isVisible ? "top-[90px]" : "top-0"
             )}>
                 <div className="flex items-center space-x-2 px-4 md:px-12">
                     {type === 'tv' && <TabButton name="episodes" label="Episodes" />}

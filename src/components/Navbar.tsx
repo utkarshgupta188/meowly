@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, Menu, X, ArrowLeft } from "lucide-react";
+import { Search, Menu, X, ArrowLeft, Dices } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { surpriseMe } from "@/app/actions";
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -14,6 +15,7 @@ const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isPending, startTransition] = React.useTransition();
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -168,6 +170,19 @@ const Navbar = () => {
                                     />
                                     <Search className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white transition-colors ml-2" onClick={() => handleSearch()} />
                                 </div>
+
+                                {/* Surprise Me Button */}
+                                <button
+                                    disabled={isPending}
+                                    onClick={() => startTransition(() => surpriseMe())}
+                                    className={cn(
+                                        "p-2 text-gray-400 hover:text-accent transition-all duration-300 rounded-full hover:bg-white/10 flex items-center justify-center",
+                                        isPending && "animate-pulse opacity-50"
+                                    )}
+                                    title="Surprise Me"
+                                >
+                                    <Dices className={cn("h-5 w-5", isPending && "animate-spin-slow")} />
+                                </button>
 
                                 {/* Mobile Search Toggle */}
                                 <button
