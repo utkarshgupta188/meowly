@@ -19,6 +19,10 @@
   --prime-card: #0a0a0a;
 }
 
+body.player-active nav {
+  display: none !important;
+}
+
 body {
   background-color: var(--background);
   background-image: 

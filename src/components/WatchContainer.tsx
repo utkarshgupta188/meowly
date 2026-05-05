@@ -64,6 +64,18 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
         setEpisode(initialEpisode);
     }, [id, type, startPlaying, initialSeason, initialEpisode]);
 
+    // Handle Navbar visibility via body class
+    React.useEffect(() => {
+        if (isPlaying) {
+            document.body.classList.add("player-active");
+        } else {
+            document.body.classList.remove("player-active");
+        }
+        return () => {
+            document.body.classList.remove("player-active");
+        };
+    }, [isPlaying]);
+
     // Use fetched season data or fallback to basic placeholders if loading/failed
     const episodesList = seasonData?.episodes || (tmdbData.seasons?.find((s: any) => s.season_number === season)
         ? Array.from({ length: tmdbData.seasons.find((s: any) => s.season_number === season).episode_count || 10 }, (_, i) => ({

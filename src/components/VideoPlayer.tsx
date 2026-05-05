@@ -112,6 +112,7 @@ export default function VideoPlayer({
                     src={playerUrl}
                     className="w-full h-full border-none"
                     allowFullScreen
+                    referrerPolicy="origin"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     {...((currentServer as any).useSandbox ? { sandbox: "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" } : {})}
                 ></iframe>
@@ -119,15 +120,6 @@ export default function VideoPlayer({
 
                 {/* Theater Mode Overlay Shadow */}
                 <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.5)] opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                {/* Scroll Helper - Moved to right side */}
-                <button
-                    onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
-                    className="absolute bottom-4 right-4 bg-accent/80 hover:bg-accent text-black p-3 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition-all z-50 hidden md:flex items-center justify-center backdrop-blur-md border border-white/20"
-                    title="Scroll to Details"
-                >
-                    <ChevronDown className="h-6 w-6" />
-                </button>
             </div>
 
             {/* Control Bar */}

@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Meowly | Watch Movies & TV Shows",
   description: "Unlimited movies and TV shows for free. Inspired by Prime Video.",
+  referrer: "origin",
 };
 
 import Footer from "@/components/Footer";
