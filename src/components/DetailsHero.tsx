@@ -231,7 +231,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     href={`https://www.imdb.com/title/${tmdbData.imdb_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-yellow-500/10 hover:bg-yellow-500/20 border-yellow-500/20 hover:border-yellow-500/40 text-yellow-500 font-black text-xs"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white font-black text-xs"
                                     title="IMDb"
                                 >
                                     IMDb

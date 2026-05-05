@@ -157,7 +157,7 @@ export default function VideoPlayer({
                         ))}
                     </div>
 
-                    <button 
+                    <button
                         onClick={() => setPlayerKey(prev => prev + 1)}
                         className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                         title="Reload Player"
@@ -179,48 +179,48 @@ export default function VideoPlayer({
                         )}
                     </button>
 
-                {/* TV Controls */}
-                {type === "tv" && seasons.length > 0 && (
-                    <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Season</span>
-                            <div className="relative">
-                                <select
-                                    value={currentSeason}
-                                    onChange={(e) => handleSeasonChange(parseInt(e.target.value))}
-                                    className="appearance-none bg-prime-hover text-white border-r-8 border-transparent pr-8 pl-3 py-1.5 rounded-md text-xs font-bold outline-none cursor-pointer hover:bg-prime-hover/70 transition-colors"
-                                    style={{ backgroundColor: '#1a242f', color: 'white' }}
-                                >
-                                    {seasons.map((s: any) => (
-                                        <option key={s.id} value={s.season_number} className="bg-prime-card text-white py-2">
-                                            {s.name || `Season ${s.season_number}`}
-                                        </option>
-                                    ))}
-                                </select>
-                                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
+                    {/* TV Controls */}
+                    {type === "tv" && seasons.length > 0 && (
+                        <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2">
+                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Season</span>
+                                <div className="relative">
+                                    <select
+                                        value={currentSeason}
+                                        onChange={(e) => handleSeasonChange(parseInt(e.target.value))}
+                                        className="appearance-none bg-prime-hover text-white border-r-8 border-transparent pr-8 pl-3 py-1.5 rounded-md text-xs font-bold outline-none cursor-pointer hover:bg-prime-hover/70 transition-colors"
+                                        style={{ backgroundColor: '#1a242f', color: 'white' }}
+                                    >
+                                        {seasons.map((s: any) => (
+                                            <option key={s.id} value={s.season_number} className="bg-prime-card text-white py-2">
+                                                {s.name || `Season ${s.season_number}`}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Episode</span>
-                            <div className="relative">
-                                <select
-                                    value={currentEpisode}
-                                    onChange={(e) => handleEpisodeChange(parseInt(e.target.value))}
-                                    className="appearance-none bg-prime-hover text-white border-r-8 border-transparent pr-8 pl-3 py-1.5 rounded-md text-xs font-bold outline-none cursor-pointer hover:bg-prime-hover/70 transition-colors"
-                                    style={{ backgroundColor: '#1a242f', color: 'white' }}
-                                >
-                                    {Array.from({ length: seasons.find((s: any) => s.season_number === currentSeason)?.episode_count || 50 }, (_, i) => i + 1).map((ep) => (
-                                        <option key={ep} value={ep} className="bg-prime-card text-white py-2">
-                                            Episode {ep}
-                                        </option>
-                                    ))}
-                                </select>
-                                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
+                            <div className="flex items-center space-x-2">
+                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Episode</span>
+                                <div className="relative">
+                                    <select
+                                        value={currentEpisode}
+                                        onChange={(e) => handleEpisodeChange(parseInt(e.target.value))}
+                                        className="appearance-none bg-prime-hover text-white border-r-8 border-transparent pr-8 pl-3 py-1.5 rounded-md text-xs font-bold outline-none cursor-pointer hover:bg-prime-hover/70 transition-colors"
+                                        style={{ backgroundColor: '#1a242f', color: 'white' }}
+                                    >
+                                        {Array.from({ length: seasons.find((s: any) => s.season_number === currentSeason)?.episode_count || 50 }, (_, i) => i + 1).map((ep) => (
+                                            <option key={ep} value={ep} className="bg-prime-card text-white py-2">
+                                                Episode {ep}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
                 </div>
             </div>
         </div>

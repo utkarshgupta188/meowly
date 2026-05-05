@@ -6,7 +6,7 @@
   --color-foreground: #ffffff;
   --color-glass: rgba(255, 255, 255, 0.05);
   --color-glass-dark: rgba(0, 0, 0, 0.6);
-  --color-accent: #FBBF24;
+  --color-accent: #ffffff;
   --color-prime-dark: #000000;
   --color-prime-card: #0a0a0a;
 }
@@ -14,7 +14,7 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --accent: #FBBF24;
+  --accent: #ffffff;
   --prime-dark: #000000;
   --prime-card: #0a0a0a;
 }
@@ -22,8 +22,8 @@
 body {
   background-color: var(--background);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(251, 191, 36, 0.03) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.03) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.01) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 255, 255, 0.01) 0px, transparent 50%);
   background-attachment: fixed;
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;

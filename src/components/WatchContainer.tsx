@@ -86,7 +86,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
         >
             {label}
             {activeTab === name && (
-                <span className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_10px_#FBBF24]" />
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
             )}
         </button>
     );
@@ -357,7 +357,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     {tmdbData.vote_average > 0 && (
                                         <div className="bg-gray-800/20 p-4 rounded-2xl border border-white/5">
                                             <span className="text-gray-500 text-[10px] uppercase font-black tracking-widest block mb-1">TMDB Rating</span>
-                                            <p className="text-xl font-black text-accent flex items-center gap-2">
+                                            <p className="text-xl font-black text-white flex items-center gap-2">
                                                 <Star className="w-5 h-5 fill-current" />
                                                 {tmdbData.vote_average.toFixed(1)}
                                             </p>
@@ -391,7 +391,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
                                     </div>
                                     <div className="relative h-full flex flex-col justify-center p-8 md:p-12 space-y-4">
-                                        <span className="text-accent text-[10px] font-black uppercase tracking-[0.3em]">Part of the Franchise</span>
+                                        <span className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">Part of the Franchise</span>
                                         <h3 className="text-3xl md:text-5xl font-black text-white">{tmdbData.belongs_to_collection.name}</h3>
                                         <Link href={`/collection/${tmdbData.belongs_to_collection.id}`}>
                                             <button className="bg-white text-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest w-fit hover:scale-105 transition-transform active:scale-95 shadow-xl">
