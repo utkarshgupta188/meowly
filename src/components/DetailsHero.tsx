@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
-import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, ArrowLeft } from "lucide-react";
+import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, X } from "lucide-react";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +17,10 @@ interface DetailsHeroProps {
 const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, currentEpisode }: DetailsHeroProps) => {
     const [inWatchlist, setInWatchlist] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [showTrailer, setShowTrailer] = useState(false);
+
+    const trailer = tmdbData.videos?.results?.find((v: any) => v.type === "Trailer" && v.site === "YouTube") || 
+                   tmdbData.videos?.results?.find((v: any) => v.type === "Teaser" && v.site === "YouTube");
 
     useEffect(() => {
         if (!tmdbData?.id) return;
@@ -88,15 +92,6 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                     />
                 )}
             </div>
-
-            {/* Go Back Button */}
-            <button 
-                onClick={() => window.history.back()}
-                className="absolute top-28 left-6 md:left-12 z-50 p-3 glass-pill hover:bg-white/10 transition-all group"
-            >
-                <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
-            </button>
-
             <div className="relative z-40 mt-0 md:-mt-10 w-full px-6 md:px-12 max-w-7xl mx-auto pt-40 md:pt-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {/* Left Side: Info */}
                 <motion.div 
@@ -163,6 +158,16 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                 <span>{type === 'tv' ? "Continue watching" : "Watch now"}</span>
                             </div>
                         </button>
+
+                        {trailer && (
+                            <button
+                                onClick={() => setShowTrailer(true)}
+                                className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
+                            >
+                                <Play className="w-6 h-6" />
+                                <span>Trailer</span>
+                            </button>
+                        )}
 
                         <div className="flex items-center gap-3">
                             <button
@@ -237,6 +242,36 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                 </motion.div>
             </div>
             <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-prime-dark to-transparent z-10" />
+
+            {/* Trailer Modal */}
+            {showTrailer && trailer && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12">
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        onClick={() => setShowTrailer(false)}
+                        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+                    />
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10"
+                    >
+                        <button 
+                            onClick={() => setShowTrailer(false)}
+                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors backdrop-blur-md"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+                        <iframe
+                            src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
+                            className="w-full h-full border-none"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        />
+                    </motion.div>
+                </div>
+            )}
         </div>
     );
 };

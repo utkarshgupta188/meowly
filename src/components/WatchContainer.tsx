@@ -6,7 +6,7 @@ import { Movie } from "@/lib/tmdb";
 import EpisodeList from "@/components/EpisodeList";
 import MovieRow from "@/components/MovieRow";
 import DetailsHero from "@/components/DetailsHero";
-import { Star, Calendar, Clock } from "lucide-react";
+import { Star, Calendar, Clock, ArrowLeft } from "lucide-react";
 import { getSeasonDetailsAction } from "@/app/actions";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -83,6 +83,14 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             transition={{ duration: 0.5 }}
             className="flex flex-col"
         >
+            {/* Go Back Button */}
+            <button 
+                onClick={() => window.history.back()}
+                className="fixed top-8 left-6 md:left-12 z-[60] p-3 glass-pill hover:bg-white/10 transition-all group"
+            >
+                <ArrowLeft className="w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
+            </button>
+
             {/* Hero / Player Section */}
             <div className={`relative w-full z-20 transition-all duration-700 ${isPlaying ? "pt-36 md:pt-24 md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
 
