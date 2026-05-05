@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Monitor, Server, ChevronDown, Maximize2, Minimize2, RefreshCcw, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveToRecentlyPlayed } from "@/lib/storage";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface VideoPlayerProps {
     type: "movie" | "tv";
