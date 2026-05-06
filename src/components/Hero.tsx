@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Play, Info, Plus, Check, X } from "lucide-react";
+import { Play, Info, Plus, Check, X, Clapperboard } from "lucide-react";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import { motion, AnimatePresence } from "framer-motion";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
@@ -116,7 +116,8 @@ const Hero = ({ movies }: HeroProps) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute inset-0"
+                    className="absolute inset-0 cursor-pointer"
+                    onClick={() => router.push(`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}`)}
                 >
                     {/* Background */}
                     <div className="absolute inset-0">
@@ -197,41 +198,55 @@ const Hero = ({ movies }: HeroProps) => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.5 }}
-                                className="flex items-center space-x-4 pt-4"
+                                className="flex flex-wrap items-center gap-4 pt-4"
                             >
                                 <Link
                                     href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}?resume=true`}
-                                    className="flex items-center space-x-3 bg-white text-black px-10 py-3.5 rounded-full font-bold text-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-xl shadow-white/10"
+                                    className="flex items-center space-x-3 bg-white text-black px-8 py-3 rounded-full font-bold text-base md:text-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-xl shadow-white/10"
+                                    onClick={(e) => e.stopPropagation()}
                                 >
-                                    <Play className="fill-current w-6 h-6" />
+                                    <Play className="fill-current w-5 h-5 md:w-6 md:h-6" />
                                     <span>Watch Now</span>
                                 </Link>
 
                                 <button
-                                    onClick={handlePlayTrailer}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePlayTrailer();
+                                    }}
                                     disabled={isTrailerLoading}
                                     className={cn(
-                                        "flex items-center space-x-3 bg-white/10 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10",
+                                        "flex items-center space-x-3 bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-base md:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10",
                                         isTrailerLoading && "animate-pulse"
                                     )}
                                 >
-                                    <Info className="w-6 h-6" />
+                                    <Clapperboard className="w-5 h-5 md:w-6 md:h-6 text-amber-400" />
                                     <span>{isTrailerLoading ? "Loading..." : "Trailer"}</span>
                                 </button>
 
+                                <Link
+                                    href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}`}
+                                    className="flex items-center space-x-3 bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-base md:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <Info className="w-5 h-5 md:w-6 md:h-6 text-accent" />
+                                    <span>Info</span>
+                                </Link>
+
                                 <button 
-                                    onClick={handleWatchlistToggle}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleWatchlistToggle();
+                                    }}
                                     className={cn(
-                                        "p-3.5 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
+                                        "p-3 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
                                         inWatchlist 
                                             ? "bg-accent text-black border-accent" 
                                             : "bg-black/40 text-white hover:bg-black/60"
                                     )}
                                 >
-                                    {inWatchlist ? <Check className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+                                    {inWatchlist ? <Check className="w-5 h-5 md:w-6 md:h-6" /> : <Plus className="w-5 h-5 md:w-6 md:h-6" />}
                                 </button>
-
-
                             </motion.div>
                         </div>
                     </div>
@@ -243,7 +258,10 @@ const Hero = ({ movies }: HeroProps) => {
                 {heroMovies.map((_, index) => (
                     <button
                         key={index}
-                        onClick={() => setCurrent(index)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrent(index);
+                        }}
                         className={cn(
                             "h-1.5 transition-all duration-300 rounded-full",
                             current === index ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"

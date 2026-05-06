@@ -155,8 +155,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
 
             {/* Tabs Navigation */}
             <div className={cn(
-                "bg-prime-dark/95 backdrop-blur-sm sticky z-30 border-b border-gray-800 shadow-md transition-all duration-500",
-                isVisible ? "top-[90px]" : "top-0"
+                "bg-prime-dark/95 backdrop-blur-sm sticky z-30 border-b border-gray-800 shadow-md transition-all duration-500 top-0"
             )}>
                 <div className="flex items-center space-x-2 px-4 md:px-12">
                     {type === 'tv' && <TabButton name="episodes" label="Episodes" />}

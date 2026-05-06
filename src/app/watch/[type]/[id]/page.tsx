@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
 import { tmdb } from "@/lib/tmdb";
 import WatchContainer from "@/components/WatchContainer";
 
@@ -71,7 +70,6 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
 
     return (
         <main className="min-h-screen bg-black pb-20">
-            <Navbar />
             <WatchContainer 
                 type={type} 
                 id={id} 
