@@ -3,6 +3,8 @@
 import { tmdb } from "@/lib/tmdb";
 import { redirect } from "next/navigation";
 
+import { gotScraping } from 'got-scraping';
+
 export async function getSeasonDetailsAction(tvId: string, seasonNumber: number) {
     try {
         const data = await tmdb.getSeasonDetails(tvId, seasonNumber);
@@ -38,7 +40,7 @@ export async function getMoctaleReviewsAction(slug: string) {
             finalCookie = `auth_token=${cookie}`;
         }
 
-        const { gotScraping } = await import('got-scraping');
+
 
         const headers = {
             'accept': '*/*',
