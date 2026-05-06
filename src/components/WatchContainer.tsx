@@ -11,6 +11,7 @@ import { Star, Calendar, Clock, ArrowLeft, User, Play, Youtube } from "lucide-re
 import { getSeasonDetailsAction } from "@/app/actions";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import MoctaleReviews from "@/components/MoctaleReviews";
 
 interface WatchContainerProps {
     type: "movie" | "tv";
@@ -25,7 +26,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [season, setSeason] = useState(initialSeason);
     const [episode, setEpisode] = useState(initialEpisode);
     const [isPlaying, setIsPlaying] = useState(startPlaying);
-    const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips" | "photos">(type === "movie" ? "details" : "episodes");
+    const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips" | "photos" | "reviews">(type === "movie" ? "details" : "episodes");
     const [showAllCast, setShowAllCast] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
@@ -163,6 +164,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                     {tmdbData.videos?.results?.length > 0 && <TabButton name="clips" label="Clips" />}
                     {(tmdbData.images?.backdrops?.length > 0 || tmdbData.images?.posters?.length > 0) && <TabButton name="photos" label="Photos" />}
                     <TabButton name="details" label="Details" />
+                    <TabButton name="reviews" label="Reviews" />
                 </div>
             </div>
 
@@ -559,6 +561,25 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     </div>
                                 </div>
                             )}
+                        </motion.div>
+                    )}
+
+                    {activeTab === "reviews" && (
+                        <motion.div
+                            key="reviews"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <MoctaleReviews 
+                                title={tmdbData.title || tmdbData.name}
+                                date={tmdbData.release_date || tmdbData.first_air_date}
+                                type={type}
+                                tmdbRating={tmdbData.vote_average}
+                                genres={tmdbData.genres?.map((g: any) => g.name) || []}
+                                overview={tmdbData.overview || ""}
+                            />
                         </motion.div>
                     )}
                 </AnimatePresence>
