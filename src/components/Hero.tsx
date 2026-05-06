@@ -127,12 +127,13 @@ const Hero = ({ movies }: HeroProps) => {
                             transition={{ duration: 10, ease: "linear" }}
                             src={`https://image.tmdb.org/t/p/original${heroMovies[current].backdrop_path}`}
                             alt={heroMovies[current].title}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-[center_30%]"
                             referrerPolicy="no-referrer"
                         />
                         {/* Cinematic Gradients */}
                         <div className="absolute inset-0 cinematic-side" />
                         <div className="absolute inset-0 cinematic-overlay" />
+                        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
                     </div>
 
                     {/* Content */}

@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import AmbientBackground from "@/components/AmbientBackground";
+import AdBlockerPopup from "@/components/AdBlockerPopup";
 
 export default function RootLayout({
   children,
@@ -29,6 +30,7 @@ export default function RootLayout({
           </PageTransition>
         </div>
         <Footer />
+        <AdBlockerPopup />
       </body>
     </html>
   );

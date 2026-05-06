@@ -83,7 +83,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     };
 
     return (
-        <div className="relative w-full min-h-screen flex items-center bg-black pb-12">
+        <div className="relative w-full min-h-[50vh] lg:min-h-[65vh] flex items-start bg-black pt-8 md:pt-12 pb-10">
             {/* Background Blur */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 {backdropUrl && (
@@ -94,13 +94,13 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                     />
                 )}
             </div>
-            <div className="relative z-40 mt-0 md:-mt-10 w-full px-6 md:px-12 max-w-7xl mx-auto pt-40 md:pt-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative z-40 w-full px-6 md:px-12 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {/* Left Side: Info */}
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="space-y-6"
+                    className="space-y-8"
                 >
                     {tmdbData.images?.logos?.length > 0 ? (
                         <motion.div
@@ -163,32 +163,55 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8 }}
-                        className="flex flex-wrap items-center gap-4 pt-4"
+                        className="flex flex-col gap-8 pt-4"
                     >
-                        <button
-                            onClick={onPlay}
-                            className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
-                        >
-                            <Play className="fill-current w-7 h-7" />
-                            <div className="flex flex-col items-start leading-none text-left">
-                                <span className="text-[10px] uppercase font-black tracking-wider text-black/70">
-                                    {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
-                                </span>
-                                <span>{type === 'tv' ? "Continue watching" : "Watch now"}</span>
-                            </div>
-                        </button>
-
-                        {trailer && (
+                        {/* Primary action buttons */}
+                        <div className="flex flex-wrap items-center gap-4">
                             <button
-                                onClick={() => setShowTrailer(true)}
-                                className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
+                                onClick={onPlay}
+                                className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
                             >
-                                <Play className="w-6 h-6" />
-                                <span>Trailer</span>
+                                <Play className="fill-current w-7 h-7" />
+                                <div className="flex flex-col items-start leading-none text-left">
+                                    <span className="text-[10px] uppercase font-black tracking-wider text-black/70">
+                                        {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
+                                    </span>
+                                    <span>{type === 'tv' ? "Continue watching" : "Watch now"}</span>
+                                </div>
                             </button>
+
+                            {trailer && (
+                                <button
+                                    onClick={() => setShowTrailer(true)}
+                                    className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
+                                >
+                                    <Play className="w-6 h-6" />
+                                    <span>Trailer</span>
+                                </button>
+                            )}
+                        </div>
+
+                        {/* TV Season selector */}
+                        {type === 'tv' && (
+                            <div className="flex items-center">
+                                <Dropdown
+                                    value={currentSeason}
+                                    onChange={(val) => onSeasonChange(Number(val))}
+                                    options={tmdbData.seasons
+                                        ?.filter((s: any) => s.season_number > 0)
+                                        .map((s: any) => ({
+                                            value: s.season_number,
+                                            label: s.name || `Season ${s.season_number}`
+                                        })) || []
+                                    }
+                                    className="bg-white/10 hover:bg-white/20 border-white/10 shadow-lg px-7 py-3.5 text-base"
+                                    menuClassName="min-w-[200px]"
+                                />
+                            </div>
                         )}
 
-                        <div className="flex items-center gap-3">
+                        {/* Secondary utility buttons */}
+                        <div className="flex flex-wrap items-center gap-3">
                             <button
                                 onClick={handleWatchlistToggle}
                                 className={cn(
@@ -240,29 +263,6 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             )}
                         </div>
                     </motion.div>
-
-                    {type === 'tv' && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 1 }}
-                            className="pt-4"
-                        >
-                            <Dropdown
-                                value={currentSeason}
-                                onChange={(val) => onSeasonChange(Number(val))}
-                                options={tmdbData.seasons
-                                    ?.filter((s: any) => s.season_number > 0)
-                                    .map((s: any) => ({
-                                        value: s.season_number,
-                                        label: s.name || `Season ${s.season_number}`
-                                    })) || []
-                                }
-                                className="bg-white/10 hover:bg-white/20 border-white/10 shadow-lg px-7 py-3.5 text-base"
-                                menuClassName="min-w-[200px]"
-                            />
-                        </motion.div>
-                    )}
                 </motion.div>
 
                 {/* Right Side: Poster */}

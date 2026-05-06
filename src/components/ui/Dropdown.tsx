@@ -18,6 +18,7 @@ interface DropdownProps {
 
 export default function Dropdown({ value, onChange, options, className, menuClassName }: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [openUpward, setOpenUpward] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const selectedOption = options.find((opt) => opt.value === value) || options[0];
@@ -31,6 +32,15 @@ export default function Dropdown({ value, onChange, options, className, menuClas
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        if (isOpen && containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            // Menu is max-h-64 (256px). If space below is less than 280px, open upward.
+            setOpenUpward(spaceBelow < 280);
+        }
+    }, [isOpen]);
 
     return (
         <div className="relative inline-block" ref={containerRef}>
@@ -49,17 +59,18 @@ export default function Dropdown({ value, onChange, options, className, menuClas
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                        initial={{ opacity: 0, y: openUpward ? -8 : 8, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                        exit={{ opacity: 0, y: openUpward ? -8 : 8, scale: 0.95 }}
                         transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }} // smooth ease-out
                         className={cn(
-                            "absolute left-0 mt-2 min-w-[180px] max-h-64 overflow-y-auto bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] focus:outline-none origin-top-left",
+                            "absolute left-0 min-w-[180px] max-h-64 overflow-y-auto bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] focus:outline-none dropdown-scrollbar",
+                            openUpward ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left",
                             menuClassName
                         )}
                         style={{
-                            scrollbarWidth: "none",
-                            msOverflowStyle: "none"
+                            scrollbarWidth: "thin",
+                            scrollbarColor: "rgba(255, 255, 255, 0.2) transparent"
                         }}
                     >
                         <div className="space-y-0.5">
