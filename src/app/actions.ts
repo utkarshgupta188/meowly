@@ -143,4 +143,30 @@ export async function getNextGenresAction(startIndex: number, limit: number = 3,
     return rows.filter(r => r.movies.length > 0);
 }
 
+export async function searchAction(query: string) {
+    try {
+        if (!query || query.trim() === "") return [];
+        return await tmdb.search(query.trim());
+    } catch (error) {
+        console.error("searchAction error:", error);
+        return [];
+    }
+}
 
+export async function getTrendingAction(type: "movie" | "tv" | "all" = "all") {
+    try {
+        return await tmdb.getTrending(type);
+    } catch (error) {
+        console.error("getTrendingAction error:", error);
+        return [];
+    }
+}
+
+export async function getGenreListAction(type: "movie" | "tv" = "movie") {
+    try {
+        return await tmdb.getGenreList(type);
+    } catch (error) {
+        console.error("getGenreListAction error:", error);
+        return [];
+    }
+}

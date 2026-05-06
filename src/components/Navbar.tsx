@@ -47,10 +47,11 @@ const Navbar = () => {
     // Sync search query with URL
     useEffect(() => {
         const q = searchParams.get("q");
-        if (q) {
-            setSearchQuery(q);
+        setSearchQuery(q || "");
+        if (pathname === "/search" && q) {
+            setIsSearchOpen(true);
         }
-    }, [searchParams]);
+    }, [searchParams, pathname]);
 
     // Close search/menu on route change
     useEffect(() => {
@@ -67,6 +68,21 @@ const Navbar = () => {
             router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
             setIsMobileMenuOpen(false);
             setIsSearchOpen(false);
+        }
+    };
+
+    const handleSearchInputChange = (value: string) => {
+        setSearchQuery(value);
+        if (value.trim()) {
+            if (pathname !== "/search") {
+                router.push(`/search?q=${encodeURIComponent(value)}`);
+            } else {
+                router.replace(`/search?q=${encodeURIComponent(value)}`);
+            }
+        } else {
+            if (pathname === "/search") {
+                router.replace("/search");
+            }
         }
     };
 
@@ -105,23 +121,28 @@ const Navbar = () => {
                             className="flex-1 flex items-center bg-white/5 border border-white/10 backdrop-blur-sm rounded-full px-2"
                         >
                             <button
-                                onClick={() => setIsSearchOpen(false)}
+                                onClick={() => {
+                                    setIsSearchOpen(false);
+                                    if (pathname === "/search") {
+                                        router.back();
+                                    }
+                                }}
                                 className="p-2 text-gray-400 hover:text-white transition-colors"
                             >
                                 <ArrowLeft className="h-5 w-5" />
                             </button>
-                            <input
+                             <input
                                 autoFocus
                                 type="text"
                                 placeholder="Search titles..."
                                 value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onChange={(e) => handleSearchInputChange(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                                 className="bg-transparent border-none outline-none text-white text-base w-full placeholder-gray-500 py-2"
                             />
                             {searchQuery && (
                                 <button
-                                    onClick={() => setSearchQuery("")}
+                                    onClick={() => handleSearchInputChange("")}
                                     className="p-2 text-gray-400 hover:text-white transition-colors"
                                 >
                                     <X className="h-5 w-5" />
@@ -166,7 +187,7 @@ const Navbar = () => {
                                         type="text"
                                         placeholder="Search Meowly..."
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onChange={(e) => handleSearchInputChange(e.target.value)}
                                         onKeyDown={handleKeyDown}
                                         className="bg-transparent border-none py-1 text-[13px] text-white placeholder-gray-500 outline-none w-32 focus:w-48 transition-all duration-300"
                                     />

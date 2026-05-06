@@ -1,20 +1,98 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import MovieCard from "@/components/MovieCard";
 import SearchGrid from "@/components/SearchGrid";
-import { tmdb } from "@/lib/tmdb";
+import { searchAction, getTrendingAction, getGenreListAction } from "@/app/actions";
 
-interface SearchPageProps {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+const SearchSkeleton = () => {
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 animate-pulse">
+            {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                    <div className="aspect-[2/3] w-full bg-white/5 rounded-3xl" />
+                    <div className="h-4 bg-white/5 rounded-full w-3/4" />
+                    <div className="h-3 bg-white/5 rounded-full w-1/2" />
+                </div>
+            ))}
+        </div>
+    );
+};
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-    const query = (await searchParams).q as string;
+function SearchContent() {
+    const searchParams = useSearchParams();
+    const query = searchParams.get("q") || "";
 
-    const results = query ? await tmdb.search(query) : [];
-    const trending = !query ? await tmdb.getTrending("all") : [];
-    const genres = !query ? await tmdb.getGenreList("movie") : [];
+    const [results, setResults] = useState<any[]>([]);
+    const [trending, setTrending] = useState<any[]>([]);
+    const [genres, setGenres] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [debouncedQuery, setDebouncedQuery] = useState(query);
+
+    // Initial load for trending and genres
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            const [trendingData, genresData] = await Promise.all([
+                getTrendingAction("all"),
+                getGenreListAction("movie")
+            ]);
+            setTrending(trendingData || []);
+            setGenres(genresData || []);
+        };
+        fetchInitialData();
+    }, []);
+
+    // Sync input instant query to debounced query
+    useEffect(() => {
+        if (query.trim() !== "") {
+            setIsLoading(true); // Show loader immediately when typing starts for feedback!
+        }
+        const handler = setTimeout(() => {
+            setDebouncedQuery(query);
+        }, 250);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [query]);
+
+    // Live search action
+    useEffect(() => {
+        let active = true;
+
+        const performSearch = async () => {
+            if (!debouncedQuery.trim()) {
+                setResults([]);
+                setIsLoading(false);
+                return;
+            }
+
+            try {
+                const searchResults = await searchAction(debouncedQuery);
+                if (active) {
+                    setResults(searchResults || []);
+                }
+            } catch (error) {
+                console.error("Search error:", error);
+                if (active) {
+                    setResults([]);
+                }
+            } finally {
+                if (active) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        performSearch();
+
+        return () => {
+            active = false;
+        };
+    }, [debouncedQuery]);
 
     return (
         <main className="min-h-screen bg-black pb-20">
@@ -25,7 +103,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                     {query ? `Results for "${query}"` : "Search Meowly"}
                 </h1>
 
-                {results.length > 0 ? (
+                {isLoading ? (
+                    <SearchSkeleton />
+                ) : results.length > 0 ? (
                     <SearchGrid results={results} />
                 ) : !query ? (
                     <div className="space-y-12">
@@ -70,5 +150,23 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 )}
             </div>
         </main>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={
+            <main className="min-h-screen bg-black pb-20">
+                <Navbar />
+                <div className="pt-40 md:pt-32 px-4 md:px-12">
+                    <h1 className="text-2xl md:text-4xl font-black mb-8 animate-pulse text-white">
+                        Search Meowly
+                    </h1>
+                    <SearchSkeleton />
+                </div>
+            </main>
+        }>
+            <SearchContent />
+        </Suspense>
     );
 }
