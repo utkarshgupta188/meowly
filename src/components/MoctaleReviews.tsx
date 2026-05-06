@@ -399,11 +399,14 @@ export default function MoctaleReviews({ title, date, type, tmdbRating, genres, 
     const offsetPerfection = lenSkip + lenTimepass + lenGoforit;
 
     const legendItems = [
-        { label: "Perfection", value: Math.round(pctPerfect), color: "bg-[#a855f7]", stroke: "#a855f7" },
-        { label: "Go for it", value: Math.round(pctPositive), color: "bg-[#05d594]", stroke: "#05d594" },
-        { label: "Timepass", value: Math.round(pctNeutral), color: "bg-[#fbbf24]", stroke: "#fbbf24" },
-        { label: "Skip", value: Math.round(pctNegative), color: "bg-[#f43f5e]", stroke: "#f43f5e" }
+        { label: "Perfection", value: Math.round(pctPerfect), color: "bg-[#a855f7]", stroke: "#a855f7", gradient: "from-purple-300 to-purple-500" },
+        { label: "Go for it", value: Math.round(pctPositive), color: "bg-[#05d594]", stroke: "#05d594", gradient: "from-emerald-300 to-emerald-500" },
+        { label: "Timepass", value: Math.round(pctNeutral), color: "bg-[#fbbf24]", stroke: "#fbbf24", gradient: "from-amber-300 to-amber-500" },
+        { label: "Skip", value: Math.round(pctNegative), color: "bg-[#f43f5e]", stroke: "#f43f5e", gradient: "from-rose-300 to-rose-500" }
     ];
+
+    // Determine the highest-rated category
+    const dominant = legendItems.reduce((prev, curr) => curr.value > prev.value ? curr : prev, legendItems[0]);
 
     const keyHighlights = ((isUsingRealApi && (data?.keyTakeaways || data?.highlights))
         ? (data.keyTakeaways || data.highlights)
@@ -547,11 +550,14 @@ export default function MoctaleReviews({ title, date, type, tmdbRating, genres, 
 
                             {/* Absolute Overlay text exactly in the center of semicircle */}
                             <div className="absolute top-[65%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center flex flex-col items-center">
-                                <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-purple-200">
-                                    {Math.round(pctPerfect)}%
+                                <span className={`text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b ${dominant.gradient}`}>
+                                    {dominant.value}%
                                 </span>
-                                <span className="text-[10px] text-gray-500 font-extrabold tracking-tight mt-0.5 whitespace-nowrap uppercase">
-                                    {meterPerfect}/{meterTotal} Votes
+                                <span className="text-[10px] text-gray-400 font-extrabold tracking-tight mt-0.5 whitespace-nowrap uppercase">
+                                    {dominant.label}
+                                </span>
+                                <span className="text-[9px] text-gray-600 font-bold tracking-tight whitespace-nowrap">
+                                    {meterTotal.toLocaleString()} Votes
                                 </span>
                             </div>
                         </div>
@@ -559,15 +565,26 @@ export default function MoctaleReviews({ title, date, type, tmdbRating, genres, 
 
                     {/* Legend block matching the image perfectly */}
                     <div className="space-y-2.5 w-full pt-4 border-t border-white/5 mt-6">
-                        {legendItems.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between text-xs">
-                                <div className="flex items-center gap-2">
-                                    <div className={`w-2.5 h-2.5 rounded-full ${item.color} shadow-sm shadow-black/20`} />
-                                    <span className="text-gray-400 font-bold">{item.label}</span>
+                        {legendItems.map((item, index) => {
+                            const isDominant = item.label === dominant.label;
+                            return (
+                                <div
+                                    key={index}
+                                    className={`flex items-center justify-between text-xs px-2.5 py-1.5 rounded-lg transition-all ${
+                                        isDominant ? "bg-white/[0.04] border border-white/10" : ""
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-2.5 h-2.5 rounded-full ${item.color} shadow-sm shadow-black/20 ${isDominant ? "ring-2 ring-white/20" : ""}`} />
+                                        <span className={`font-bold ${isDominant ? "text-white" : "text-gray-400"}`}>{item.label}</span>
+                                        {isDominant && (
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-amber-400/80">Highest</span>
+                                        )}
+                                    </div>
+                                    <span className={`font-black ${isDominant ? "text-white text-sm" : "text-white"}`}>{item.value}%</span>
                                 </div>
-                                <span className="text-white font-black">{item.value}%</span>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
