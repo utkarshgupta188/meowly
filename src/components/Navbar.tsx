@@ -80,6 +80,7 @@ const Navbar = () => {
         { name: "Home", href: "/" },
         { name: "Movies", href: "/movies" },
         { name: "TV Shows", href: "/tv" },
+        { name: "People", href: "/people" },
         { name: "My List", href: "/watchlist" },
         { name: "Categories", href: "/categories" },
         { name: "Awards", href: "/awards" },

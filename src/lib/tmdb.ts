@@ -143,6 +143,10 @@ export const tmdb = {
         const data = await fetchTMDB(`/person/${id}/combined_credits`);
         return data || {};
     },
+    getPopularPeople: async (page = 1) => {
+        const data = await fetchTMDB("/person/popular", { page: page.toString() });
+        return data || {};
+    },
     getCollection: async (id: string) => {
         const data = await fetchTMDB(`/collection/${id}`);
         return data || {};
