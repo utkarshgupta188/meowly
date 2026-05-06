@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import MovieRow from "@/components/MovieRow";
 import { tmdb } from "@/lib/tmdb";
 import RecentlyPlayedRow from "@/components/RecentlyPlayedRow";
+import InfiniteGenres from "@/components/InfiniteGenres";
 
 export default async function Home() {
   const [
@@ -47,6 +48,7 @@ export default async function Home() {
         <MovieRow title="TV Shows" movies={popularTV} />
         <MovieRow title="Action Blockbusters" movies={actionMovies} />
         <MovieRow title="Comedy Hits" movies={comedyMovies} />
+        <InfiniteGenres />
       </div>
 
 

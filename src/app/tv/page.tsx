@@ -4,6 +4,7 @@ import MovieRow from "@/components/MovieRow";
 import FilterBar from "@/components/FilterBar";
 import { tmdb } from "@/lib/tmdb";
 import SearchGrid from "@/components/SearchGrid";
+import InfiniteGenres from "@/components/InfiniteGenres";
 
 interface TVPageProps {
     searchParams: Promise<{
@@ -67,6 +68,7 @@ export default async function TVPage({ searchParams }: TVPageProps) {
                     <MovieRow title="Top Rated" movies={topRated} />
                     <MovieRow title="Sci-Fi & Fantasy" movies={scifi} />
                     <MovieRow title="Drama Series" movies={drama} />
+                    <InfiniteGenres type="tv" />
                 </div>
             </div>
         </main>

@@ -77,3 +77,70 @@ export async function getMoctaleReviewsAction(slug: string) {
     }
 }
 
+export async function getNextGenresAction(startIndex: number, limit: number = 3, type: "all" | "movie" | "tv" = "all") {
+    let genreList = [];
+
+    if (type === "all") {
+        genreList = [
+            { title: "Sci-Fi & Fantasy", type: "tv" as const, genreId: "10765" },
+            { title: "Adventure Quests", type: "movie" as const, genreId: "12" },
+            { title: "Gripping Dramas", type: "movie" as const, genreId: "18" },
+            { title: "Chilling Horror", type: "movie" as const, genreId: "27" },
+            { title: "Crime Thrillers", type: "movie" as const, genreId: "80" },
+            { title: "Animated Wonders", type: "movie" as const, genreId: "16" },
+            { title: "Mystery & Suspense", type: "movie" as const, genreId: "9648" },
+            { title: "Romantic Getaways", type: "movie" as const, genreId: "10749" },
+            { title: "Reality Obsessions", type: "tv" as const, genreId: "10764" },
+            { title: "Insightful Documentaries", type: "movie" as const, genreId: "99" },
+            { title: "Wild West Tales", type: "movie" as const, genreId: "37" },
+            { title: "Musical Journeys", type: "movie" as const, genreId: "10402" },
+            { title: "Historic Wars", type: "movie" as const, genreId: "36" }
+        ];
+    } else if (type === "movie") {
+        genreList = [
+            { title: "Sci-Fi & Fantasy", type: "movie" as const, genreId: "878" },
+            { title: "Adventure Quests", type: "movie" as const, genreId: "12" },
+            { title: "Animated Wonders", type: "movie" as const, genreId: "16" },
+            { title: "Comedy Hits", type: "movie" as const, genreId: "35" },
+            { title: "Crime Thrillers", type: "movie" as const, genreId: "80" },
+            { title: "Insightful Documentaries", type: "movie" as const, genreId: "99" },
+            { title: "Romantic Getaways", type: "movie" as const, genreId: "10749" },
+            { title: "Mystery & Suspense", type: "movie" as const, genreId: "9648" },
+            { title: "Historic Wars", type: "movie" as const, genreId: "36" },
+            { title: "Wild West Tales", type: "movie" as const, genreId: "37" },
+            { title: "Musical Journeys", type: "movie" as const, genreId: "10402" }
+        ];
+    } else { // type === "tv"
+        genreList = [
+            { title: "Action & Adventure", type: "tv" as const, genreId: "10759" },
+            { title: "Animated Wonders", type: "tv" as const, genreId: "16" },
+            { title: "Comedy Hits", type: "tv" as const, genreId: "35" },
+            { title: "Crime Thrillers", type: "tv" as const, genreId: "80" },
+            { title: "Mystery & Suspense", type: "tv" as const, genreId: "9648" },
+            { title: "Reality Obsessions", type: "tv" as const, genreId: "10764" },
+            { title: "Insightful Documentaries", type: "tv" as const, genreId: "99" },
+            { title: "Historic Wars", type: "tv" as const, genreId: "10768" },
+            { title: "Wild West Tales", type: "tv" as const, genreId: "37" },
+            { title: "Musical Journeys", type: "tv" as const, genreId: "10402" }
+        ];
+    }
+
+    const slice = genreList.slice(startIndex, startIndex + limit);
+    if (slice.length === 0) return [];
+
+    const rows = await Promise.all(slice.map(async (g) => {
+        try {
+            const movies = await tmdb.getDiscover(g.type, { genreId: g.genreId });
+            return {
+                title: g.title,
+                movies: movies || []
+            };
+        } catch (e) {
+            return { title: g.title, movies: [] };
+        }
+    }));
+
+    return rows.filter(r => r.movies.length > 0);
+}
+
+
