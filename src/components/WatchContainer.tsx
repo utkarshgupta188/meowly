@@ -7,7 +7,7 @@ import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import EpisodeList from "@/components/EpisodeList";
 import MovieRow from "@/components/MovieRow";
 import DetailsHero from "@/components/DetailsHero";
-import { Star, Calendar, Clock, ArrowLeft, User, Play, Youtube, X } from "lucide-react";
+import { Star, Calendar, Clock, ArrowLeft, User, Play, Youtube, X, Download, ChevronLeft, ChevronRight, Loader2, CheckCircle2 } from "lucide-react";
 import { getSeasonDetailsAction } from "@/app/actions";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,6 +31,119 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [activeVideo, setActiveVideo] = useState<any | null>(null);
+    const [activePhoto, setActivePhoto] = useState<{ type: 'backdrop' | 'poster'; index: number; file_path: string } | null>(null);
+    const [downloadStatus, setDownloadStatus] = useState<'idle' | 'downloading' | 'success' | 'fallback'>('idle');
+
+    useEffect(() => {
+        if (downloadStatus !== 'idle') {
+            const delay = downloadStatus === 'fallback' ? 8000 : 4000;
+            const timer = setTimeout(() => setDownloadStatus('idle'), delay);
+            return () => clearTimeout(timer);
+        }
+    }, [downloadStatus]);
+
+    // Photos Gallery Handlers & Navigation
+    const getPhotoList = () => {
+        if (!activePhoto) return [];
+        if (activePhoto.type === 'backdrop') {
+            return tmdbData.images?.backdrops || [];
+        } else {
+            return tmdbData.images?.posters?.slice(0, 18) || [];
+        }
+    };
+
+    const photoList = getPhotoList();
+    const hasPrev = activePhoto !== null && activePhoto.index > 0;
+    const hasNext = activePhoto !== null && activePhoto.index < photoList.length - 1;
+
+    const handlePrev = () => {
+        if (!activePhoto || !hasPrev) return;
+        const prevIdx = activePhoto.index - 1;
+        setActivePhoto({
+            type: activePhoto.type,
+            index: prevIdx,
+            file_path: photoList[prevIdx].file_path
+        });
+    };
+
+    const handleNext = () => {
+        if (!activePhoto || !hasNext) return;
+        const nextIdx = activePhoto.index + 1;
+        setActivePhoto({
+            type: activePhoto.type,
+            index: nextIdx,
+            file_path: photoList[nextIdx].file_path
+        });
+    };
+
+    // Keyboard navigation for photo modal
+    useEffect(() => {
+        if (!activePhoto) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setActivePhoto(null);
+            } else if (e.key === "ArrowLeft") {
+                if (hasPrev) {
+                    const prevIdx = activePhoto.index - 1;
+                    setActivePhoto({
+                        type: activePhoto.type,
+                        index: prevIdx,
+                        file_path: photoList[prevIdx].file_path
+                    });
+                }
+            } else if (e.key === "ArrowRight") {
+                if (hasNext) {
+                    const nextIdx = activePhoto.index + 1;
+                    setActivePhoto({
+                        type: activePhoto.type,
+                        index: nextIdx,
+                        file_path: photoList[nextIdx].file_path
+                    });
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [activePhoto, photoList, hasPrev, hasNext]);
+
+    const handleDownload = async (filePath: string) => {
+        setDownloadStatus('downloading');
+        try {
+            const originalUrl = `${TMDB_CONFIG.imageBase}/original${filePath}`;
+            const proxyUrl = `https://meoserve.utkarshg.workers.dev/api/proxy?url=${encodeURIComponent(originalUrl)}`;
+            
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error('Proxy download failed');
+            
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            // Extract a clean filename from filePath
+            const filename = filePath.split('/').pop() || 'photo.jpg';
+            
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Revoke after a short delay to ensure browser processed click
+            setTimeout(() => {
+                window.URL.revokeObjectURL(blobUrl);
+            }, 100);
+            
+            setDownloadStatus('success');
+        } catch (error) {
+            console.error('Failed to download via proxy, falling back:', error);
+            // Fallback: open in new tab
+            const imageUrl = `${TMDB_CONFIG.imageBase}/original${filePath}`;
+            window.open(imageUrl, '_blank');
+            setDownloadStatus('fallback');
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -285,7 +398,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                             <div
                                                 key={idx}
                                                 className="relative aspect-video rounded-2xl overflow-hidden group border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-zoom-in"
-                                                onClick={() => window.open(`${TMDB_CONFIG.imageBase}/original${image.file_path}`, '_blank')}
+                                                onClick={() => setActivePhoto({ type: 'backdrop', index: idx, file_path: image.file_path })}
                                             >
                                                 <img
                                                     src={`${TMDB_CONFIG.imageBase}/w780${image.file_path}`}
@@ -311,7 +424,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                             <div
                                                 key={idx}
                                                 className="relative aspect-[2/3] rounded-xl overflow-hidden group border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-zoom-in"
-                                                onClick={() => window.open(`${TMDB_CONFIG.imageBase}/original${image.file_path}`, '_blank')}
+                                                onClick={() => setActivePhoto({ type: 'poster', index: idx, file_path: image.file_path })}
                                             >
                                                 <img
                                                     src={`${TMDB_CONFIG.imageBase}/w500${image.file_path}`}
@@ -615,6 +728,168 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 allowFullScreen
                             />
                         </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Photo Modal Viewer */}
+            <AnimatePresence>
+                {activePhoto && (
+                    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 md:p-8">
+                        {/* Blur Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setActivePhoto(null)}
+                            className="absolute inset-0 bg-black/95 backdrop-blur-md"
+                        />
+                        
+                        {/* Upper Right Control panel */}
+                        <div className="absolute top-6 right-6 z-[110] flex items-center gap-4">
+                            <button
+                                onClick={() => handleDownload(activePhoto.file_path)}
+                                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-accent hover:text-black text-white rounded-full transition-all duration-300 font-bold text-sm backdrop-blur-md border border-white/10 shadow-lg active:scale-95"
+                                title="Download image"
+                            >
+                                <Download className="w-4 h-4" />
+                                <span className="hidden md:inline">Download</span>
+                            </button>
+                            <button
+                                onClick={() => setActivePhoto(null)}
+                                className="p-3 bg-white/10 hover:bg-red-600 text-white rounded-full transition-all duration-300 backdrop-blur-md border border-white/10 shadow-lg"
+                                title="Close viewer"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Image Container */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                            transition={{ type: "spring", duration: 0.5 }}
+                            className="relative max-w-[90vw] max-h-[75vh] md:max-h-[80vh] flex items-center justify-center overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black/40 z-[105]"
+                        >
+                            <AnimatePresence mode="wait">
+                                <motion.img
+                                    key={activePhoto.file_path}
+                                    initial={{ opacity: 0, scale: 0.98 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 1.02 }}
+                                    transition={{ duration: 0.25 }}
+                                    src={`${TMDB_CONFIG.imageBase}/original${activePhoto.file_path}`}
+                                    className={cn(
+                                        "object-contain w-full h-full max-h-[70vh] md:max-h-[78vh] rounded-xl select-none shadow-[0_0_50px_rgba(0,0,0,0.8)]",
+                                        activePhoto.type === 'backdrop' ? 'aspect-video' : 'aspect-[2/3]'
+                                    )}
+                                    alt={`${activePhoto.type === 'backdrop' ? 'Backdrop' : 'Poster'} image`}
+                                />
+                            </AnimatePresence>
+                        </motion.div>
+
+                        {/* Bottom Navigation Control Bar */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 30 }}
+                            transition={{ delay: 0.1 }}
+                            className="relative mt-6 px-6 py-3 bg-black/60 backdrop-blur-lg border border-white/10 rounded-full flex items-center gap-6 z-[105] shadow-2xl"
+                        >
+                            <button
+                                onClick={handlePrev}
+                                disabled={!hasPrev}
+                                className="p-2 hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-transparent rounded-full text-white transition-all duration-200 active:scale-90"
+                                title="Previous Photo"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            
+                            <div className="flex flex-col items-center justify-center min-w-[120px] select-none text-center">
+                                <span className="text-white font-black text-sm tracking-wide">
+                                    {activePhoto.index + 1} <span className="text-gray-500 font-bold mx-0.5">/</span> {photoList.length}
+                                </span>
+                                <span className="text-[10px] text-accent font-black uppercase tracking-[0.2em] mt-0.5">
+                                    {activePhoto.type}
+                                </span>
+                            </div>
+
+                            <button
+                                onClick={handleNext}
+                                disabled={!hasNext}
+                                className="p-2 hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-transparent rounded-full text-white transition-all duration-200 active:scale-90"
+                                title="Next Photo"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </motion.div>
+
+                        {/* Glassmorphic Guidance Toast */}
+                        <AnimatePresence>
+                            {downloadStatus !== 'idle' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    className="fixed bottom-24 left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0 z-[120] max-w-sm w-[calc(100vw-2rem)] bg-black/60 backdrop-blur-xl border border-white/15 p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-start gap-4 text-white ring-1 ring-white/5"
+                                >
+                                    {downloadStatus === 'downloading' && (
+                                        <>
+                                            <div className="p-2.5 bg-accent/20 text-accent rounded-xl border border-accent/20 shrink-0">
+                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                            </div>
+                                            <div className="flex-1 min-w-0 text-left">
+                                                <h4 className="text-sm font-bold text-white mb-1">Downloading Image</h4>
+                                                <p className="text-xs text-gray-300 leading-relaxed">
+                                                    Fetching high-resolution photo directly to your device...
+                                                </p>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {downloadStatus === 'success' && (
+                                        <>
+                                            <div className="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/20 shrink-0">
+                                                <CheckCircle2 className="w-5 h-5" />
+                                            </div>
+                                            <div className="flex-1 min-w-0 text-left">
+                                                <h4 className="text-sm font-bold text-white mb-1">Download Complete</h4>
+                                                <p className="text-xs text-gray-300 leading-relaxed">
+                                                    The high-resolution image has been saved to your downloads folder!
+                                                </p>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {downloadStatus === 'fallback' && (
+                                        <>
+                                            <div className="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/20 shrink-0 animate-pulse">
+                                                <Download className="w-5 h-5" />
+                                            </div>
+                                            <div className="flex-1 min-w-0 text-left">
+                                                <h4 className="text-sm font-bold text-white mb-1">Saving Photo</h4>
+                                                <p className="text-xs text-gray-300 leading-relaxed">
+                                                    The original photo has been opened in a new tab. Simply <span className="text-accent font-semibold">right-click</span> (or <span className="text-accent font-semibold">long-press</span> on mobile) and select <span className="text-white font-semibold underline decoration-accent/50 decoration-2 underline-offset-2">"Save Image As..."</span>.
+                                                </p>
+                                                <div className="flex items-center gap-1.5 mt-2.5 text-[10px] text-gray-500 font-semibold tracking-wider uppercase select-none">
+                                                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                                                    Preserves 100% of your data quota
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    <button 
+                                        onClick={() => setDownloadStatus('idle')}
+                                        className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/5 rounded-lg shrink-0"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 )}
             </AnimatePresence>
