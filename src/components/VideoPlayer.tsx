@@ -19,8 +19,8 @@ interface VideoPlayerProps {
 const SERVERS = [
     {
         name: "Server 1",
-        movie: (id: string) => `https://vidsrc.in/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidsrc.in/embed/tv/${id}/${s}/${e}`,
+        movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
