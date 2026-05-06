@@ -82,6 +82,7 @@ const Navbar = () => {
         { name: "TV Shows", href: "/tv" },
         { name: "My List", href: "/watchlist" },
         { name: "Categories", href: "/categories" },
+        { name: "Awards", href: "/awards" },
     ];
 
     return (

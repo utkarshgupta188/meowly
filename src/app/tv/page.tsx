@@ -41,10 +41,12 @@ export default async function TVPage({ searchParams }: TVPageProps) {
         );
     }
 
-    const [trending, popular, topRated, scifi, drama] = await Promise.all([
+    const [trending, popular, topRated, airingToday, onTheAir, scifi, drama] = await Promise.all([
         tmdb.getTrending("tv"),
         tmdb.getPopular("tv"),
         tmdb.getTopRated("tv"),
+        tmdb.getAiringToday(),
+        tmdb.getOnTheAir(),
         tmdb.getDiscover("tv", { genreId: "10765" }), // Sci-Fi & Fantasy
         tmdb.getDiscover("tv", { genreId: "18" }),    // Drama
     ]);
@@ -58,6 +60,8 @@ export default async function TVPage({ searchParams }: TVPageProps) {
                 <FilterBar type="tv" genres={genres} />
                 
                 <div className="mt-10 md:mt-4 space-y-12 transition-all duration-500">
+                    <MovieRow title="Airing Today" movies={airingToday} />
+                    <MovieRow title="Currently Airing (On The Air)" movies={onTheAir} />
                     <MovieRow title="Trending TV Shows" movies={trending} />
                     <MovieRow title="Popular Series" movies={popular} />
                     <MovieRow title="Top Rated" movies={topRated} />

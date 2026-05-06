@@ -147,6 +147,29 @@ export const tmdb = {
         const data = await fetchTMDB(`/collection/${id}`);
         return data || {};
     },
+    getListDetails: async (listId: string | number): Promise<Movie[]> => {
+        const data = await fetchTMDB(`/list/${listId}`);
+        return (data?.items || []).map((item: any) => ({
+            ...item,
+            media_type: item.media_type || "movie"
+        }));
+    },
+    getUpcoming: async (): Promise<Movie[]> => {
+        const data = await fetchTMDB("/movie/upcoming");
+        return (data?.results || []).map((item: any) => ({ ...item, media_type: "movie" }));
+    },
+    getNowPlaying: async (): Promise<Movie[]> => {
+        const data = await fetchTMDB("/movie/now_playing");
+        return (data?.results || []).map((item: any) => ({ ...item, media_type: "movie" }));
+    },
+    getAiringToday: async (): Promise<Movie[]> => {
+        const data = await fetchTMDB("/tv/airing_today");
+        return (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+    },
+    getOnTheAir: async (): Promise<Movie[]> => {
+        const data = await fetchTMDB("/tv/on_the_air");
+        return (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+    },
     getRandomContent: async (): Promise<Movie | null> => {
         const types: ("movie" | "tv")[] = ["movie", "tv"];
         const type = types[Math.floor(Math.random() * types.length)];
