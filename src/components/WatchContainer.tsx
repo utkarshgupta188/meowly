@@ -7,7 +7,7 @@ import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import EpisodeList from "@/components/EpisodeList";
 import MovieRow from "@/components/MovieRow";
 import DetailsHero from "@/components/DetailsHero";
-import { Star, Calendar, Clock, ArrowLeft, User, Play, Youtube } from "lucide-react";
+import { Star, Calendar, Clock, ArrowLeft, User, Play, Youtube, X } from "lucide-react";
 import { getSeasonDetailsAction } from "@/app/actions";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,6 +30,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [showAllCast, setShowAllCast] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
+    const [activeVideo, setActiveVideo] = useState<any | null>(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -232,7 +233,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     <div
                                         key={video.id}
                                         className="group relative bg-prime-card/40 rounded-2xl overflow-hidden border border-white/5 hover:border-accent/50 transition-all shadow-xl cursor-pointer"
-                                        onClick={() => window.open(`https://www.youtube.com/watch?v=${video.key}`, '_blank')}
+                                        onClick={() => setActiveVideo(video)}
                                     >
                                         <div className="aspect-video relative">
                                             <img
@@ -583,6 +584,40 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* Video Modal Player */}
+            <AnimatePresence>
+                {activeVideo && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setActiveVideo(null)}
+                            className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10"
+                        >
+                            <button
+                                onClick={() => setActiveVideo(null)}
+                                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors backdrop-blur-md"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                            <iframe
+                                src={`https://www.youtube.com/embed/${activeVideo.key}?autoplay=1`}
+                                className="w-full h-full border-none"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 }
