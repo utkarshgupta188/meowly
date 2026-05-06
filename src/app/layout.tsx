@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
+import AmbientBackground from "@/components/AmbientBackground";
 
 export default function RootLayout({
   children,
@@ -20,8 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white`}>
-        <div className="flex-grow">
+      <body className={`${inter.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white relative`}>
+        <AmbientBackground />
+        <div className="flex-grow relative z-10">
           <PageTransition>
             {children}
           </PageTransition>

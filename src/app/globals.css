@@ -116,4 +116,80 @@ body {
       opacity: 1;
     }
   }
+
+  .animate-hue-shift {
+    animation: slow-hue-shift 50s linear infinite;
+  }
+
+  @keyframes slow-hue-shift {
+    0% {
+      filter: hue-rotate(0deg);
+    }
+    50% {
+      filter: hue-rotate(180deg);
+    }
+    100% {
+      filter: hue-rotate(360deg);
+    }
+  }
+
+  .animate-breathe-one {
+    animation: breathe-one 16s infinite ease-in-out;
+  }
+
+  .animate-breathe-two {
+    animation: breathe-two 20s infinite ease-in-out;
+  }
+
+  .animate-breathe-three {
+    animation: breathe-three 18s infinite ease-in-out;
+  }
+
+  .animate-breathe-four {
+    animation: breathe-four 22s infinite ease-in-out;
+  }
+
+  @keyframes breathe-one {
+    0%, 100% {
+      transform: scale(0.9) translate(0px, 0px);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.15) translate(40px, -20px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes breathe-two {
+    0%, 100% {
+      transform: scale(1.1) translate(0px, 0px);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(0.85) translate(-30px, 40px);
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes breathe-three {
+    0%, 100% {
+      transform: scale(0.85) translate(0px, 0px);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.1) translate(30px, 30px);
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes breathe-four {
+    0%, 100% {
+      transform: scale(1) translate(0px, 0px);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.15) translate(-40px, -15px);
+      opacity: 0.4;
+    }
+  }
 }

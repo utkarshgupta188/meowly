@@ -23,7 +23,7 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
 
     useEffect(() => {
         setInWatchlist(isInWatchlist(movie.id.toString(), movie.media_type || 'movie'));
-        
+
         const handleUpdate = () => {
             setInWatchlist(isInWatchlist(movie.id.toString(), movie.media_type || 'movie'));
         };
@@ -91,8 +91,8 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            whileHover={{ 
-                scale: 1.15, 
+            whileHover={{
+                scale: 1.15,
                 zIndex: 50,
                 y: -10,
                 transition: { type: "spring", stiffness: 400, damping: 25 }
@@ -134,13 +134,13 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                     <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                                <button 
+                                <button
                                     onClick={handlePlayClick}
                                     className="bg-accent text-black p-2 rounded-full hover:scale-110 transition-transform shadow-lg shadow-accent/20"
                                 >
                                     <Play className="h-4 w-4 fill-current" />
                                 </button>
-                                <button 
+                                <button
                                     onClick={handleWatchlistClick}
                                     className={cn(
                                         "p-2 rounded-full backdrop-blur-md border border-white/20 hover:scale-110 transition-transform",
@@ -150,7 +150,7 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                                     {inWatchlist ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
                                 </button>
                                 {isResume && (
-                                    <button 
+                                    <button
                                         onClick={handleInfoClick}
                                         className="p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:scale-110 transition-transform text-white hover:bg-white/20"
                                         title="Show details"

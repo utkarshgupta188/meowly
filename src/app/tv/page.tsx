@@ -19,7 +19,7 @@ export default async function TVPage() {
         <main className="min-h-screen pb-20 overflow-x-hidden">
             <Navbar />
             {trending.length > 0 && <Hero movies={trending} />}
-            
+
             <div className="relative z-40">
                 <div className="mt-10 md:mt-4 space-y-12 transition-all duration-500">
                     <MovieRow title="Airing Today" movies={airingToday} />

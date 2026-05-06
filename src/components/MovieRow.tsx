@@ -19,7 +19,7 @@ interface MovieRowProps {
 
 const getHeaderConfig = (title: string) => {
     const lowerTitle = title.toLowerCase();
-    
+
     if (lowerTitle.includes("recent")) {
         return {
             gradient: "from-cyan-400 via-sky-400 to-indigo-400",
@@ -181,7 +181,7 @@ const getHeaderConfig = (title: string) => {
             badge: { text: "SOON", bg: "bg-amber-500/10 text-amber-400 border border-amber-500/20" }
         };
     }
-    
+
     return {
         gradient: "from-white via-white to-neutral-400",
         icon: null,
@@ -202,7 +202,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
     };
 
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -227,8 +227,8 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
                         </span>
                     )}
                 </div>
-                <Link 
-                    href={`/search?q=${encodeURIComponent(title.toLowerCase())}`} 
+                <Link
+                    href={`/search?q=${encodeURIComponent(title.toLowerCase())}`}
                     className="text-xs md:text-sm font-semibold text-gray-500 hover:text-white transition-colors flex items-center"
                 >
                     See All <ChevronRight className="h-4 w-4 ml-0.5" />
@@ -249,9 +249,9 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {movies.map((movie) => (
-                        <MovieCard 
-                            key={`${movie.id}-${movie.media_type}`} 
-                            movie={movie} 
+                        <MovieCard
+                            key={`${movie.id}-${movie.media_type}`}
+                            movie={movie}
                             isResume={isResume}
                             className={cardClassName}
                             onRemove={onRemove}
