@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: WatchPageProps) {
 export default async function WatchPage({ params, searchParams }: WatchPageProps) {
     const { type, id } = await params;
     const { s, e, resume } = await searchParams;
+    
     const movie = await tmdb.getDetails(type, id);
 
     if (!movie || !movie.id) {

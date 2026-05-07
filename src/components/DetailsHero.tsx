@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
-import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, X } from "lucide-react";
+import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, X, Trophy, Sparkles, Award, Star, Compass, Flame, Palette, Globe, Video, Heart, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
+const Tiktok = (props: React.ComponentProps<"svg">) => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    </svg>
+);
+
 import Dropdown from "@/components/ui/Dropdown";
+
+const IconMap: Record<string, React.ComponentType<any>> = {
+    Trophy,
+    Sparkles,
+    Award,
+    Star,
+    Compass,
+    Flame,
+    Palette,
+    Globe,
+    Video,
+    Heart
+};
 
 interface DetailsHeroProps {
     tmdbData: any;
@@ -250,15 +277,75 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                 </a>
                             )}
 
-                            {tmdbData.imdb_id && (
+                            {(tmdbData.imdb_id || tmdbData.external_ids?.imdb_id) && (
                                 <a
-                                    href={`https://www.imdb.com/title/${tmdbData.imdb_id}`}
+                                    href={`https://www.imdb.com/title/${tmdbData.imdb_id || tmdbData.external_ids.imdb_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white font-black text-xs"
                                     title="IMDb"
                                 >
                                     IMDb
+                                </a>
+                            )}
+
+                            {tmdbData.external_ids?.instagram_id && (
+                                <a
+                                    href={`https://instagram.com/${tmdbData.external_ids.instagram_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    title="Instagram"
+                                >
+                                    <Instagram className="w-5 h-5 text-gray-300 hover:text-white" />
+                                </a>
+                            )}
+
+                            {tmdbData.external_ids?.twitter_id && (
+                                <a
+                                    href={`https://twitter.com/${tmdbData.external_ids.twitter_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    title="Twitter / X"
+                                >
+                                    <Twitter className="w-5 h-5 text-gray-300 hover:text-white" />
+                                </a>
+                            )}
+
+                            {tmdbData.facebook_id || tmdbData.external_ids?.facebook_id ? (
+                                <a
+                                    href={`https://facebook.com/${tmdbData.facebook_id || tmdbData.external_ids.facebook_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    title="Facebook"
+                                >
+                                    <Facebook className="w-5 h-5 text-gray-300 hover:text-white" />
+                                </a>
+                            ) : null}
+
+                            {tmdbData.external_ids?.youtube_id && (
+                                <a
+                                    href={`https://youtube.com/${tmdbData.external_ids.youtube_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    title="YouTube"
+                                >
+                                    <Youtube className="w-5 h-5 text-gray-300 hover:text-white" />
+                                </a>
+                            )}
+
+                            {tmdbData.external_ids?.tiktok_id && (
+                                <a
+                                    href={`https://tiktok.com/@${tmdbData.external_ids.tiktok_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    title="TikTok"
+                                >
+                                    <Tiktok className="w-5 h-5 text-gray-300 hover:text-white" />
                                 </a>
                             )}
                         </div>

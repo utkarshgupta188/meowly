@@ -106,7 +106,7 @@ export const tmdb = {
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
         const data = await fetchTMDB(`/${type}/${id}`, { 
-            append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords",
+            append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords,external_ids",
             include_image_language: "en,null"
         });
         return data || {};
@@ -160,7 +160,25 @@ export const tmdb = {
     },
     getListDetails: async (listId: string | number): Promise<Movie[]> => {
         const data = await fetchTMDB(`/list/${listId}`);
-        return (data?.items || []).map((item: any) => ({
+        if (!data) return [];
+        
+        let allItems = [...(data.items || [])];
+        const totalPages = data.total_pages || 1;
+        
+        if (totalPages > 1) {
+            const promises = [];
+            for (let p = 2; p <= totalPages; p++) {
+                promises.push(fetchTMDB(`/list/${listId}`, { page: p.toString() }));
+            }
+            const results = await Promise.all(promises);
+            results.forEach((res) => {
+                if (res?.items) {
+                    allItems = allItems.concat(res.items);
+                }
+            });
+        }
+        
+        return allItems.map((item: any) => ({
             ...item,
             media_type: item.media_type || "movie"
         }));

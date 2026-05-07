@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import AwardsClient from "./AwardsClient";
 import { tmdb } from "@/lib/tmdb";
 import { Metadata } from "next";
@@ -53,7 +52,6 @@ export default async function AwardsPage() {
                     filmfare={filmfare}
                 />
             </div>
-            <Footer />
         </main>
     );
 }

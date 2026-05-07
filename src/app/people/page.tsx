@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import PeopleClient from "./PeopleClient";
 import { tmdb } from "@/lib/tmdb";
 import { Metadata } from "next";
@@ -40,7 +39,6 @@ export default async function PeoplePage() {
             <div className="pt-32 px-6 md:px-12 max-w-7xl mx-auto">
                 <PeopleClient initialPeople={popularPeople} />
             </div>
-            <Footer />
         </main>
     );
 }

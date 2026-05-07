@@ -2,10 +2,24 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Star, Calendar, MapPin, User, Instagram, Twitter, Globe, ChevronDown, ChevronUp, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Star, Calendar, MapPin, User, Instagram, Twitter, Facebook, Youtube, Globe, ChevronDown, ChevronUp, Image as ImageIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import MovieRow from './MovieRow';
 import { TMDB_CONFIG } from '@/lib/tmdb';
+
+const Tiktok = (props: React.ComponentProps<"svg">) => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    </svg>
+);
 
 interface PersonDetailsClientProps {
     person: any;
@@ -175,6 +189,26 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
                                         icon={Twitter} 
                                         href={externalIds.twitter_id ? `https://twitter.com/${externalIds.twitter_id}` : ""} 
                                         label="Twitter"
+                                    />
+                                    <SocialLink 
+                                        icon={Facebook} 
+                                        href={externalIds.facebook_id ? `https://facebook.com/${externalIds.facebook_id}` : ""} 
+                                        label="Facebook"
+                                    />
+                                    <SocialLink 
+                                        icon={Youtube} 
+                                        href={externalIds.youtube_id ? `https://youtube.com/${externalIds.youtube_id}` : ""} 
+                                        label="YouTube"
+                                    />
+                                    <SocialLink 
+                                        icon={Tiktok} 
+                                        href={externalIds.tiktok_id ? `https://tiktok.com/@${externalIds.tiktok_id}` : ""} 
+                                        label="TikTok"
+                                    />
+                                    <SocialLink 
+                                        icon={Globe} 
+                                        href={externalIds.wikidata_id ? `https://wikidata.org/wiki/${externalIds.wikidata_id}` : ""} 
+                                        label="Wikidata"
                                     />
                                     <SocialLink 
                                         icon={Globe} 
