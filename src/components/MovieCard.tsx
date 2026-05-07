@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Play, Plus, Check, Info, X } from "lucide-react";
+import { Play, Plus, Check, Info, X, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import { cn } from "@/lib/utils";
@@ -32,11 +32,15 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
         return () => window.removeEventListener("watchlistUpdated", handleUpdate);
     }, [movie.id, movie.media_type]);
 
-    const imageUrl = movie.backdrop_path
-        ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
-        : movie.poster_path
-            ? `${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`
-            : null;
+    const isPerson = movie.media_type === "person";
+
+    const imageUrl = isPerson
+        ? (movie.profile_path ? `${TMDB_CONFIG.posterSizes.medium}${movie.profile_path}` : null)
+        : movie.backdrop_path
+            ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
+            : movie.poster_path
+                ? `${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`
+                : null;
 
     const watchUrl = `/watch/${movie.media_type || 'movie'}/${movie.id}${movie.season ? `?s=${movie.season}&e=${movie.episode || 1}` : ''}`;
     const playUrl = `${watchUrl}${watchUrl.includes('?') ? '&' : '?'}resume=true`;
@@ -77,7 +81,11 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     };
 
     const handleCardClick = () => {
-        router.push(isResume ? detailsUrl : watchUrl);
+        if (isPerson) {
+            router.push(`/person/${movie.id}`);
+        } else {
+            router.push(isResume ? detailsUrl : watchUrl);
+        }
     };
 
     const handleRemoveClick = (e: React.MouseEvent) => {
@@ -115,85 +123,129 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                         <X className="h-3.5 w-3.5" />
                     </button>
                 )}
-                {movie.poster_path ? (
+                {imageUrl ? (
                     <img
-                        src={`${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`}
-                        alt={movie.title || movie.name || "Movie"}
+                        src={imageUrl}
+                        alt={movie.title || movie.name || "Media"}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         loading="lazy"
                         referrerPolicy="no-referrer"
                     />
                 ) : (
-                    <div className="flex items-center justify-center h-full w-full bg-white/5 text-gray-500 text-xs text-center p-2">
-                        {movie.title || movie.name}
+                    <div className="flex flex-col items-center justify-center h-full w-full bg-white/5 text-gray-500 text-xs text-center p-4">
+                        {isPerson ? (
+                            <User className="h-10 w-10 text-gray-600 mb-2" />
+                        ) : null}
+                        <span>{movie.title || movie.name}</span>
                     </div>
                 )}
 
                 {/* Detailed Hover Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-4">
                     <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 space-y-2">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                                <button
-                                    onClick={handlePlayClick}
-                                    className="bg-accent text-black p-2 rounded-full hover:scale-110 transition-transform shadow-lg shadow-accent/20"
-                                >
-                                    <Play className="h-4 w-4 fill-current" />
-                                </button>
-                                <button
-                                    onClick={handleWatchlistClick}
-                                    className={cn(
-                                        "p-2 rounded-full backdrop-blur-md border border-white/20 hover:scale-110 transition-transform",
-                                        inWatchlist ? "bg-accent border-accent text-black" : "bg-black/60 text-white"
-                                    )}
-                                >
-                                    {inWatchlist ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-                                </button>
-                                {isResume && (
-                                    <button
-                                        onClick={handleInfoClick}
-                                        className="p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:scale-110 transition-transform text-white hover:bg-white/20"
-                                        title="Show details"
-                                    >
+                        {isPerson ? (
+                            <>
+                                <div className="flex items-center justify-between">
+                                    <span className="px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 text-[9px] font-bold uppercase tracking-wider">
+                                        {movie.known_for_department || "Person"}
+                                    </span>
+                                    <div className="p-1.5 rounded-full bg-white/10 border border-white/20 text-white">
                                         <Info className="h-3 w-3" />
-                                    </button>
+                                    </div>
+                                </div>
+
+                                <h3 className="text-sm md:text-base font-bold text-white mb-1 line-clamp-1 drop-shadow-md">
+                                    {movie.name}
+                                </h3>
+
+                                {movie.known_for && movie.known_for.length > 0 && (
+                                    <div className="space-y-1 pt-1.5 border-t border-white/10">
+                                        <div className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Known For</div>
+                                        <div className="flex flex-col gap-1">
+                                            {movie.known_for.slice(0, 3).map((item) => (
+                                                <div 
+                                                    key={item.id}
+                                                    className="text-[10px] text-gray-200 line-clamp-1 flex items-center"
+                                                >
+                                                    <span className="text-accent mr-1.5">•</span>
+                                                    <span>{item.title || item.name}</span>
+                                                    {item.release_date && (
+                                                        <span className="text-gray-400 ml-1">
+                                                            ({item.release_date.split("-")[0]})
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 )}
-                            </div>
-                            <div className="bg-white/20 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold text-white border border-white/10">
-                                HD
-                            </div>
-                        </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                        <button
+                                            onClick={handlePlayClick}
+                                            className="bg-accent text-black p-2 rounded-full hover:scale-110 transition-transform shadow-lg shadow-accent/20"
+                                        >
+                                            <Play className="h-4 w-4 fill-current" />
+                                        </button>
+                                        <button
+                                            onClick={handleWatchlistClick}
+                                            className={cn(
+                                                "p-2 rounded-full backdrop-blur-md border border-white/20 hover:scale-110 transition-transform",
+                                                inWatchlist ? "bg-accent border-accent text-black" : "bg-black/60 text-white"
+                                            )}
+                                        >
+                                            {inWatchlist ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+                                        </button>
+                                        {isResume && (
+                                            <button
+                                                onClick={handleInfoClick}
+                                                className="p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:scale-110 transition-transform text-white hover:bg-white/20"
+                                                title="Show details"
+                                            >
+                                                <Info className="h-3 w-3" />
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="bg-white/20 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold text-white border border-white/10">
+                                        HD
+                                    </div>
+                                </div>
 
-                        <h3 className="text-sm md:text-base font-bold text-white mb-1 line-clamp-1 drop-shadow-md">
-                            {movie.title || movie.name}
-                        </h3>
+                                <h3 className="text-sm md:text-base font-bold text-white mb-1 line-clamp-1 drop-shadow-md">
+                                    {movie.title || movie.name}
+                                </h3>
 
-                        {movie.media_type === "tv" && movie.season && (
-                            <div className="text-[10px] text-accent font-bold mb-1">
-                                Season {movie.season} • Episode {movie.episode || 1}
-                            </div>
+                                {movie.media_type === "tv" && movie.season && (
+                                    <div className="text-[10px] text-accent font-bold mb-1">
+                                        Season {movie.season} • Episode {movie.episode || 1}
+                                    </div>
+                                )}
+
+                                <div className="flex items-center space-x-3 text-[10px] font-bold text-gray-300 mb-2">
+                                    <span className="text-accent flex items-center">
+                                        <span className="mr-1">★</span>
+                                        {movie.vote_average?.toFixed(1) || "0.0"}
+                                    </span>
+                                    <span className="px-1.5 py-0.5 rounded bg-white/10 text-white/80">
+                                        {movie.release_date?.split("-")?.[0] || movie.first_air_date?.split("-")?.[0] || "N/A"}
+                                    </span>
+                                </div>
+
+                                <p className="text-[11px] md:text-xs text-gray-200/90 line-clamp-4 leading-relaxed font-medium">
+                                    {movie.tagline ? (
+                                        <>
+                                            <span className="text-accent font-bold italic mr-1">"{movie.tagline}"</span>
+                                            {movie.overview}
+                                        </>
+                                    ) : (
+                                        movie.overview
+                                    )}
+                                </p>
+                            </>
                         )}
-
-                        <div className="flex items-center space-x-3 text-[10px] font-bold text-gray-300 mb-2">
-                            <span className="text-accent flex items-center">
-                                <span className="mr-1">★</span>
-                                {movie.vote_average?.toFixed(1) || "0.0"}
-                            </span>
-                            <span className="px-1.5 py-0.5 rounded bg-white/10 text-white/80">
-                                {movie.release_date?.split("-")?.[0] || movie.first_air_date?.split("-")?.[0] || "N/A"}
-                            </span>
-                        </div>
-
-                        <p className="text-[11px] md:text-xs text-gray-200/90 line-clamp-4 leading-relaxed font-medium">
-                            {movie.tagline ? (
-                                <>
-                                    <span className="text-accent font-bold italic mr-1">"{movie.tagline}"</span>
-                                    {movie.overview}
-                                </>
-                            ) : (
-                                movie.overview
-                            )}
-                        </p>
                     </div>
                 </div>
 

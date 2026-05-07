@@ -15,6 +15,7 @@ interface MovieRowProps {
     cardClassName?: string;
     isResume?: boolean;
     onRemove?: (id: string, type: string) => void;
+    seeAllUrl?: string;
 }
 
 const getHeaderConfig = (title: string) => {
@@ -189,9 +190,72 @@ const getHeaderConfig = (title: string) => {
     };
 };
 
-const MovieRow = ({ title, movies, className, cardClassName, isResume = false, onRemove }: MovieRowProps) => {
+const getSeeAllUrl = (title: string): string | null => {
+    const lower = title.toLowerCase().trim();
+
+    // 1. Core Pages Mapping
+    if (lower === "popular movies") return "/movies";
+    if (lower === "tv shows" || lower === "popular series") return "/tv";
+    if (lower === "my list" || lower === "watchlist") return "/watchlist";
+
+    // 2. Movie Genre Pages (from homepage, categories page, movies page)
+    if (lower === "action blockbusters" || lower === "action movies") {
+        return "/categories/28?name=Action&type=movie";
+    }
+    if (lower === "comedy hits" || lower === "comedy movies") {
+        return "/categories/35?name=Comedy&type=movie";
+    }
+    if (lower === "horror movies" || lower === "chilling horror") {
+        return "/categories/27?name=Horror&type=movie";
+    }
+    if (lower === "animation favorites" || lower === "animated wonders") {
+        return "/categories/16?name=Animation&type=movie";
+    }
+    if (lower === "drama series" || lower === "gripping dramas" || lower === "drama movies") {
+        return "/categories/18?name=Drama&type=tv";
+    }
+    if (lower === "sci-fi & fantasy") {
+        return "/categories/10765?name=Sci-Fi%20%26%20Fantasy&type=tv";
+    }
+    if (lower === "adventure quests") {
+        return "/categories/12?name=Adventure&type=movie";
+    }
+    if (lower === "crime thrillers") {
+        return "/categories/80?name=Crime&type=movie";
+    }
+    if (lower === "mystery & suspense") {
+        return "/categories/9648?name=Mystery&type=movie";
+    }
+    if (lower === "romantic getaways") {
+        return "/categories/10749?name=Romance&type=movie";
+    }
+    if (lower === "reality obsessions") {
+        return "/categories/10764?name=Reality&type=tv";
+    }
+    if (lower === "insightful documentaries") {
+        return "/categories/99?name=Documentary&type=movie";
+    }
+    if (lower === "wild west tales") {
+        return "/categories/37?name=Western&type=movie";
+    }
+    if (lower === "musical journeys") {
+        return "/categories/10402?name=Music&type=movie";
+    }
+    if (lower === "historic wars") {
+        return "/categories/36?name=History&type=movie";
+    }
+    if (lower === "action & adventure") {
+        return "/categories/10759?name=Action%20%26%20Adventure&type=tv";
+    }
+
+    // Default to null for contextual or non-paginated rows (Trending Now, Recently Played, Recommendations, Similar, Airing Today, Known For, etc.)
+    return null;
+};
+
+const MovieRow = ({ title, movies, className, cardClassName, isResume = false, onRemove, seeAllUrl }: MovieRowProps) => {
     const rowRef = useRef<HTMLDivElement>(null);
     const config = getHeaderConfig(title);
+    const resolvedSeeAllUrl = seeAllUrl ?? getSeeAllUrl(title);
 
     const scroll = (direction: "left" | "right") => {
         if (rowRef.current) {
@@ -227,12 +291,14 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
                         </span>
                     )}
                 </div>
-                <Link
-                    href={`/search?q=${encodeURIComponent(title.toLowerCase())}`}
-                    className="text-xs md:text-sm font-semibold text-gray-500 hover:text-white transition-colors flex items-center"
-                >
-                    See All <ChevronRight className="h-4 w-4 ml-0.5" />
-                </Link>
+                {resolvedSeeAllUrl && (
+                    <Link
+                        href={resolvedSeeAllUrl}
+                        className="text-xs md:text-sm font-semibold text-gray-500 hover:text-white transition-colors flex items-center"
+                    >
+                        See All <ChevronRight className="h-4 w-4 ml-0.5" />
+                    </Link>
+                )}
             </div>
 
             <div className="relative group/nav" style={{ overflow: 'clip', overflowClipMargin: '40px' }}>

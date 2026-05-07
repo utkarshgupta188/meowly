@@ -176,7 +176,7 @@ const Hero = ({ movies }: HeroProps) => {
                             >
                                 <span className="flex items-center">
                                     <span className="text-accent mr-1.5">★</span>
-                                    <span className="text-white font-bold">{heroMovies[current].vote_average.toFixed(1)}</span>
+                                    <span className="text-white font-bold">{heroMovies[current].vote_average?.toFixed(1) || "0.0"}</span>
                                 </span>
                                 <span className="text-gray-600">•</span>
                                 <span className="text-white font-medium">{heroMovies[current].release_date?.split("-")[0] || heroMovies[current].first_air_date?.split("-")[0]}</span>

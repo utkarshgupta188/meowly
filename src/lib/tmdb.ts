@@ -75,17 +75,20 @@ export type Movie = {
     id: number;
     title?: string;
     name?: string;
-    overview: string;
-    poster_path: string;
-    backdrop_path: string;
+    overview?: string;
+    poster_path?: string;
+    backdrop_path?: string;
     release_date?: string;
     first_air_date?: string;
-    vote_average: number;
-    media_type: "movie" | "tv";
+    vote_average?: number;
+    media_type: "movie" | "tv" | "person";
     season?: number;
     episode?: number;
     tagline?: string;
     logos?: any[];
+    profile_path?: string;
+    known_for_department?: string;
+    known_for?: Movie[];
 };
 
 export const tmdb = {
@@ -110,7 +113,11 @@ export const tmdb = {
     },
     search: async (query: string): Promise<Movie[]> => {
         const data = await fetchTMDB("/search/multi", { query });
-        return (data?.results || []).filter((item: any) => item.media_type === "movie" || item.media_type === "tv");
+        return (data?.results || []).filter((item: any) => 
+            item.media_type === "movie" || 
+            item.media_type === "tv" || 
+            item.media_type === "person"
+        );
     },
     getGenreList: async (type: "movie" | "tv") => {
         const data = await fetchTMDB(`/genre/${type}/list`);
