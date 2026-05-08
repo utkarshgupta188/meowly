@@ -21,7 +21,7 @@ export default async function MoviesPage() {
             {trending.length > 0 && <Hero movies={trending} />}
 
             <div className="relative z-40">
-                <div className="mt-10 md:mt-4 space-y-12 transition-all duration-500">
+                <div className="mt-10 md:mt-4 space-y-6 md:space-y-12 transition-all duration-500">
                     <MovieRow title="Now Playing in Theaters" movies={nowPlaying} />
                     <MovieRow title="Upcoming Anticipated" movies={upcoming} />
                     <MovieRow title="Trending Movies" movies={trending} />

@@ -28,9 +28,9 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
     const movies = await tmdb.getDiscover(type, { genreId });
 
     return (
-        <main className="min-h-screen bg-black pt-40 md:pt-32 pb-20 overflow-x-hidden">
+        <main className="min-h-screen bg-black pt-24 sm:pt-28 md:pt-32 pb-20 overflow-x-hidden">
             <Navbar />
-            <div className="px-8 md:px-12">
+            <div className="px-4 sm:px-8 md:px-12">
                 <div className="flex items-center gap-4 mb-12">
                     <h1 className="text-3xl md:text-5xl font-bold">
                         <span className="text-accent">{genreName}</span> {type === "movie" ? "Movies" : "TV Shows"}
@@ -38,9 +38,9 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
                 </div>
 
                 {movies && movies.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
                         {movies.map((movie) => (
-                            <MovieCard key={movie.id} movie={movie} />
+                            <MovieCard key={movie.id} movie={movie} isFluid={true} />
                         ))}
                     </div>
                 ) : (

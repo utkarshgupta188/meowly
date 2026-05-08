@@ -100,7 +100,7 @@ const Hero = ({ movies }: HeroProps) => {
     };
 
     return (
-        <div className="relative h-[65vh] md:h-[85vh] w-full overflow-hidden bg-black group">
+        <div className="relative h-[75vh] sm:h-[80vh] md:h-[85vh] w-full overflow-hidden bg-black group">
             <TrailerModal 
                 isOpen={isTrailerModalOpen}
                 onClose={() => setIsTrailerModalOpen(false)}
@@ -137,15 +137,15 @@ const Hero = ({ movies }: HeroProps) => {
                     </div>
 
                     {/* Content */}
-                    <div className="absolute inset-0 flex flex-col px-4 md:px-12 lg:px-20 pt-20 pb-20 md:pb-32 justify-end">
-                        <div className="max-w-3xl space-y-6 z-10">
+                    <div className="absolute inset-0 flex flex-col px-4 sm:px-6 md:px-12 lg:px-20 pt-24 pb-14 md:pb-32 justify-end">
+                        <div className="max-w-3xl space-y-3 sm:space-y-4 md:space-y-6 z-10">
                             {/* Title / Logo */}
                             {heroMovies[current].logos && (heroMovies[current].logos as any[]).length > 0 ? (
                                 <motion.div
                                     initial={{ opacity: 0, x: -30 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
-                                    className="h-24 md:h-32 lg:h-40 w-full flex items-start"
+                                    className="h-12 sm:h-20 md:h-32 lg:h-40 w-full flex items-start"
                                 >
                                     <img
                                         src={`${TMDB_CONFIG.imageBase}/original${
@@ -161,7 +161,7 @@ const Hero = ({ movies }: HeroProps) => {
                                     initial={{ opacity: 0, x: -30 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
-                                    className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none drop-shadow-2xl"
+                                    className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none drop-shadow-2xl"
                                 >
                                     {heroMovies[current].title || heroMovies[current].name}
                                 </motion.h1>
@@ -172,16 +172,16 @@ const Hero = ({ movies }: HeroProps) => {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.6, delay: 0.3 }}
-                                className="flex items-center space-x-4 text-gray-300 text-sm md:text-base font-medium"
+                                className="flex items-center space-x-3 sm:space-x-4 text-gray-300 text-xs sm:text-sm md:text-base font-medium"
                             >
                                 <span className="flex items-center">
-                                    <span className="text-accent mr-1.5">★</span>
+                                    <span className="text-accent mr-1 sm:mr-1.5">★</span>
                                     <span className="text-white font-bold">{heroMovies[current].vote_average?.toFixed(1) || "0.0"}</span>
                                 </span>
                                 <span className="text-gray-600">•</span>
                                 <span className="text-white font-medium">{heroMovies[current].release_date?.split("-")[0] || heroMovies[current].first_air_date?.split("-")[0]}</span>
                                 <span className="text-gray-600">•</span>
-                                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-white border border-white/10 uppercase tracking-widest font-bold">4K Ultra HD</span>
+                                <span className="px-1.5 py-0.5 rounded-full bg-white/10 text-[9px] sm:text-[10px] text-white border border-white/10 uppercase tracking-widest font-bold">4K Ultra HD</span>
                             </motion.div>
 
                             {/* Description */}
@@ -189,7 +189,7 @@ const Hero = ({ movies }: HeroProps) => {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.6, delay: 0.4 }}
-                                className="text-gray-300 text-base md:text-lg line-clamp-3 font-light leading-relaxed max-w-2xl"
+                                className="text-gray-300 text-xs sm:text-sm md:text-lg line-clamp-2 sm:line-clamp-3 font-light leading-relaxed max-w-2xl"
                             >
                                 {heroMovies[current].overview}
                             </motion.p>
@@ -199,14 +199,14 @@ const Hero = ({ movies }: HeroProps) => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.5 }}
-                                className="flex flex-wrap items-center gap-4 pt-4"
+                                className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-4 pt-2 md:pt-4"
                             >
                                 <Link
                                     href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}?resume=true`}
-                                    className="flex items-center space-x-3 bg-white text-black px-8 py-3 rounded-full font-bold text-base md:text-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-xl shadow-white/10"
+                                    className="flex items-center space-x-1 sm:space-x-2 bg-white text-black px-3 py-2 sm:px-5 sm:py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-xl shadow-white/10"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <Play className="fill-current w-5 h-5 md:w-6 md:h-6" />
+                                    <Play className="fill-current w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
                                     <span>Watch Now</span>
                                 </Link>
 
@@ -217,20 +217,20 @@ const Hero = ({ movies }: HeroProps) => {
                                     }}
                                     disabled={isTrailerLoading}
                                     className={cn(
-                                        "flex items-center space-x-3 bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-base md:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10",
+                                        "flex items-center space-x-1 sm:space-x-2 bg-white/10 backdrop-blur-md text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10",
                                         isTrailerLoading && "animate-pulse"
                                     )}
                                 >
-                                    <Clapperboard className="w-5 h-5 md:w-6 md:h-6 text-amber-400" />
+                                    <Clapperboard className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-amber-400" />
                                     <span>{isTrailerLoading ? "Loading..." : "Trailer"}</span>
                                 </button>
 
                                 <Link
                                     href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}`}
-                                    className="flex items-center space-x-3 bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-base md:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10"
+                                    className="flex items-center space-x-1 sm:space-x-2 bg-white/10 backdrop-blur-md text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <Info className="w-5 h-5 md:w-6 md:h-6 text-accent" />
+                                    <Info className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-accent" />
                                     <span>Info</span>
                                 </Link>
 
@@ -240,13 +240,17 @@ const Hero = ({ movies }: HeroProps) => {
                                         handleWatchlistToggle();
                                     }}
                                     className={cn(
-                                        "p-3 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
+                                        "p-2 sm:p-2.5 md:p-3.5 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
                                         inWatchlist 
                                             ? "bg-accent text-black border-accent" 
                                             : "bg-black/40 text-white hover:bg-black/60"
                                     )}
                                 >
-                                    {inWatchlist ? <Check className="w-5 h-5 md:w-6 md:h-6" /> : <Plus className="w-5 h-5 md:w-6 md:h-6" />}
+                                    {inWatchlist ? (
+                                        <Check className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+                                    ) : (
+                                        <Plus className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+                                    )}
                                 </button>
                             </motion.div>
                         </div>
@@ -255,7 +259,7 @@ const Hero = ({ movies }: HeroProps) => {
             </AnimatePresence>
 
             {/* Pagination Indicators */}
-            <div className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+            <div className="absolute bottom-4 sm:bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
                 {heroMovies.map((_, index) => (
                     <button
                         key={index}
@@ -264,8 +268,8 @@ const Hero = ({ movies }: HeroProps) => {
                             setCurrent(index);
                         }}
                         className={cn(
-                            "h-1.5 transition-all duration-300 rounded-full",
-                            current === index ? "w-8 bg-white" : "w-2 bg-white/30 hover:bg-white/50"
+                            "h-1 sm:h-1.5 transition-all duration-300 rounded-full",
+                            current === index ? "w-6 sm:w-8 bg-white" : "w-1.5 sm:w-2 bg-white/30 hover:bg-white/50"
                         )}
                     />
                 ))}

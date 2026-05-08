@@ -36,7 +36,7 @@ export default async function PeoplePage() {
     return (
         <main className="min-h-screen bg-black text-white pb-20 overflow-x-hidden">
             <Navbar />
-            <div className="pt-32 px-6 md:px-12 max-w-7xl mx-auto">
+            <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto">
                 <PeopleClient initialPeople={popularPeople} />
             </div>
         </main>

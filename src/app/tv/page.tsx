@@ -21,7 +21,7 @@ export default async function TVPage() {
             {trending.length > 0 && <Hero movies={trending} />}
 
             <div className="relative z-40">
-                <div className="mt-10 md:mt-4 space-y-12 transition-all duration-500">
+                <div className="mt-10 md:mt-4 space-y-6 md:space-y-12 transition-all duration-500">
                     <MovieRow title="Airing Today" movies={airingToday} />
                     <MovieRow title="Currently Airing (On The Air)" movies={onTheAir} />
                     <MovieRow title="Trending TV Shows" movies={trending} />

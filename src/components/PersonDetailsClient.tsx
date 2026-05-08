@@ -59,7 +59,7 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
             {/* Back Button */}
             <button 
                 onClick={() => router.back()}
-                className="fixed top-6 left-6 md:left-12 z-[100] inline-flex items-center text-gray-400 hover:text-white transition-all group p-3 glass-pill"
+                className="fixed top-6 left-4 sm:left-8 md:left-12 z-[100] inline-flex items-center text-gray-400 hover:text-white transition-all group p-3 glass-pill"
             >
                 <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
                 <span className="font-bold hidden md:inline">Back</span>
@@ -81,7 +81,7 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative z-10 min-h-[70vh] max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-end pt-32 pb-12">
+                <div className="relative z-10 min-h-[70vh] max-w-7xl mx-auto px-4 sm:px-8 md:px-12 flex flex-col justify-end pt-32 pb-12">
                     <div className="flex flex-col md:flex-row gap-8 items-end">
                         <motion.div 
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -127,7 +127,7 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
                     {/* Left: Biography */}
                     <div className="lg:col-span-2 space-y-8">
@@ -247,7 +247,7 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
                 </div>
 
                 {/* Standard Sized Known For Section */}
-                <section className="-mx-6 md:-mx-12 mt-12">
+                <section className="-mx-4 sm:-mx-8 md:-mx-12 mt-12">
                     <MovieRow 
                         title="Known For" 
                         movies={knownFor} 

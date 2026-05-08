@@ -20,7 +20,7 @@ export default async function CategoriesPage() {
     return (
         <main className="min-h-screen pb-20 bg-black pt-40 md:pt-32 overflow-x-hidden">
             <Navbar />
-            <div className="px-8 md:px-12 space-y-12">
+            <div className="px-8 md:px-12 space-y-6 md:space-y-12">
                 <h1 className="text-3xl md:text-5xl font-bold mb-8">Categories</h1>
 
                 <section className="animate-in slide-in-from-bottom-4 fade-in duration-700 delay-100">
@@ -61,7 +61,7 @@ export default async function CategoriesPage() {
                     </div>
                 </section>
 
-                <div className="space-y-16 mt-20">
+                <div className="space-y-6 md:space-y-16 mt-10 md:mt-20">
                     <MovieRow title="Action Blockbusters" movies={action} className="px-0 md:px-0" />
                     <MovieRow title="Comedy Hits" movies={comedy} className="px-0 md:px-0" />
                     <MovieRow title="Drama Series" movies={drama} className="px-0 md:px-0" />

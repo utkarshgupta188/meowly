@@ -40,7 +40,7 @@ export default async function Home() {
 
       {heroMovies && heroMovies.length > 0 && <Hero movies={heroMovies as any} />}
 
-      <div className="relative z-40 mt-4 md:-mt-10 space-y-12 transition-all duration-500">
+      <div className="relative z-40 mt-4 md:-mt-10 space-y-6 md:space-y-12 transition-all duration-500">
         <RecentlyPlayedRow />
         <MovieRow title="Trending Now" movies={trending} />
         <MovieRow title="Popular Movies" movies={popularMovies} />

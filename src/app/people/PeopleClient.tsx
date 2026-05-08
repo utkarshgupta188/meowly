@@ -160,7 +160,7 @@ export default function PeopleClient({ initialPeople }: PeopleClientProps) {
                     initial="hidden"
                     animate="show"
                     exit="hidden"
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8"
+                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6"
                 >
                     {filteredPeople.length > 0 ? (
                         filteredPeople.map((person) => {

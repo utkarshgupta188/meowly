@@ -36,10 +36,10 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
 
     const imageUrl = isPerson
         ? (movie.profile_path ? `${TMDB_CONFIG.posterSizes.medium}${movie.profile_path}` : null)
-        : movie.backdrop_path
-            ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
-            : movie.poster_path
-                ? `${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`
+        : movie.poster_path
+            ? `${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`
+            : movie.backdrop_path
+                ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
                 : null;
 
     const watchUrl = `/watch/${movie.media_type || 'movie'}/${movie.id}${movie.season ? `?s=${movie.season}&e=${movie.episode || 1}` : ''}`;
@@ -107,7 +107,7 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
             }}
             className={cn(
                 "relative group cursor-pointer transition-all duration-300",
-                isFluid ? "w-full" : "flex-none w-[160px] md:w-[220px]",
+                isFluid ? "w-full" : "flex-none w-[165px] sm:w-[185px] md:w-[205px] lg:w-[220px]",
                 className
             )}
             onClick={handleCardClick}

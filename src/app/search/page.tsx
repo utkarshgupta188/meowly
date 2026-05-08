@@ -10,7 +10,7 @@ import { searchAction, getTrendingAction, getGenreListAction } from "@/app/actio
 
 const SearchSkeleton = () => {
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 animate-pulse">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 animate-pulse">
             {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="space-y-3">
                     <div className="aspect-[2/3] w-full bg-white/5 rounded-3xl" />
@@ -98,7 +98,7 @@ function SearchContent() {
         <main className="min-h-screen bg-black pb-20">
             <Navbar />
 
-            <div className="pt-40 md:pt-32 px-4 md:px-12">
+            <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12">
                 <h1 className="text-2xl md:text-4xl font-black mb-8 transition-all animate-in fade-in slide-in-from-left duration-700 truncate max-w-full pb-2">
                     {query ? `Results for "${query}"` : "Search Meowly"}
                 </h1>
@@ -131,9 +131,9 @@ function SearchContent() {
                                 <div className="w-1 h-6 bg-accent rounded-full" />
                                 <h2 className="text-xl font-bold">Trending Now</h2>
                             </div>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
                                 {trending.slice(0, 12).map((item) => (
-                                    <MovieCard key={item.id} movie={item} />
+                                    <MovieCard key={item.id} movie={item} isFluid={true} />
                                 ))}
                             </div>
                         </div>
@@ -158,7 +158,7 @@ export default function SearchPage() {
         <Suspense fallback={
             <main className="min-h-screen bg-black pb-20">
                 <Navbar />
-                <div className="pt-40 md:pt-32 px-4 md:px-12">
+                <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12">
                     <h1 className="text-2xl md:text-4xl font-black mb-8 animate-pulse text-white">
                         Search Meowly
                     </h1>

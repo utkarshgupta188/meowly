@@ -74,7 +74,7 @@ const InfiniteGenres = ({ type = "all" }: InfiniteGenresProps) => {
     }, [currentIndex, hasMore, isLoading]);
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-6 md:space-y-12">
             {/* Loaded rows */}
             {rows.map((row) => (
                 <MovieRow 

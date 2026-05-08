@@ -439,7 +439,7 @@ const AwardsClient = ({
                     initial="hidden"
                     animate="show"
                     exit="hidden"
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6"
                 >
                     {processedMovies.length > 0 ? (
                         processedMovies.map((movie) => (

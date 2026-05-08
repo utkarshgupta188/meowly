@@ -134,7 +134,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="h-24 md:h-32 lg:h-40 w-full flex items-start"
+                            className="h-16 sm:h-24 md:h-32 lg:h-40 w-full flex items-start"
                         >
                             <img
                                 src={`${TMDB_CONFIG.imageBase}/original${tmdbData.images.logos.find((l: any) => l.iso_639_1 === 'en')?.file_path ||
@@ -149,7 +149,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter"
+                            className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter"
                         >
                             {tmdbData.title || tmdbData.name}
                         </motion.h1>
@@ -196,9 +196,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         <div className="flex flex-wrap items-center gap-4">
                             <button
                                 onClick={onPlay}
-                                className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
+                                className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
                             >
-                                <Play className="fill-current w-7 h-7" />
+                                <Play className="fill-current w-5 h-5 md:w-7 md:h-7" />
                                 <div className="flex flex-col items-start leading-none text-left">
                                     <span className="text-[10px] uppercase font-black tracking-wider text-black/70">
                                         {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
@@ -210,9 +210,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             {trailer && (
                                 <button
                                     onClick={() => setShowTrailer(true)}
-                                    className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
+                                    className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
                                 >
-                                    <Play className="w-6 h-6" />
+                                    <Play className="w-5 h-5 md:w-6 md:h-6" />
                                     <span>Trailer</span>
                                 </button>
                             )}
@@ -242,25 +242,25 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             <button
                                 onClick={handleWatchlistToggle}
                                 className={cn(
-                                    "w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
+                                    "w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
                                     inWatchlist
                                         ? "bg-accent border-accent text-black shadow-lg shadow-accent/20"
                                         : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                 )}
                                 title={inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
                             >
-                                {inWatchlist ? <Check className="w-7 h-7" /> : <Plus className="w-7 h-7" />}
+                                {inWatchlist ? <Check className="w-5 h-5 md:w-7 md:h-7" /> : <Plus className="w-5 h-5 md:w-7 md:h-7" />}
                             </button>
 
                             <button
                                 onClick={handleShare}
                                 className={cn(
-                                    "w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
+                                    "w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2",
                                     copied ? "bg-green-600 border-green-500 text-white" : "bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                 )}
                                 title="Share"
                             >
-                                {copied ? <Check className="w-7 h-7" /> : <Share2 className="w-7 h-7" />}
+                                {copied ? <Check className="w-5 h-5 md:w-7 md:h-7" /> : <Share2 className="w-5 h-5 md:w-7 md:h-7" />}
                             </button>
 
                             {tmdbData.homepage && (
@@ -268,10 +268,10 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     href={tmdbData.homepage}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/10 hover:bg-white/20 border-white/10 hover:border-white/40 text-white"
                                     title="Official Website"
                                 >
-                                    <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 md:w-6 md:h-6 fill-current" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                                     </svg>
                                 </a>
@@ -282,7 +282,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     href={`https://www.imdb.com/title/${tmdbData.imdb_id || tmdbData.external_ids.imdb_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white font-black text-xs"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white font-black text-[10px] md:text-xs"
                                     title="IMDb"
                                 >
                                     IMDb
@@ -294,10 +294,10 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     href={`https://instagram.com/${tmdbData.external_ids.instagram_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
                                     title="Instagram"
                                 >
-                                    <Instagram className="w-5 h-5 text-gray-300 hover:text-white" />
+                                    <Instagram className="w-4 h-4 md:w-5 md:h-5 text-gray-300 hover:text-white" />
                                 </a>
                             )}
 
@@ -306,34 +306,34 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     href={`https://twitter.com/${tmdbData.external_ids.twitter_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
                                     title="Twitter / X"
                                 >
-                                    <Twitter className="w-5 h-5 text-gray-300 hover:text-white" />
+                                    <Twitter className="w-4 h-4 md:w-5 md:h-5 text-gray-300 hover:text-white" />
                                 </a>
                             )}
 
-                            {tmdbData.facebook_id || tmdbData.external_ids?.facebook_id ? (
+                            {(tmdbData.facebook_id || tmdbData.external_ids?.facebook_id) && (
                                 <a
                                     href={`https://facebook.com/${tmdbData.facebook_id || tmdbData.external_ids.facebook_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
                                     title="Facebook"
                                 >
-                                    <Facebook className="w-5 h-5 text-gray-300 hover:text-white" />
+                                    <Facebook className="w-4 h-4 md:w-5 md:h-5 text-gray-300 hover:text-white" />
                                 </a>
-                            ) : null}
+                            )}
 
                             {tmdbData.external_ids?.youtube_id && (
                                 <a
                                     href={`https://youtube.com/${tmdbData.external_ids.youtube_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
                                     title="YouTube"
                                 >
-                                    <Youtube className="w-5 h-5 text-gray-300 hover:text-white" />
+                                    <Youtube className="w-4 h-4 md:w-5 md:h-5 text-gray-300 hover:text-white" />
                                 </a>
                             )}
 
@@ -342,10 +342,10 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     href={`https://tiktok.com/@${tmdbData.external_ids.tiktok_id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+                                    className="w-10 h-10 md:w-14 md:h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 border-2 bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
                                     title="TikTok"
                                 >
-                                    <Tiktok className="w-5 h-5 text-gray-300 hover:text-white" />
+                                    <Tiktok className="w-4 h-4 md:w-5 md:h-5 text-gray-300 hover:text-white" />
                                 </a>
                             )}
                         </div>

@@ -105,7 +105,7 @@ export default function VideoPlayer({
         <div className="flex flex-col w-full h-full">
             {/* Player Frame */}
             <div className={cn(
-                "relative w-full aspect-video md:h-[75vh] bg-black group transition-all duration-500",
+                "relative w-full aspect-[14/10] sm:aspect-video md:h-[75vh] bg-black group transition-all duration-500",
                 isTheaterMode && "md:h-[90vh] z-40"
             )}>
                 <iframe

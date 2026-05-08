@@ -31,7 +31,7 @@ export const SectionSkeleton = () => {
     return (
         <div className="space-y-6 px-4 md:px-12 py-8">
             <Skeleton className="h-8 w-48" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
                 {[...Array(6)].map((_, i) => (
                     <MovieCardSkeleton key={i} />
                 ))}
@@ -42,7 +42,7 @@ export const SectionSkeleton = () => {
 
 export const MovieRowSkeleton = () => {
     return (
-        <div className="space-y-4 px-8 md:px-12 py-4">
+        <div className="space-y-4 px-4 sm:px-8 md:px-12 py-4">
             <Skeleton className="h-7 w-48 mb-6" />
             <div className="flex space-x-4 overflow-hidden">
                 {[...Array(8)].map((_, i) => (

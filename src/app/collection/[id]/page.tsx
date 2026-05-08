@@ -73,7 +73,7 @@ export default async function CollectionPage({
             </div>
 
             {/* Collection Items */}
-            <div className="px-8 md:px-12">
+            <div className="px-4 sm:px-8 md:px-12">
                 <div className="flex items-center gap-4 mb-8">
                     <div className="w-1.5 h-8 bg-accent rounded-full" />
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
@@ -83,9 +83,9 @@ export default async function CollectionPage({
                 </div>
 
                 {collection.parts && collection.parts.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
                         {collection.parts.map((movie: any) => (
-                            <MovieCard key={movie.id} movie={{ ...movie, media_type: 'movie' }} />
+                            <MovieCard key={movie.id} movie={{ ...movie, media_type: 'movie' }} isFluid={true} />
                         ))}
                     </div>
                 ) : (

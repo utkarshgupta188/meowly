@@ -271,7 +271,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className={cn("space-y-4 px-8 md:px-12 group/row", className)}
+            className={cn("space-y-2 md:space-y-4 px-4 sm:px-8 md:px-12 group/row", className)}
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3 group/header cursor-pointer select-none">
@@ -311,7 +311,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
 
                 <div
                     ref={rowRef}
-                    className="flex space-x-4 overflow-x-auto overflow-y-visible scrollbar-hide px-4 py-8 scroll-smooth"
+                    className="flex items-start space-x-4 overflow-x-auto overflow-y-visible scrollbar-hide px-4 py-3 md:py-8 scroll-smooth"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {movies.map((movie) => (

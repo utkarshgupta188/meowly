@@ -208,7 +208,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const TabButton = ({ name, label }: { name: typeof activeTab, label: string }) => (
         <button
             onClick={() => setActiveTab(name)}
-            className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 ${activeTab === name ? "text-accent" : "text-gray-400 hover:text-white"
+            className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${activeTab === name ? "text-accent" : "text-gray-400 hover:text-white"
                 }`}
         >
             {label}
@@ -271,12 +271,12 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             <div className={cn(
                 "bg-prime-dark/95 backdrop-blur-sm sticky z-30 border-b border-gray-800 shadow-md transition-all duration-500 top-0"
             )}>
-                <div className="flex items-center space-x-2 px-4 md:px-12">
+                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none px-4 md:px-12 pb-0.5">
                     {type === 'tv' && <TabButton name="episodes" label="Episodes" />}
                     <TabButton name="related" label="Related" />
+                    <TabButton name="details" label="Details" />
                     {tmdbData.videos?.results?.length > 0 && <TabButton name="clips" label="Clips" />}
                     {(tmdbData.images?.backdrops?.length > 0 || tmdbData.images?.posters?.length > 0) && <TabButton name="photos" label="Photos" />}
-                    <TabButton name="details" label="Details" />
                     <TabButton name="reviews" label="Reviews" />
                 </div>
             </div>
@@ -341,7 +341,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 </h3>
                                 <span className="text-gray-500 text-xs font-black uppercase tracking-widest">{tmdbData.videos?.results?.length} Videos</span>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                                 {tmdbData.videos?.results?.map((video: any) => (
                                     <div
                                         key={video.id}
@@ -393,7 +393,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                         Backdrops
                                         <span className="text-gray-500 text-xs font-black uppercase tracking-widest">{tmdbData.images.backdrops.length}</span>
                                     </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                                         {tmdbData.images.backdrops.map((image: any, idx: number) => (
                                             <div
                                                 key={idx}
@@ -419,7 +419,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                         Posters
                                         <span className="text-gray-500 text-xs font-black uppercase tracking-widest">{tmdbData.images.posters.length}</span>
                                     </h3>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
                                         {tmdbData.images.posters.slice(0, 18).map((image: any, idx: number) => (
                                             <div
                                                 key={idx}
@@ -582,7 +582,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                             Full Cast
                                         </h3>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                                             {tmdbData.credits?.cast?.slice(0, showAllCast ? 100 : 9).map((person: any) => (
                                                 <Link href={`/person/${person.id}`} key={person.id} className="flex items-center space-x-4 group cursor-pointer hover:bg-white/5 p-4 rounded-2xl transition-all border border-transparent hover:border-white/10">
                                                     <div className="w-16 h-16 rounded-2xl bg-gray-800 overflow-hidden border-2 border-transparent group-hover:border-accent transition-all shadow-lg group-hover:shadow-accent/20 flex-shrink-0">
