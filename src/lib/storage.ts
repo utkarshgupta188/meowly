@@ -20,6 +20,20 @@ export interface RecentItem {
     tagline?: string;
 }
 
+// In-memory caches to bypass redundant localStorage reads and JSON.parse operations
+let cachedWatchlist: RecentItem[] | null = null;
+let cachedRecentlyPlayed: RecentItem[] | null = null;
+
+// Multi-tab or custom event invalidation listeners
+if (typeof window !== "undefined") {
+    window.addEventListener("watchlistUpdated", () => {
+        cachedWatchlist = null;
+    });
+    window.addEventListener("recentlyPlayedUpdated", () => {
+        cachedRecentlyPlayed = null;
+    });
+}
+
 export function saveToRecentlyPlayed(item: RecentItem) {
     if (typeof window === "undefined") return;
 
@@ -39,6 +53,7 @@ export function saveToRecentlyPlayed(item: RecentItem) {
         }
 
         localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(items));
+        cachedRecentlyPlayed = items;
         
         // Dispatch a custom event to notify other components
         window.dispatchEvent(new Event("recentlyPlayedUpdated"));
@@ -49,10 +64,12 @@ export function saveToRecentlyPlayed(item: RecentItem) {
 
 export function getRecentlyPlayed(): RecentItem[] {
     if (typeof window === "undefined") return [];
+    if (cachedRecentlyPlayed !== null) return cachedRecentlyPlayed;
 
     try {
         const stored = localStorage.getItem(RECENTLY_PLAYED_KEY);
-        return stored ? JSON.parse(stored) : [];
+        cachedRecentlyPlayed = stored ? JSON.parse(stored) : [];
+        return cachedRecentlyPlayed!;
     } catch (error) {
         return [];
     }
@@ -69,6 +86,7 @@ export function removeFromRecentlyPlayed(id: string, type: string) {
         items = items.filter(i => !(i.id === id && i.type === type));
 
         localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(items));
+        cachedRecentlyPlayed = items;
         window.dispatchEvent(new Event("recentlyPlayedUpdated"));
     } catch (error) {
         // Silently fail
@@ -89,6 +107,7 @@ export function addToWatchlist(item: RecentItem) {
 
         items.unshift({ ...item, last_played: Date.now() });
         localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
+        cachedWatchlist = items;
         window.dispatchEvent(new Event("watchlistUpdated"));
     } catch (error) {
         // Silently fail
@@ -106,6 +125,7 @@ export function removeFromWatchlist(id: string, type: string) {
         items = items.filter(i => !(i.id === id && i.type === type));
 
         localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
+        cachedWatchlist = items;
         window.dispatchEvent(new Event("watchlistUpdated"));
     } catch (error) {
         // Silently fail
@@ -113,25 +133,18 @@ export function removeFromWatchlist(id: string, type: string) {
 }
 
 export function isInWatchlist(id: string, type: string): boolean {
-    if (typeof window === "undefined") return false;
-
-    try {
-        const stored = localStorage.getItem(WATCHLIST_KEY);
-        if (!stored) return false;
-
-        const items: RecentItem[] = JSON.parse(stored);
-        return items.some(i => i.id === id && i.type === type);
-    } catch (error) {
-        return false;
-    }
+    const items = getWatchlist();
+    return items.some(i => i.id === id && i.type === type);
 }
 
 export function getWatchlist(): RecentItem[] {
     if (typeof window === "undefined") return [];
+    if (cachedWatchlist !== null) return cachedWatchlist;
 
     try {
         const stored = localStorage.getItem(WATCHLIST_KEY);
-        return stored ? JSON.parse(stored) : [];
+        cachedWatchlist = stored ? JSON.parse(stored) : [];
+        return cachedWatchlist!;
     } catch (error) {
         return [];
     }

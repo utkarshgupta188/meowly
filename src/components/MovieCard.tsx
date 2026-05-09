@@ -102,14 +102,14 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, scale: 1 }}
             whileHover={{
                 scale: 1.15,
                 zIndex: 50,
                 y: -10,
                 transition: { type: "spring", stiffness: 400, damping: 25 }
             }}
+            style={{ willChange: "transform" }}
             className={cn(
                 "relative group cursor-pointer transition-all duration-300",
                 isFluid ? "w-full" : "flex-none w-[165px] sm:w-[185px] md:w-[205px] lg:w-[220px]",
@@ -137,6 +137,7 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                                 "transition-transform duration-700 group-hover:scale-110",
                                 isCompany ? "max-w-full max-h-full object-contain" : "w-full h-full object-cover"
                             )}
+                            style={{ willChange: "transform" }}
                             loading="lazy"
                             referrerPolicy="no-referrer"
                         />

@@ -28,8 +28,6 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     const [isPlaying, setIsPlaying] = useState(startPlaying);
     const [activeTab, setActiveTab] = useState<"episodes" | "related" | "details" | "clips" | "photos" | "reviews">(type === "movie" ? "details" : "episodes");
     const [showAllCast, setShowAllCast] = useState(false);
-    const [isVisible, setIsVisible] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
     const [activeVideo, setActiveVideo] = useState<any | null>(null);
     const [activePhoto, setActivePhoto] = useState<{ type: 'backdrop' | 'poster'; index: number; file_path: string } | null>(null);
     const [downloadStatus, setDownloadStatus] = useState<'idle' | 'downloading' | 'success' | 'fallback'>('idle');
@@ -43,18 +41,17 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
     }, [downloadStatus]);
 
     // Photos Gallery Handlers & Navigation
-    const getPhotoList = () => {
+    const photoList = React.useMemo(() => {
         if (!activePhoto) return [];
         if (activePhoto.type === 'backdrop') {
             return tmdbData.images?.backdrops || [];
         } else {
             return tmdbData.images?.posters?.slice(0, 18) || [];
         }
-    };
+    }, [activePhoto, tmdbData.images?.backdrops, tmdbData.images?.posters]);
 
-    const photoList = getPhotoList();
-    const hasPrev = activePhoto !== null && activePhoto.index > 0;
-    const hasNext = activePhoto !== null && activePhoto.index < photoList.length - 1;
+    const hasPrev = React.useMemo(() => activePhoto !== null && activePhoto.index > 0, [activePhoto]);
+    const hasNext = React.useMemo(() => activePhoto !== null && activePhoto.index < photoList.length - 1, [activePhoto, photoList.length]);
 
     const handlePrev = () => {
         if (!activePhoto || !hasPrev) return;
@@ -145,19 +142,6 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
         }
     };
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY > lastScrollY && currentScrollY > 80) {
-                setIsVisible(false);
-            } else {
-                setIsVisible(true);
-            }
-            setLastScrollY(currentScrollY);
-        };
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [lastScrollY]);
 
     // Determine current season data
     const [seasonData, setSeasonData] = useState<any>(null);

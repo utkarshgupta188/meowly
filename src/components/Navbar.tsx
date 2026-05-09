@@ -11,7 +11,7 @@ import { surpriseMe } from "@/app/actions";
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
+    const lastScrollYRef = React.useRef(0);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -25,26 +25,27 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
+            const lastScrollY = lastScrollYRef.current;
 
             // Hide on scroll down, show on scroll up
             if (currentScrollY > lastScrollY && currentScrollY > 80) {
-                setIsVisible(false);
+                setIsVisible(prev => prev ? false : prev);
             } else {
-                setIsVisible(true);
+                setIsVisible(prev => !prev ? true : prev);
             }
 
-            setLastScrollY(currentScrollY);
+            lastScrollYRef.current = currentScrollY;
 
             if (currentScrollY > 0) {
-                setIsScrolled(true);
+                setIsScrolled(prev => prev ? prev : true);
             } else {
-                setIsScrolled(false);
+                setIsScrolled(prev => !prev ? prev : false);
             }
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [lastScrollY]);
+    }, []);
 
     // Sync search query with URL (for back/forward navigation or direct links)
     useEffect(() => {

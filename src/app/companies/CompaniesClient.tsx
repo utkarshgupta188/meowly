@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React from "react";
 import Link from "next/link";
-import { Search, Sparkles, Building2, MapPin, Globe, ArrowRight, Film } from "lucide-react";
+import { Sparkles, Building2, MapPin, Globe, ArrowRight, Film } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TMDB_CONFIG } from "@/lib/tmdb";
 
@@ -20,18 +20,6 @@ interface CompaniesClientProps {
 }
 
 export default function CompaniesClient({ initialCompanies }: CompaniesClientProps) {
-    const [searchQuery, setSearchQuery] = useState("");
-
-    // Filter companies based on search input
-    const filteredCompanies = useMemo(() => {
-        return initialCompanies.filter(company => {
-            const matchesName = company.name.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesHQ = (company.headquarters || "").toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesCountry = (company.origin_country || "").toLowerCase().includes(searchQuery.toLowerCase());
-            
-            return matchesName || matchesHQ || matchesCountry;
-        });
-    }, [initialCompanies, searchQuery]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -96,38 +84,19 @@ export default function CompaniesClient({ initialCompanies }: CompaniesClientPro
                 </div>
             </div>
 
-            {/* Filters and Search Bar */}
-            <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-10">
-                <div className="text-gray-400 text-sm font-semibold uppercase tracking-wider">
-                    Showing <span className="text-white font-black">{filteredCompanies.length}</span> studios
-                </div>
-
-                {/* Realtime Search Input */}
-                <div className="relative w-full md:max-w-md bg-white/5 border border-white/10 rounded-full px-5 py-3.5 focus-within:border-white/40 focus-within:ring-1 focus-within:ring-white/20 transition-all">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-                    <input
-                        type="text"
-                        id="companies-search-input"
-                        placeholder="Search by studio name or country..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-transparent border-none w-full pl-6 text-sm text-white placeholder-gray-500 outline-none"
-                    />
-                </div>
-            </div>
 
             {/* Companies Grid */}
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={searchQuery}
+                    key="companies-grid"
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
                     exit="hidden"
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
                 >
-                    {filteredCompanies.length > 0 ? (
-                        filteredCompanies.map((company) => {
+                    {initialCompanies.length > 0 ? (
+                        initialCompanies.map((company) => {
                             const logoUrl = company.logo_path
                                 ? `${TMDB_CONFIG.imageBase}/w500${company.logo_path}`
                                 : null;
@@ -217,17 +186,9 @@ export default function CompaniesClient({ initialCompanies }: CompaniesClientPro
                                 <Film className="h-10 w-10" />
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-lg font-bold text-white">No production studios match your search</h3>
-                                <p className="text-sm text-gray-400">Try verifying the spelling or picking a simpler query.</p>
+                                <h3 className="text-lg font-bold text-white">No production studios available</h3>
+                                <p className="text-sm text-gray-400">Please check back later.</p>
                             </div>
-                            {searchQuery && (
-                                <button
-                                    onClick={() => setSearchQuery("")}
-                                    className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold tracking-wide transition-all duration-300 border border-white/5 cursor-pointer"
-                                >
-                                    Clear Search Query
-                                </button>
-                            )}
                         </div>
                     )}
                 </motion.div>

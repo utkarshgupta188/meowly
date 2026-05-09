@@ -125,6 +125,7 @@ const Hero = ({ movies }: HeroProps) => {
                             initial={{ scale: 1.1 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 10, ease: "linear" }}
+                            style={{ willChange: "transform" }}
                             src={`https://image.tmdb.org/t/p/original${heroMovies[current].backdrop_path}`}
                             alt={heroMovies[current].title}
                             className="w-full h-full object-cover object-[center_1%]"

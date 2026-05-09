@@ -234,6 +234,10 @@ export default function MoctaleReviews({ title, date, type, tmdbRating, genres, 
 
     const slug = getMoctaleSlug(title, date);
 
+    const dynamicFallback = React.useMemo(() => {
+        return generateDynamicFallback(title, tmdbRating, genres, overview);
+    }, [title, tmdbRating, genres, overview]);
+
     useEffect(() => {
         let isMounted = true;
 
@@ -337,7 +341,6 @@ export default function MoctaleReviews({ title, date, type, tmdbRating, genres, 
     ));
 
     const isUsingRealApi = !!(data && (hasMeterData || (apiReviews && apiReviews.length > 0)));
-    const dynamicFallback = generateDynamicFallback(title, tmdbRating, genres, overview);
 
     let reviewsList: Review[] = [];
     if (isUsingRealApi && apiReviews && apiReviews.length > 0) {

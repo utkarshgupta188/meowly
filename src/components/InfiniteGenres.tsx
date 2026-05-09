@@ -51,11 +51,16 @@ const InfiniteGenres = ({ type = "all" }: InfiniteGenresProps) => {
         }
     };
 
+    const loadMoreRef = useRef(loadMoreGenres);
+    loadMoreRef.current = loadMoreGenres;
+
     useEffect(() => {
+        if (!hasMore) return;
+
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting && hasMore && !isLoading) {
-                    loadMoreGenres();
+                if (entries[0].isIntersecting) {
+                    loadMoreRef.current();
                 }
             },
             { threshold: 0.1, rootMargin: "200px" } // Start loading 200px before reaching the bottom
@@ -71,7 +76,7 @@ const InfiniteGenres = ({ type = "all" }: InfiniteGenresProps) => {
                 observer.unobserve(currentTarget);
             }
         };
-    }, [currentIndex, hasMore, isLoading]);
+    }, [hasMore]);
 
     return (
         <div className="space-y-6 md:space-y-12">

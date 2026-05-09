@@ -30,14 +30,22 @@ interface Genre {
 
 function SearchContent() {
     const searchParams = useSearchParams();
-    const query = searchParams.get("q") || "";
+    const [hasMounted, setHasMounted] = useState(false);
+
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+
+    const query = hasMounted ? (searchParams.get("q") || "") : "";
 
     const [results, setResults] = useState<Movie[]>([]);
     const [trending, setTrending] = useState<Movie[]>([]);
     const [genres, setGenres] = useState<Genre[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [debouncedQuery, setDebouncedQuery] = useState(query);
+    const [debouncedQuery, setDebouncedQuery] = useState("");
     const [activeCategory, setActiveCategory] = useState<"all" | "movie" | "tv" | "person" | "company">("all");
+
+    const isFirstSync = React.useRef(true);
 
     // Initial load for trending and genres
     useEffect(() => {
@@ -57,6 +65,14 @@ function SearchContent() {
         if (query.trim() !== "") {
             setIsLoading(true); // Show loader immediately when typing starts for feedback!
         }
+
+        // If it's the first sync (initial load), skip debounce for faster page load!
+        if (isFirstSync.current && query.trim() !== "") {
+            isFirstSync.current = false;
+            setDebouncedQuery(query);
+            return;
+        }
+
         const handler = setTimeout(() => {
             setDebouncedQuery(query);
         }, 250);
