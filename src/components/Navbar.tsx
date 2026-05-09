@@ -25,16 +25,16 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-            
+
             // Hide on scroll down, show on scroll up
             if (currentScrollY > lastScrollY && currentScrollY > 80) {
                 setIsVisible(false);
             } else {
                 setIsVisible(true);
             }
-            
+
             setLastScrollY(currentScrollY);
-            
+
             if (currentScrollY > 0) {
                 setIsScrolled(true);
             } else {
@@ -49,12 +49,12 @@ const Navbar = () => {
     // Sync search query with URL (for back/forward navigation or direct links)
     useEffect(() => {
         const q = searchParams.get("q") || "";
-        
+
         // Only update searchQuery state from the URL if they differ,
         // and we aren't currently focused on a search input (which means the user is typing)
         const activeEl = document.activeElement;
         const isInputFocused = activeEl && (
-            activeEl.tagName === "INPUT" && 
+            activeEl.tagName === "INPUT" &&
             (activeEl.getAttribute("placeholder")?.includes("Search") || activeEl.getAttribute("type") === "text")
         );
 
@@ -87,7 +87,7 @@ const Navbar = () => {
                         focusTarget.value = val;
                     }
                 };
-                
+
                 requestAnimationFrame(handleFocus);
                 setTimeout(handleFocus, 50);
                 setTimeout(handleFocus, 150);
@@ -165,8 +165,8 @@ const Navbar = () => {
     ];
 
     if (
-        pathname?.startsWith("/person/") || 
-        pathname?.startsWith("/watch/") || 
+        pathname?.startsWith("/person/") ||
+        pathname?.startsWith("/watch/") ||
         pathname?.startsWith("/company/") ||
         pathname?.startsWith("/network/")
     ) {
@@ -176,7 +176,7 @@ const Navbar = () => {
     return (
         <nav
             className={cn(
-                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl transition-all duration-500 ease-in-out px-6 py-2 glass-pill",
+                "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] md:w-fit transition-all duration-500 ease-in-out px-3 md:px-6 py-2 glass-pill",
                 isScrolled ? "bg-black/60 shadow-2xl" : "bg-black/20",
                 !isVisible && "-top-24"
             )}
@@ -202,7 +202,7 @@ const Navbar = () => {
                             >
                                 <ArrowLeft className="h-5 w-5" />
                             </button>
-                             <input
+                            <input
                                 ref={mobileInputRef}
                                 autoFocus
                                 type="text"
@@ -227,22 +227,22 @@ const Navbar = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="flex items-center justify-between w-full gap-4"
+                            className="flex items-center justify-between w-full gap-4 md:gap-6 lg:gap-8 xl:gap-10"
                         >
-                            <div className="flex items-center gap-4 lg:gap-8 min-w-0">
+                            <div className="flex items-center gap-2 md:gap-3.5 lg:gap-6 xl:gap-8 min-w-0">
                                 <Link href="/" className="group flex-shrink-0 flex items-center">
                                     <span className="text-xl font-black tracking-tighter text-white">
                                         MEOW<span className="text-accent italic">LY</span>
                                     </span>
                                 </Link>
 
-                                <div className="hidden md:flex items-center gap-0.5 lg:gap-1 min-w-0 overflow-hidden">
+                                <div className="hidden md:flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 min-w-0 overflow-x-auto scrollbar-none py-1">
                                     {navLinks.map((link) => (
                                         <Link
                                             key={link.name}
                                             href={link.href}
                                             className={cn(
-                                                "text-[13px] lg:text-[14px] font-semibold text-gray-400 hover:text-white px-2 lg:px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0",
+                                                "text-[11px] lg:text-[13px] xl:text-[14px] font-semibold text-gray-400 hover:text-white px-1.5 lg:px-2 xl:px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0",
                                                 pathname === link.href ? "bg-white/10 text-white" : ""
                                             )}
                                         >
@@ -253,8 +253,8 @@ const Navbar = () => {
                             </div>
 
                             <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-                                 {/* Desktop Search */}
-                                <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
+                                {/* Desktop Search */}
+                                <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-2.5 md:px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                                     <input
                                         ref={desktopInputRef}
                                         type="text"
@@ -262,7 +262,7 @@ const Navbar = () => {
                                         value={searchQuery}
                                         onChange={(e) => handleSearchInputChange(e.target.value)}
                                         onKeyDown={handleKeyDown}
-                                        className="bg-transparent border-none py-1 text-[13px] text-white placeholder-gray-500 outline-none w-32 focus:w-48 transition-all duration-300"
+                                        className="bg-transparent border-none py-1 text-[13px] text-white placeholder-gray-500 outline-none w-20 md:w-24 lg:w-32 focus:w-40 lg:focus:w-48 transition-all duration-300"
                                     />
                                     <Search className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white transition-colors ml-2" onClick={() => handleSearch()} />
                                 </div>
@@ -318,8 +318,8 @@ const Navbar = () => {
                                         href={link.href}
                                         className={cn(
                                             "text-[16px] font-bold px-5 py-4 rounded-2xl transition-all duration-300 flex items-center justify-between group",
-                                            pathname === link.href 
-                                                ? "bg-accent text-black" 
+                                            pathname === link.href
+                                                ? "bg-accent text-black"
                                                 : "text-gray-400 hover:bg-white/5 hover:text-white"
                                         )}
                                         onClick={() => setIsMobileMenuOpen(false)}
