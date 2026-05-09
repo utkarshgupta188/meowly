@@ -539,7 +539,11 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                     <div className="flex flex-wrap gap-8 items-center">
                                         {/* Networks first for TV */}
                                         {type === 'tv' && tmdbData.networks?.map((network: any) => (
-                                            <div key={network.id} className="group relative flex items-center gap-3">
+                                            <Link 
+                                                key={network.id} 
+                                                href={`/network/${network.id}`}
+                                                className="group relative flex items-center gap-3 cursor-pointer"
+                                            >
                                                 <div className="bg-white/90 p-2.5 rounded-xl h-12 flex items-center justify-center shadow-lg group-hover:bg-white transition-all hover:scale-105 border border-white/20">
                                                     <img
                                                         src={`${TMDB_CONFIG.imageBase}/w200${network.logo_path}`}
@@ -551,11 +555,15 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                                     <span className="text-[10px] font-black text-accent uppercase tracking-wider">Network</span>
                                                     <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors hidden md:block">{network.name}</span>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))}
                                         {/* Production Companies */}
                                         {tmdbData.production_companies?.filter((c: any) => c.logo_path).slice(0, 4).map((company: any) => (
-                                            <div key={company.id} className="group relative flex items-center gap-3">
+                                            <Link 
+                                                key={company.id} 
+                                                href={`/company/${company.id}`}
+                                                className="group relative flex items-center gap-3 cursor-pointer"
+                                            >
                                                 <div className="bg-white/90 p-2.5 rounded-xl h-12 flex items-center justify-center shadow-lg group-hover:bg-white transition-all hover:scale-105 border border-white/20">
                                                     <img
                                                         src={`${TMDB_CONFIG.imageBase}/w200${company.logo_path}`}
@@ -567,7 +575,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-wider">Studio</span>
                                                     <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors hidden md:block">{company.name}</span>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>

@@ -37,7 +37,7 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
 
             const res = await fetch(url.toString(), {
                 next: { revalidate: 3600 },
-                headers: { 
+                headers: {
                     "Accept": "application/json",
                     "User-Agent": "MeowlyApp/1.0"
                 },
@@ -61,7 +61,7 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
             return data;
         } catch (error: any) {
             attempt++;
-            
+
             if (attempt >= MAX_RETRIES) {
                 return null;
             }
@@ -81,7 +81,7 @@ export type Movie = {
     release_date?: string;
     first_air_date?: string;
     vote_average?: number;
-    media_type: "movie" | "tv" | "person";
+    media_type: "movie" | "tv" | "person" | "company";
     season?: number;
     episode?: number;
     tagline?: string;
@@ -89,6 +89,9 @@ export type Movie = {
     profile_path?: string;
     known_for_department?: string;
     known_for?: Movie[];
+    popularity?: number;
+    logo_path?: string;
+    origin_country?: string;
 };
 
 export const tmdb = {
@@ -105,19 +108,32 @@ export const tmdb = {
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
-        const data = await fetchTMDB(`/${type}/${id}`, { 
+        const data = await fetchTMDB(`/${type}/${id}`, {
             append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords,external_ids",
             include_image_language: "en,null"
         });
         return data || {};
     },
     search: async (query: string): Promise<Movie[]> => {
-        const data = await fetchTMDB("/search/multi", { query });
-        return (data?.results || []).filter((item: any) => 
-            item.media_type === "movie" || 
-            item.media_type === "tv" || 
-            item.media_type === "person"
-        );
+        const [multiData, companyData] = await Promise.all([
+            fetchTMDB("/search/multi", { query }),
+            fetchTMDB("/search/company", { query })
+        ]);
+
+        const multiResults = (multiData?.results || [])
+            .filter((item: any) =>
+                item.media_type === "movie" ||
+                item.media_type === "tv" ||
+                item.media_type === "person"
+            );
+
+        const companyResults = (companyData?.results || [])
+            .map((item: any) => ({
+                ...item,
+                media_type: "company" as const
+            }));
+
+        return [...multiResults, ...companyResults];
     },
     getGenreList: async (type: "movie" | "tv") => {
         const data = await fetchTMDB(`/genre/${type}/list`);
@@ -134,7 +150,7 @@ export const tmdb = {
             const key = type === "movie" ? "primary_release_year" : "first_air_date_year";
             params[key] = options.year;
         }
-        
+
         const data = await fetchTMDB(`/discover/${type}`, params);
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
@@ -161,10 +177,10 @@ export const tmdb = {
     getListDetails: async (listId: string | number): Promise<Movie[]> => {
         const data = await fetchTMDB(`/list/${listId}`);
         if (!data) return [];
-        
+
         let allItems = [...(data.items || [])];
         const totalPages = data.total_pages || 1;
-        
+
         if (totalPages > 1) {
             const promises = [];
             for (let p = 2; p <= totalPages; p++) {
@@ -177,7 +193,7 @@ export const tmdb = {
                 }
             });
         }
-        
+
         return allItems.map((item: any) => ({
             ...item,
             media_type: item.media_type || "movie"
@@ -214,8 +230,32 @@ export const tmdb = {
         const videos = data?.results || [];
         // Priority: Trailer > Teaser > Clip
         const trailer = videos.find((v: any) => v.type === "Trailer" && v.site === "YouTube") ||
-                       videos.find((v: any) => v.type === "Teaser" && v.site === "YouTube") ||
-                       videos.find((v: any) => v.site === "YouTube");
+            videos.find((v: any) => v.type === "Teaser" && v.site === "YouTube") ||
+            videos.find((v: any) => v.site === "YouTube");
         return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1` : null;
+    },
+    getCompanyDetails: async (id: string) => {
+        const data = await fetchTMDB(`/company/${id}`);
+        return data || null;
+    },
+    getNetworkDetails: async (id: string) => {
+        const data = await fetchTMDB(`/network/${id}`);
+        return data || null;
+    },
+    getDiscoverByCompany: async (companyId: string, type: "movie" | "tv" = "movie"): Promise<Movie[]> => {
+        const data = await fetchTMDB(`/discover/${type}`, {
+            with_companies: companyId,
+            sort_by: "popularity.desc",
+            include_adult: "false"
+        });
+        return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+    },
+    getDiscoverByNetwork: async (networkId: string): Promise<Movie[]> => {
+        const data = await fetchTMDB(`/discover/tv`, {
+            with_networks: networkId,
+            sort_by: "popularity.desc",
+            include_adult: "false"
+        });
+        return (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
     }
 };

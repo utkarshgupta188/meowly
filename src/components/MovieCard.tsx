@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Play, Plus, Check, Info, X, User } from "lucide-react";
+import { Play, Plus, Check, Info, X, User, Film } from "lucide-react";
 import { motion } from "framer-motion";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import { cn } from "@/lib/utils";
@@ -33,14 +33,17 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     }, [movie.id, movie.media_type]);
 
     const isPerson = movie.media_type === "person";
+    const isCompany = movie.media_type === "company";
 
     const imageUrl = isPerson
         ? (movie.profile_path ? `${TMDB_CONFIG.posterSizes.medium}${movie.profile_path}` : null)
-        : movie.poster_path
-            ? `${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`
-            : movie.backdrop_path
-                ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
-                : null;
+        : isCompany
+            ? (movie.logo_path ? `${TMDB_CONFIG.posterSizes.medium}${movie.logo_path}` : null)
+            : movie.poster_path
+                ? `${TMDB_CONFIG.posterSizes.medium}${movie.poster_path}`
+                : movie.backdrop_path
+                    ? `${TMDB_CONFIG.backdropSizes.medium}${movie.backdrop_path}`
+                    : null;
 
     const watchUrl = `/watch/${movie.media_type || 'movie'}/${movie.id}${movie.season ? `?s=${movie.season}&e=${movie.episode || 1}` : ''}`;
     const playUrl = `${watchUrl}${watchUrl.includes('?') ? '&' : '?'}resume=true`;
@@ -83,6 +86,8 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     const handleCardClick = () => {
         if (isPerson) {
             router.push(`/person/${movie.id}`);
+        } else if (isCompany) {
+            router.push(`/company/${movie.id}`);
         } else {
             router.push(isResume ? detailsUrl : watchUrl);
         }
@@ -124,17 +129,24 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                     </button>
                 )}
                 {imageUrl ? (
-                    <img
-                        src={imageUrl}
-                        alt={movie.title || movie.name || "Media"}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                    />
+                    <div className={cn("w-full h-full flex items-center justify-center", isCompany ? "bg-white p-6" : "")}>
+                        <img
+                            src={imageUrl}
+                            alt={movie.title || movie.name || "Media"}
+                            className={cn(
+                                "transition-transform duration-700 group-hover:scale-110",
+                                isCompany ? "max-w-full max-h-full object-contain" : "w-full h-full object-cover"
+                            )}
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                        />
+                    </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center h-full w-full bg-white/5 text-gray-500 text-xs text-center p-4">
                         {isPerson ? (
                             <User className="h-10 w-10 text-gray-600 mb-2" />
+                        ) : isCompany ? (
+                            <Film className="h-10 w-10 text-gray-600 mb-2" />
                         ) : null}
                         <span>{movie.title || movie.name}</span>
                     </div>
@@ -177,6 +189,28 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                                                 </div>
                                             ))}
                                         </div>
+                                    </div>
+                                )}
+                            </>
+                        ) : isCompany ? (
+                            <>
+                                <div className="flex items-center justify-between">
+                                    <span className="px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 text-[9px] font-bold uppercase tracking-wider">
+                                        Production Studio
+                                    </span>
+                                    <div className="p-1.5 rounded-full bg-white/10 border border-white/20 text-white">
+                                        <Info className="h-3 w-3" />
+                                    </div>
+                                </div>
+
+                                <h3 className="text-sm md:text-base font-bold text-white mb-1 line-clamp-2 drop-shadow-md">
+                                    {movie.name}
+                                </h3>
+
+                                {movie.origin_country && (
+                                    <div className="flex items-center gap-1.5 text-[10px] text-gray-300">
+                                        <span className="text-gray-400 uppercase font-bold">Country:</span>
+                                        <span className="font-semibold text-accent">{movie.origin_country}</span>
                                     </div>
                                 )}
                             </>

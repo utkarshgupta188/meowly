@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Film, Tv, User, Building2, Layers } from "lucide-react";
 import MovieCard from "@/components/MovieCard";
 import SearchGrid from "@/components/SearchGrid";
 import { searchAction, getTrendingAction, getGenreListAction } from "@/app/actions";
@@ -36,6 +37,7 @@ function SearchContent() {
     const [genres, setGenres] = useState<Genre[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [debouncedQuery, setDebouncedQuery] = useState(query);
+    const [activeCategory, setActiveCategory] = useState<"all" | "movie" | "tv" | "person" | "company">("all");
 
     // Initial load for trending and genres
     useEffect(() => {
@@ -62,6 +64,11 @@ function SearchContent() {
         return () => {
             clearTimeout(handler);
         };
+    }, [query]);
+
+    // Reset filter when query changes
+    useEffect(() => {
+        setActiveCategory("all");
     }, [query]);
 
     // Live search action
@@ -99,6 +106,15 @@ function SearchContent() {
         };
     }, [debouncedQuery]);
 
+    const movieCount = results.filter(item => item.media_type === "movie").length;
+    const tvCount = results.filter(item => item.media_type === "tv").length;
+    const personCount = results.filter(item => item.media_type === "person").length;
+    const companyCount = results.filter(item => item.media_type === "company").length;
+
+    const filteredResults = activeCategory === "all"
+        ? results
+        : results.filter(item => item.media_type === activeCategory);
+
     return (
         <main className="min-h-screen bg-black pb-20">
 
@@ -110,7 +126,112 @@ function SearchContent() {
                 {isLoading ? (
                     <SearchSkeleton />
                 ) : results.length > 0 ? (
-                    <SearchGrid results={results} />
+                    <div className="space-y-8">
+                        {/* Beautiful Sliding/Minimalist Category Tabs */}
+                        <div className="flex flex-wrap gap-2.5 border-b border-white/10 pb-6">
+                            <button
+                                onClick={() => setActiveCategory("all")}
+                                className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                    activeCategory === "all"
+                                        ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
+                                        : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
+                                }`}
+                            >
+                                <Layers className="w-3.5 h-3.5" />
+                                <span className="uppercase tracking-wider">All</span>
+                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                                    activeCategory === "all" ? "bg-black/10 text-black" : "bg-white/10 text-gray-400"
+                                }`}>
+                                    {results.length}
+                                </span>
+                            </button>
+                            {movieCount > 0 && (
+                                <button
+                                    onClick={() => setActiveCategory("movie")}
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                        activeCategory === "movie"
+                                            ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
+                                            : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
+                                    }`}
+                                >
+                                    <Film className="w-3.5 h-3.5" />
+                                    <span className="uppercase tracking-wider">Movies</span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                                        activeCategory === "movie" ? "bg-black/10 text-black" : "bg-white/10 text-gray-400"
+                                    }`}>
+                                        {movieCount}
+                                    </span>
+                                </button>
+                            )}
+                            {tvCount > 0 && (
+                                <button
+                                    onClick={() => setActiveCategory("tv")}
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                        activeCategory === "tv"
+                                            ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
+                                            : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
+                                    }`}
+                                >
+                                    <Tv className="w-3.5 h-3.5" />
+                                    <span className="uppercase tracking-wider">TV Shows</span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                                        activeCategory === "tv" ? "bg-black/10 text-black" : "bg-white/10 text-gray-400"
+                                    }`}>
+                                        {tvCount}
+                                    </span>
+                                </button>
+                            )}
+                            {personCount > 0 && (
+                                <button
+                                    onClick={() => setActiveCategory("person")}
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                        activeCategory === "person"
+                                            ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
+                                            : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
+                                    }`}
+                                >
+                                    <User className="w-3.5 h-3.5" />
+                                    <span className="uppercase tracking-wider">People</span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                                        activeCategory === "person" ? "bg-black/10 text-black" : "bg-white/10 text-gray-400"
+                                    }`}>
+                                        {personCount}
+                                    </span>
+                                </button>
+                            )}
+                            {companyCount > 0 && (
+                                <button
+                                    onClick={() => setActiveCategory("company")}
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                        activeCategory === "company"
+                                            ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
+                                            : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
+                                    }`}
+                                >
+                                    <Building2 className="w-3.5 h-3.5" />
+                                    <span className="uppercase tracking-wider">Studios</span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                                        activeCategory === "company" ? "bg-black/10 text-black" : "bg-white/10 text-gray-400"
+                                    }`}>
+                                        {companyCount}
+                                    </span>
+                                </button>
+                            )}
+                        </div>
+
+                        {filteredResults.length > 0 ? (
+                            <SearchGrid results={filteredResults} />
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-32 text-center">
+                                <p className="text-gray-400 text-lg mb-2">
+                                    No results in this category
+                                </p>
+                                <p className="text-gray-600 text-sm">
+                                    Try checking the other tabs for matches.
+                                </p>
+                            </div>
+                        )}
+                    </div>
                 ) : !query ? (
                     <div className="space-y-12">
                         {/* Top Genres */}

@@ -133,7 +133,7 @@ const Hero = ({ movies }: HeroProps) => {
                         {/* Cinematic Gradients */}
                         <div className="absolute inset-0 cinematic-side" />
                         <div className="absolute inset-0 cinematic-overlay" />
-                        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black via-black/60 to-transparent pointer-events-none z-10" />
+                        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-10" />
                     </div>
 
                     {/* Content */}

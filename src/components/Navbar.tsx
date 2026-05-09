@@ -200,7 +200,7 @@ const Navbar = () => {
                                 ref={mobileInputRef}
                                 autoFocus
                                 type="text"
-                                placeholder="Search titles..."
+                                placeholder="Search titles, people, studios..."
                                 value={searchQuery}
                                 onChange={(e) => handleSearchInputChange(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -252,7 +252,7 @@ const Navbar = () => {
                                     <input
                                         ref={desktopInputRef}
                                         type="text"
-                                        placeholder="Search Meowly..."
+                                        placeholder="Search titles, people, studios..."
                                         value={searchQuery}
                                         onChange={(e) => handleSearchInputChange(e.target.value)}
                                         onKeyDown={handleKeyDown}
