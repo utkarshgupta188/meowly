@@ -128,10 +128,10 @@ function SearchContent() {
                 ) : results.length > 0 ? (
                     <div className="space-y-8">
                         {/* Beautiful Sliding/Minimalist Category Tabs */}
-                        <div className="flex flex-wrap gap-2.5 border-b border-white/10 pb-6">
+                        <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-none pb-4 border-b border-white/10 -mx-4 px-4 sm:mx-0 sm:px-0 flex-nowrap md:pb-6">
                             <button
                                 onClick={() => setActiveCategory("all")}
-                                className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border shrink-0 whitespace-nowrap ${
                                     activeCategory === "all"
                                         ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
                                         : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
@@ -148,7 +148,7 @@ function SearchContent() {
                             {movieCount > 0 && (
                                 <button
                                     onClick={() => setActiveCategory("movie")}
-                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border shrink-0 whitespace-nowrap ${
                                         activeCategory === "movie"
                                             ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
                                             : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
@@ -166,7 +166,7 @@ function SearchContent() {
                             {tvCount > 0 && (
                                 <button
                                     onClick={() => setActiveCategory("tv")}
-                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border shrink-0 whitespace-nowrap ${
                                         activeCategory === "tv"
                                             ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
                                             : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
@@ -184,7 +184,7 @@ function SearchContent() {
                             {personCount > 0 && (
                                 <button
                                     onClick={() => setActiveCategory("person")}
-                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border shrink-0 whitespace-nowrap ${
                                         activeCategory === "person"
                                             ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
                                             : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"
@@ -202,7 +202,7 @@ function SearchContent() {
                             {companyCount > 0 && (
                                 <button
                                     onClick={() => setActiveCategory("company")}
-                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border ${
+                                    className={`px-5 py-2.5 rounded-full text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-2 border shrink-0 whitespace-nowrap ${
                                         activeCategory === "company"
                                             ? "bg-white text-black border-white font-bold shadow-lg shadow-white/10"
                                             : "bg-white/5 text-gray-400 border-white/5 hover:text-white hover:bg-white/10 hover:border-white/10"

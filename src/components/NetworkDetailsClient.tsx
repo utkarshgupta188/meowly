@@ -60,6 +60,7 @@ export default function NetworkDetailsClient({
     const totalResults = tvShowsTotalResults || tvShows.length;
     const totalPages = tvShowsTotalPages || 1;
     const hasMore = tvPage < totalPages && loadedTvShows.length < totalResults;
+    const displayedTotalResults = hasMore ? totalResults : loadedTvShows.length;
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -95,7 +96,7 @@ export default function NetworkDetailsClient({
             </button>
 
             {/* Cinematic Hero Backdrop */}
-            <div className="relative w-full min-h-[30vh] sm:min-h-[35vh] md:min-h-[40vh] overflow-hidden flex items-end">
+            <div className="relative w-full min-h-[20vh] sm:min-h-[25vh] md:min-h-[30vh] overflow-hidden flex items-end">
                 <div className="absolute inset-0 z-0">
                     {backdropUrl ? (
                         <img
@@ -110,14 +111,14 @@ export default function NetworkDetailsClient({
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-10 pt-16">
+                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-4 pt-10">
                     <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
                         {/* Network Logo Display */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="w-36 h-36 md:w-44 md:h-44 bg-white/95 p-4 rounded-3xl flex items-center justify-center shadow-2xl border border-white/20 hover:scale-105 transition-transform"
+                            className="w-28 h-28 md:w-36 md:h-36 bg-white/95 p-3 rounded-2xl flex items-center justify-center shadow-2xl border border-white/20 hover:scale-105 transition-transform"
                         >
                             {network.logo_path ? (
                                 <img
@@ -126,7 +127,7 @@ export default function NetworkDetailsClient({
                                     className="max-w-full max-h-full object-contain"
                                 />
                             ) : (
-                                <Tv className="w-16 h-16 text-gray-400" />
+                                <Tv className="w-12 h-12 text-gray-400" />
                             )}
                         </motion.div>
 
@@ -209,53 +210,17 @@ export default function NetworkDetailsClient({
                     </div>
                 )}
 
-                {/* Progress bar / Load More section */}
+                {/* Infinite Scroll Sentinel / Indicator */}
                 {loadedTvShows.length > 0 && (
-                    <div className="mt-16 flex flex-col items-center justify-center space-y-6 pb-12 border-t border-white/5 pt-12">
-                        {/* Progress Bar Indicator */}
-                        <div className="w-full max-w-md text-center space-y-2">
-                            <p className="text-sm text-gray-400 font-medium">
-                                Showing <span className="text-white font-bold">{loadedTvShows.length}</span> of{" "}
-                                <span className="text-accent font-black">{totalResults}</span> TV shows
-                            </p>
-                            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                                <motion.div 
-                                    className="h-full bg-gradient-to-r from-accent to-blue-500 rounded-full"
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${Math.min(100, (loadedTvShows.length / totalResults) * 100)}%` }}
-                                    transition={{ duration: 0.5, ease: "easeOut" }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Infinite Scroll Sentinel / Indicator */}
-                        <div ref={observerTarget} className="w-full flex justify-center py-4">
-                            <AnimatePresence mode="wait">
-                                {hasMore ? (
-                                    <motion.div
-                                        key="loading-indicator"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="flex items-center gap-3 text-sm text-gray-400 font-medium"
-                                    >
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-accent rounded-full animate-spin" />
-                                        <span>Loading more TV Shows...</span>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="all-loaded"
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="text-center py-4 bg-white/5 border border-white/5 px-6 rounded-2xl max-w-sm"
-                                    >
-                                        <p className="text-gray-400 text-sm font-semibold tracking-wider flex items-center justify-center gap-2">
-                                            🍿 You've explored the entire catalog!
-                                        </p>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                    <div ref={observerTarget} className="w-full flex justify-center py-12 border-t border-white/5 mt-16">
+                        {hasMore && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className="w-8 h-8 border-3 border-white/20 border-t-accent rounded-full animate-spin"
+                            />
+                        )}
                     </div>
                 )}
             </div>

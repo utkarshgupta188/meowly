@@ -83,6 +83,7 @@ export default function CompanyDetailsClient({
     const totalPages = activeTab === "movie" ? (moviesTotalPages || 1) : (tvShowsTotalPages || 1);
     const currentPage = activeTab === "movie" ? moviePage : tvPage;
     const hasMore = currentPage < totalPages && displayedItems.length < totalResults;
+    const displayedTotalResults = hasMore ? totalResults : displayedItems.length;
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -117,7 +118,7 @@ export default function CompanyDetailsClient({
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             </button>
             {/* Cinematic Hero Backdrop */}
-            <div className="relative w-full min-h-[30vh] sm:min-h-[35vh] md:min-h-[40vh] overflow-hidden flex items-end">
+            <div className="relative w-full min-h-[20vh] sm:min-h-[25vh] md:min-h-[30vh] overflow-hidden flex items-end">
                 <div className="absolute inset-0 z-0">
                     {backdropUrl ? (
                         <img
@@ -132,14 +133,14 @@ export default function CompanyDetailsClient({
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-10 pt-16">
-                    <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
+                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-4 pt-12">
+                    <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-center md:items-end text-center md:text-left">
                         {/* Company Logo Display */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="w-36 h-36 md:w-44 md:h-44 bg-white/90 p-4 rounded-3xl flex items-center justify-center shadow-2xl border border-white/20 hover:scale-105 transition-transform"
+                            className="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 bg-white/90 p-3 rounded-2xl flex items-center justify-center shadow-2xl border border-white/20 hover:scale-105 transition-transform"
                         >
                             {company.logo_path ? (
                                 <img
@@ -148,16 +149,16 @@ export default function CompanyDetailsClient({
                                     className="max-w-full max-h-full object-contain"
                                 />
                             ) : (
-                                <Film className="w-16 h-16 text-gray-400" />
+                                <Film className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
                             )}
                         </motion.div>
 
                         {/* Company Info */}
-                        <div className="flex-1 space-y-4">
+                        <div className="flex-1 space-y-3 sm:space-y-4">
                             <motion.span
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="text-accent text-xs font-black uppercase tracking-[0.3em]"
+                                className="text-accent text-[10px] sm:text-xs font-black uppercase tracking-[0.3em]"
                             >
                                 Production Studio
                             </motion.span>
@@ -167,7 +168,7 @@ export default function CompanyDetailsClient({
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
-                                    className="text-4xl md:text-6xl font-black tracking-tight text-white leading-none"
+                                    className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tight text-white leading-none"
                                 >
                                     {company.name}
                                 </motion.h1>
@@ -178,17 +179,17 @@ export default function CompanyDetailsClient({
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="flex flex-wrap gap-4 items-center justify-center md:justify-start text-sm text-gray-300"
+                                className="flex flex-wrap gap-2.5 sm:gap-4 items-center justify-center md:justify-start text-xs sm:text-sm text-gray-300"
                             >
                                 {company.headquarters && (
-                                    <div className="flex items-center gap-1.5 bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
-                                        <MapPin className="w-4 h-4 text-accent" />
+                                    <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/10 backdrop-blur-md">
+                                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" />
                                         <span>{company.headquarters}</span>
                                     </div>
                                 )}
                                 {company.origin_country && (
-                                    <div className="flex items-center gap-1.5 bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
-                                        <span className="text-[10px] font-black uppercase text-gray-400">Country:</span>
+                                    <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/10 backdrop-blur-md">
+                                        <span className="text-[9px] sm:text-[10px] font-black uppercase text-gray-400">Country:</span>
                                         <span className="font-bold">{company.origin_country}</span>
                                     </div>
                                 )}
@@ -197,11 +198,11 @@ export default function CompanyDetailsClient({
                                         href={company.homepage}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 hover:border-accent/50 backdrop-blur-md transition-all text-accent font-semibold"
+                                        className="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/10 hover:border-accent/50 backdrop-blur-md transition-all text-accent font-semibold"
                                     >
-                                        <Globe className="w-4 h-4" />
+                                        <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                         <span>Website</span>
-                                        <ExternalLink className="w-3 h-3" />
+                                        <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                                     </a>
                                 )}
                             </motion.div>
@@ -213,19 +214,19 @@ export default function CompanyDetailsClient({
             {/* Filter Tabs and content Grid */}
             <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mt-4">
                 {/* Custom sliding tabs */}
-                <div className="flex justify-center md:justify-start border-b border-white/10 pb-4 mb-8">
-                    <div className="flex gap-4 p-1 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
+                <div className="flex justify-center md:justify-start border-b border-white/10 pb-4 mb-6 sm:mb-8">
+                    <div className="flex w-full sm:w-auto gap-2 p-1.5 bg-white/5 rounded-xl sm:rounded-2xl border border-white/5 backdrop-blur-md">
                         <button
                             onClick={() => setActiveTab("movie")}
                             className={cn(
-                                "relative px-6 py-2.5 rounded-xl font-bold text-sm tracking-wide transition-all flex items-center gap-2",
+                                "flex-1 sm:flex-initial relative px-4 py-2 sm:px-6 sm:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm tracking-wide transition-all flex items-center justify-center gap-1.5 sm:gap-2",
                                 activeTab === "movie" ? "text-black bg-accent shadow-lg shadow-accent/20" : "text-gray-400 hover:text-white"
                             )}
                         >
-                            <Film className="w-4 h-4" />
+                            <Film className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             <span>Movies</span>
                             <span className={cn(
-                                "text-xs rounded-md px-1.5 py-0.5",
+                                "text-[10px] sm:text-xs rounded-md px-1.5 py-0.5 font-bold",
                                 activeTab === "movie" ? "bg-black/15 text-black" : "bg-white/10 text-gray-400"
                             )}>
                                 {moviesTotalResults || movies.length}
@@ -235,14 +236,14 @@ export default function CompanyDetailsClient({
                         <button
                             onClick={() => setActiveTab("tv")}
                             className={cn(
-                                "relative px-6 py-2.5 rounded-xl font-bold text-sm tracking-wide transition-all flex items-center gap-2",
+                                "flex-1 sm:flex-initial relative px-4 py-2 sm:px-6 sm:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm tracking-wide transition-all flex items-center justify-center gap-1.5 sm:gap-2",
                                 activeTab === "tv" ? "text-black bg-accent shadow-lg shadow-accent/20" : "text-gray-400 hover:text-white"
                             )}
                         >
-                            <Tv className="w-4 h-4" />
+                            <Tv className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             <span>TV Shows</span>
                             <span className={cn(
-                                "text-xs rounded-md px-1.5 py-0.5",
+                                "text-[10px] sm:text-xs rounded-md px-1.5 py-0.5 font-bold",
                                 activeTab === "tv" ? "bg-black/15 text-black" : "bg-white/10 text-gray-400"
                             )}>
                                 {tvShowsTotalResults || tvShows.length}
@@ -261,7 +262,7 @@ export default function CompanyDetailsClient({
                         transition={{ duration: 0.4 }}
                     >
                         {displayedItems.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                                 {displayedItems.map((item) => (
                                     <MovieCard key={`${item.id}-${item.media_type}`} movie={item} isFluid={true} />
                                 ))}
@@ -276,53 +277,17 @@ export default function CompanyDetailsClient({
                     </motion.div>
                 </AnimatePresence>
 
-                {/* Progress bar / Load More section */}
+                {/* Infinite Scroll Sentinel / Indicator */}
                 {displayedItems.length > 0 && (
-                    <div className="mt-16 flex flex-col items-center justify-center space-y-6 pb-12 border-t border-white/5 pt-12">
-                        {/* Progress Bar Indicator */}
-                        <div className="w-full max-w-md text-center space-y-2">
-                            <p className="text-sm text-gray-400 font-medium">
-                                Showing <span className="text-white font-bold">{displayedItems.length}</span> of{" "}
-                                <span className="text-accent font-black">{totalResults}</span> {activeTab === "movie" ? "movies" : "TV shows"}
-                            </p>
-                            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                                <motion.div 
-                                    className="h-full bg-gradient-to-r from-accent to-purple-500 rounded-full"
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${Math.min(100, (displayedItems.length / totalResults) * 100)}%` }}
-                                    transition={{ duration: 0.5, ease: "easeOut" }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Infinite Scroll Sentinel / Indicator */}
-                        <div ref={observerTarget} className="w-full flex justify-center py-4">
-                            <AnimatePresence mode="wait">
-                                {hasMore ? (
-                                    <motion.div
-                                        key="loading-indicator"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="flex items-center gap-3 text-sm text-gray-400 font-medium"
-                                    >
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-accent rounded-full animate-spin" />
-                                        <span>Loading more {activeTab === "movie" ? "Movies" : "TV Shows"}...</span>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="all-loaded"
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        className="text-center py-4 bg-white/5 border border-white/5 px-6 rounded-2xl max-w-sm"
-                                    >
-                                        <p className="text-gray-400 text-sm font-semibold tracking-wider flex items-center justify-center gap-2">
-                                            🍿 You've explored the entire catalog!
-                                        </p>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                    <div ref={observerTarget} className="w-full flex justify-center py-12 border-t border-white/5 mt-16">
+                        {hasMore && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className="w-8 h-8 border-3 border-white/20 border-t-accent rounded-full animate-spin"
+                            />
+                        )}
                     </div>
                 )}
             </div>

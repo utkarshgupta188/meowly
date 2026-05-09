@@ -158,9 +158,10 @@ const Navbar = () => {
         { name: "Movies", href: "/movies" },
         { name: "TV Shows", href: "/tv" },
         { name: "People", href: "/people" },
-        { name: "My List", href: "/watchlist" },
+        { name: "Companies", href: "/companies" },
         { name: "Categories", href: "/categories" },
         { name: "Awards", href: "/awards" },
+        { name: "My List", href: "/watchlist" },
     ];
 
     if (
