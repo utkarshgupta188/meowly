@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import MovieRow from "@/components/MovieRow";
 import { tmdb } from "@/lib/tmdb";
@@ -17,7 +16,6 @@ export default async function MoviesPage() {
 
     return (
         <main className="min-h-screen pb-20 overflow-x-hidden">
-            <Navbar />
             {trending.length > 0 && <Hero movies={trending} />}
 
             <div className="relative z-40">

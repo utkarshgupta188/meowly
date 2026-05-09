@@ -19,6 +19,8 @@ const Navbar = () => {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const mobileInputRef = React.useRef<HTMLInputElement>(null);
+    const desktopInputRef = React.useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -44,17 +46,58 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [lastScrollY]);
 
-    // Sync search query with URL
+    // Sync search query with URL (for back/forward navigation or direct links)
     useEffect(() => {
-        const q = searchParams.get("q");
-        setSearchQuery(q || "");
-        if (pathname === "/search" && q) {
-            setIsSearchOpen(true);
+        const q = searchParams.get("q") || "";
+        
+        // Only update searchQuery state from the URL if they differ,
+        // and we aren't currently focused on a search input (which means the user is typing)
+        const activeEl = document.activeElement;
+        const isInputFocused = activeEl && (
+            activeEl.tagName === "INPUT" && 
+            (activeEl.getAttribute("placeholder")?.includes("Search") || activeEl.getAttribute("type") === "text")
+        );
+
+        if (q !== searchQuery && !isInputFocused) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSearchQuery(q);
         }
-    }, [searchParams, pathname]);
+        if (pathname === "/search" && q) {
+            if (typeof window !== "undefined" && window.innerWidth < 768) {
+                setIsSearchOpen(true);
+            }
+        }
+    }, [searchParams, pathname, searchQuery]);
+
+    // Preserve focus during route transitions or layout shifts
+    useEffect(() => {
+        const activeEl = document.activeElement;
+        const isMobileActive = activeEl && mobileInputRef.current && (activeEl === mobileInputRef.current || mobileInputRef.current.contains(activeEl));
+        const isDesktopActive = activeEl && desktopInputRef.current && (activeEl === desktopInputRef.current || desktopInputRef.current.contains(activeEl));
+
+        if (isMobileActive || isDesktopActive) {
+            const focusTarget = isMobileActive ? mobileInputRef.current : desktopInputRef.current;
+            if (focusTarget) {
+                const handleFocus = () => {
+                    if (focusTarget && document.activeElement !== focusTarget) {
+                        focusTarget.focus();
+                        // Maintain cursor position at the end of text
+                        const val = focusTarget.value;
+                        focusTarget.value = "";
+                        focusTarget.value = val;
+                    }
+                };
+                
+                requestAnimationFrame(handleFocus);
+                setTimeout(handleFocus, 50);
+                setTimeout(handleFocus, 150);
+            }
+        }
+    }, [pathname, searchParams]);
 
     // Close search/menu on route change
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMobileMenuOpen(false);
         // Only close search if we're not on the search page
         if (pathname !== "/search") {
@@ -62,10 +105,34 @@ const Navbar = () => {
         }
     }, [pathname]);
 
+    // Debounce updating the URL query param while typing to prevent race conditions
+    useEffect(() => {
+        const q = searchParams.get("q") || "";
+        const queryVal = searchQuery.trim();
+
+        if (queryVal === q.trim()) return;
+
+        const timer = setTimeout(() => {
+            if (queryVal) {
+                if (pathname !== "/search") {
+                    router.push(`/search?q=${encodeURIComponent(queryVal)}`, { scroll: false });
+                } else {
+                    router.replace(`/search?q=${encodeURIComponent(queryVal)}`, { scroll: false });
+                }
+            } else {
+                if (pathname === "/search") {
+                    router.replace("/search", { scroll: false });
+                }
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery, pathname, router, searchParams]);
+
     const handleSearch = (e?: React.FormEvent | React.MouseEvent) => {
         if (e) e.preventDefault();
         if (searchQuery.trim()) {
-            router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+            router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`, { scroll: false });
             setIsMobileMenuOpen(false);
             setIsSearchOpen(false);
         }
@@ -73,15 +140,9 @@ const Navbar = () => {
 
     const handleSearchInputChange = (value: string) => {
         setSearchQuery(value);
-        if (value.trim()) {
-            if (pathname !== "/search") {
-                router.push(`/search?q=${encodeURIComponent(value)}`);
-            } else {
-                router.replace(`/search?q=${encodeURIComponent(value)}`);
-            }
-        } else {
+        if (!value.trim()) {
             if (pathname === "/search") {
-                router.replace("/search");
+                router.replace("/search", { scroll: false });
             }
         }
     };
@@ -101,6 +162,10 @@ const Navbar = () => {
         { name: "Categories", href: "/categories" },
         { name: "Awards", href: "/awards" },
     ];
+
+    if (pathname?.startsWith("/person/") || pathname?.startsWith("/watch/")) {
+        return null;
+    }
 
     return (
         <nav
@@ -132,6 +197,7 @@ const Navbar = () => {
                                 <ArrowLeft className="h-5 w-5" />
                             </button>
                              <input
+                                ref={mobileInputRef}
                                 autoFocus
                                 type="text"
                                 placeholder="Search titles..."
@@ -184,6 +250,7 @@ const Navbar = () => {
                                  {/* Desktop Search */}
                                 <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                                     <input
+                                        ref={desktopInputRef}
                                         type="text"
                                         placeholder="Search Meowly..."
                                         value={searchQuery}

@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "@/components/Navbar";
 import AwardsClient from "./AwardsClient";
 import { tmdb } from "@/lib/tmdb";
 import { Metadata } from "next";
@@ -37,7 +36,6 @@ export default async function AwardsPage() {
 
     return (
         <main className="min-h-screen bg-black text-white pb-20 overflow-x-hidden">
-            <Navbar />
             <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto">
                 <AwardsClient
                     oscars={oscars}

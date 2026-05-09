@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import { tmdb } from "@/lib/tmdb";
 import MovieCard from "@/components/MovieCard";
 
@@ -29,7 +28,6 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
 
     return (
         <main className="min-h-screen bg-black pt-24 sm:pt-28 md:pt-32 pb-20 overflow-x-hidden">
-            <Navbar />
             <div className="px-4 sm:px-8 md:px-12">
                 <div className="flex items-center gap-4 mb-12">
                     <h1 className="text-3xl md:text-5xl font-bold">

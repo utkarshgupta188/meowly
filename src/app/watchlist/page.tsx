@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
 import MovieCard from "@/components/MovieCard";
 import { getWatchlist } from "@/lib/storage";
 import { Movie } from "@/lib/tmdb";
@@ -38,7 +37,6 @@ export default function WatchlistPage() {
 
     return (
         <main className="min-h-screen bg-black pb-20">
-            <Navbar />
             
             <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto">
                 <header className="mb-12">

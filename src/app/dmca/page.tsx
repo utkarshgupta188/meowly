@@ -1,11 +1,8 @@
-
 import React from 'react';
-import Navbar from '@/components/Navbar';
 
 export default function DMCA() {
     return (
         <main className="min-h-screen bg-black text-gray-300">
-            <Navbar />
 
             <div className="max-w-3xl mx-auto px-6 pt-40 md:pt-32 pb-24 space-y-8">
                 <div className="space-y-4 border-b border-gray-800 pb-8">

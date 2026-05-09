@@ -21,9 +21,33 @@ const Tiktok = (props: React.ComponentProps<"svg">) => (
     </svg>
 );
 
+interface SocialLinkProps {
+    icon: React.ElementType;
+    href: string;
+    label: string;
+}
+
+const SocialLink = ({ icon: Icon, href, label }: SocialLinkProps) => {
+    if (!href) return null;
+    return (
+        <a 
+            href={href} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 hover:border-accent/50 transition-all group"
+            title={label}
+        >
+            <Icon className="w-5 h-5 text-gray-400 group-hover:text-accent transition-colors" />
+        </a>
+    );
+};
+
 interface PersonDetailsClientProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     person: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     credits: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     knownFor: any[];
     backdropUrl: string | null;
     profileUrl: string | null;
@@ -39,34 +63,20 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
     const shouldTruncateBio = biography.length > 600;
     const displayBio = shouldTruncateBio && !isBioExpanded ? biography.slice(0, 600) + "..." : biography;
 
-    const SocialLink = ({ icon: Icon, href, label }: { icon: any, href: string, label: string }) => {
-        if (!href) return null;
-        return (
-            <a 
-                href={href} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 hover:border-accent/50 transition-all group"
-                title={label}
-            >
-                <Icon className="w-5 h-5 text-gray-400 group-hover:text-accent transition-colors" />
-            </a>
-        );
-    };
-
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-accent selection:text-black">
             {/* Back Button */}
             <button 
                 onClick={() => router.back()}
-                className="fixed top-6 left-4 sm:left-8 md:left-12 z-[100] inline-flex items-center text-gray-400 hover:text-white transition-all group p-3 glass-pill"
+                className="fixed top-6 left-4 sm:left-8 md:left-12 z-[100] p-3 bg-black/50 hover:bg-black/80 backdrop-blur-md border border-white/15 rounded-full text-white transition-all hover:scale-110 group"
+                title="Go Back"
             >
-                <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                <span className="font-bold hidden md:inline">Back</span>
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             </button>
 
+
             {/* Cinematic Hero Backdrop */}
-            <div className="relative w-full min-h-[70vh] overflow-hidden">
+            <div className="relative w-full min-h-[35vh] overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     {backdropUrl ? (
                         <img
@@ -81,7 +91,7 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative z-10 min-h-[70vh] max-w-7xl mx-auto px-4 sm:px-8 md:px-12 flex flex-col justify-end pt-32 pb-12">
+                <div className="relative z-10 min-h-[35vh] max-w-7xl mx-auto px-4 sm:px-8 md:px-12 flex flex-col justify-end pt-10 pb-8">
                     <div className="flex flex-col md:flex-row gap-8 items-end">
                         <motion.div 
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -160,7 +170,7 @@ export default function PersonDetailsClient({ person, credits, knownFor, backdro
                                     Gallery
                                 </h2>
                                 <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                                    {images.slice(1, 10).map((img: any, idx: number) => (
+                                    {images.slice(1, 10).map((img: { file_path: string }, idx: number) => (
                                         <div key={idx} className="w-32 md:w-40 flex-shrink-0 aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all group cursor-pointer shadow-lg">
                                             <img 
                                                 src={`${TMDB_CONFIG.imageBase}/w500${img.file_path}`} 

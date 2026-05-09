@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import MovieRow from "@/components/MovieRow";
 import { tmdb } from "@/lib/tmdb";
@@ -36,7 +35,6 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen pb-20 overflow-x-hidden">
-      <Navbar />
 
       {heroMovies && heroMovies.length > 0 && <Hero movies={heroMovies as any} />}
 

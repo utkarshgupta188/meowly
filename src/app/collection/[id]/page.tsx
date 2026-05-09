@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import { tmdb, TMDB_CONFIG } from "@/lib/tmdb";
 import MovieCard from "@/components/MovieCard";
 
@@ -38,7 +37,6 @@ export default async function CollectionPage({
     if (!collection) {
         return (
             <main className="min-h-screen bg-black flex items-center justify-center">
-                <Navbar />
                 <p className="text-white text-xl">Collection not found.</p>
             </main>
         );
@@ -46,7 +44,6 @@ export default async function CollectionPage({
 
     return (
         <main className="min-h-screen bg-black pb-20 overflow-x-hidden">
-            <Navbar />
             
             {/* Header / Hero */}
             <div className="relative h-[60vh] md:h-[70vh] w-full mb-12">

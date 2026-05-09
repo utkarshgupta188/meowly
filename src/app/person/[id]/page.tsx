@@ -2,7 +2,6 @@
 import React from 'react';
 import { tmdb, TMDB_CONFIG } from '@/lib/tmdb';
 import MovieRow from '@/components/MovieRow';
-import Navbar from '@/components/Navbar';
 import { ArrowLeft, Star, Calendar, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -64,7 +63,6 @@ export default async function PersonPage({ params }: PersonPageProps) {
 
     return (
         <main className="min-h-screen bg-black pb-20">
-            <Navbar />
             <PersonDetailsClient 
                 person={person}
                 credits={credits}

@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import { tmdb } from "@/lib/tmdb";
 import MovieRow from "@/components/MovieRow";
 import Link from "next/link";
@@ -19,7 +18,6 @@ export default async function CategoriesPage() {
 
     return (
         <main className="min-h-screen pb-20 bg-black pt-40 md:pt-32 overflow-x-hidden">
-            <Navbar />
             <div className="px-8 md:px-12 space-y-6 md:space-y-12">
                 <h1 className="text-3xl md:text-5xl font-bold mb-8">Categories</h1>
 

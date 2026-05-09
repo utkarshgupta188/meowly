@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
-import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, ChevronDown, X, Trophy, Sparkles, Award, Star, Compass, Flame, Palette, Globe, Video, Heart, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
+import { TMDB_CONFIG } from "@/lib/tmdb";
+import { Play, Plus, Share2, Check, MessageSquare, AudioWaveform, X, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
@@ -21,20 +21,34 @@ const Tiktok = (props: React.ComponentProps<"svg">) => (
 
 import Dropdown from "@/components/ui/Dropdown";
 
-const IconMap: Record<string, React.ComponentType<any>> = {
-    Trophy,
-    Sparkles,
-    Award,
-    Star,
-    Compass,
-    Flame,
-    Palette,
-    Globe,
-    Video,
-    Heart
-};
+interface VideoResult {
+    type: string;
+    site: string;
+    key: string;
+}
+
+interface SeasonData {
+    season_number: number;
+    name?: string;
+}
+
+interface ReleaseDateResult {
+    iso_3166_1: string;
+    release_dates?: Array<{ certification: string }>;
+}
+
+interface ContentRatingResult {
+    iso_3166_1: string;
+    rating?: string;
+}
+
+interface LogoImage {
+    iso_639_1: string;
+    file_path: string;
+}
 
 interface DetailsHeroProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tmdbData: any;
     type: "movie" | "tv";
     onPlay: () => void;
@@ -48,8 +62,8 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     const [copied, setCopied] = useState(false);
     const [showTrailer, setShowTrailer] = useState(false);
 
-    const trailer = tmdbData.videos?.results?.find((v: any) => v.type === "Trailer" && v.site === "YouTube") ||
-        tmdbData.videos?.results?.find((v: any) => v.type === "Teaser" && v.site === "YouTube");
+    const trailer = tmdbData.videos?.results?.find((v: VideoResult) => v.type === "Trailer" && v.site === "YouTube") ||
+        tmdbData.videos?.results?.find((v: VideoResult) => v.type === "Teaser" && v.site === "YouTube");
 
     useEffect(() => {
         if (!tmdbData?.id) return;
@@ -71,15 +85,12 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     const year = tmdbData.release_date?.split("-")[0] || tmdbData.first_air_date?.split("-")[0] || "2024";
     const runTime = tmdbData.runtime ? `${Math.floor(tmdbData.runtime / 60)} h ${tmdbData.runtime % 60} min` : type === 'tv' ? `${tmdbData.number_of_episodes || 24} episodes` : "1 h 45 min";
 
-    const currentSeasonData = tmdbData.seasons?.find((s: any) => s.season_number === currentSeason);
-    const seasonName = currentSeasonData?.name || `Season ${currentSeason}`;
-
     const getRating = () => {
         if (type === 'movie') {
-            const releaseDates = tmdbData.release_dates?.results?.find((r: any) => r.iso_3166_1 === 'US');
+            const releaseDates = tmdbData.release_dates?.results?.find((r: ReleaseDateResult) => r.iso_3166_1 === 'US');
             return releaseDates?.release_dates?.[0]?.certification || "NR";
         } else {
-            const contentRatings = tmdbData.content_ratings?.results?.find((r: any) => r.iso_3166_1 === 'US');
+            const contentRatings = tmdbData.content_ratings?.results?.find((r: ContentRatingResult) => r.iso_3166_1 === 'US');
             return contentRatings?.rating || "NR";
         }
     };
@@ -110,10 +121,11 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
     };
 
     return (
-        <div className="relative w-full min-h-[50vh] lg:min-h-[65vh] flex items-start bg-black pt-8 md:pt-12 pb-10">
+        <div className="relative w-full min-h-[50vh] lg:min-h-[65vh] flex items-start bg-black pt-24 md:pt-12 pb-10">
             {/* Background Blur */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 {backdropUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={backdropUrl}
                         alt={tmdbData.title || tmdbData.name}
@@ -136,8 +148,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             transition={{ delay: 0.2 }}
                             className="h-16 sm:h-24 md:h-32 lg:h-40 w-full flex items-start"
                         >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src={`${TMDB_CONFIG.imageBase}/original${tmdbData.images.logos.find((l: any) => l.iso_639_1 === 'en')?.file_path ||
+                                src={`${TMDB_CONFIG.imageBase}/original${tmdbData.images.logos.find((l: LogoImage) => l.iso_639_1 === 'en')?.file_path ||
                                     tmdbData.images.logos[0].file_path
                                     }`}
                                 alt={tmdbData.title || tmdbData.name}
@@ -225,8 +238,8 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                                     value={currentSeason}
                                     onChange={(val) => onSeasonChange(Number(val))}
                                     options={tmdbData.seasons
-                                        ?.filter((s: any) => s.season_number > 0)
-                                        .map((s: any) => ({
+                                        ?.filter((s: SeasonData) => s.season_number > 0)
+                                        .map((s: SeasonData) => ({
                                             value: s.season_number,
                                             label: s.name || `Season ${s.season_number}`
                                         })) || []
@@ -361,6 +374,7 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                 >
                     <div className="relative w-80 xl:w-96 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-white/20 transform perspective-1000">
                         {tmdbData.poster_path && (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                                 src={`${TMDB_CONFIG.posterSizes.large}${tmdbData.poster_path}`}
                                 alt={tmdbData.title || tmdbData.name}

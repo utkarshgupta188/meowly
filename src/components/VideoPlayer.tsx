@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Monitor, Server, ChevronDown, Maximize2, Minimize2, RefreshCcw, ArrowLeft } from "lucide-react";
+import { Server, Maximize2, Minimize2, RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveToRecentlyPlayed } from "@/lib/storage";
 import Dropdown from "@/components/ui/Dropdown";
@@ -9,6 +9,7 @@ import Dropdown from "@/components/ui/Dropdown";
 interface VideoPlayerProps {
     type: "movie" | "tv";
     id: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tmdbData: any;
     season?: number;
     episode?: number;
@@ -99,7 +100,7 @@ export default function VideoPlayer({
         ? currentServer.movie(id)
         : currentServer.show(id, currentSeason, currentEpisode);
 
-    const seasons = tmdbData?.seasons || [];
+    const seasons = (tmdbData?.seasons as Array<{ season_number: number; name?: string; episode_count: number }>) || [];
 
     return (
         <div className="flex flex-col w-full h-full">
@@ -109,13 +110,13 @@ export default function VideoPlayer({
                 isTheaterMode && "md:h-[90vh] z-40"
             )}>
                 <iframe
-                    key={playerKey}
+                    key={`${selectedServer}-${currentSeason}-${currentEpisode}-${playerKey}`}
                     src={playerUrl}
                     className="w-full h-full border-none"
                     allowFullScreen
                     referrerPolicy="origin"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    {...((currentServer as any).useSandbox ? { sandbox: "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" } : {})}
+                    {...(currentServer.useSandbox ? { sandbox: "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" } : {})}
                 ></iframe>
 
 
@@ -180,7 +181,7 @@ export default function VideoPlayer({
                                 <Dropdown
                                     value={currentSeason}
                                     onChange={(val) => handleSeasonChange(Number(val))}
-                                    options={seasons.map((s: any) => ({
+                                    options={seasons.map((s) => ({
                                         value: s.season_number,
                                         label: s.name || `Season ${s.season_number}`
                                     }))}
@@ -195,7 +196,7 @@ export default function VideoPlayer({
                                     value={currentEpisode}
                                     onChange={(val) => handleEpisodeChange(Number(val))}
                                     options={Array.from(
-                                        { length: seasons.find((s: any) => s.season_number === currentSeason)?.episode_count || 50 },
+                                        { length: seasons.find((s) => s.season_number === currentSeason)?.episode_count || 50 },
                                         (_, i) => ({ value: i + 1, label: `Episode ${i + 1}` })
                                     )}
                                     className="px-4 py-2 rounded-lg text-sm bg-[#1a242f] hover:bg-[#1a242f]/80 border-none shadow-none font-bold"

@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import MovieCard from "@/components/MovieCard";
 import SearchGrid from "@/components/SearchGrid";
 import { searchAction, getTrendingAction, getGenreListAction } from "@/app/actions";
+import { Movie } from "@/lib/tmdb";
 
 const SearchSkeleton = () => {
     return (
@@ -22,13 +22,18 @@ const SearchSkeleton = () => {
     );
 };
 
+interface Genre {
+    id: number;
+    name: string;
+}
+
 function SearchContent() {
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
 
-    const [results, setResults] = useState<any[]>([]);
-    const [trending, setTrending] = useState<any[]>([]);
-    const [genres, setGenres] = useState<any[]>([]);
+    const [results, setResults] = useState<Movie[]>([]);
+    const [trending, setTrending] = useState<Movie[]>([]);
+    const [genres, setGenres] = useState<Genre[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [debouncedQuery, setDebouncedQuery] = useState(query);
 
@@ -96,7 +101,6 @@ function SearchContent() {
 
     return (
         <main className="min-h-screen bg-black pb-20">
-            <Navbar />
 
             <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12">
                 <h1 className="text-2xl md:text-4xl font-black mb-8 transition-all animate-in fade-in slide-in-from-left duration-700 truncate max-w-full pb-2">
@@ -113,7 +117,7 @@ function SearchContent() {
                         <div className="space-y-4">
                             <h2 className="text-lg font-semibold text-gray-400">Top Genres</h2>
                             <div className="flex flex-wrap gap-3">
-                                {genres.slice(0, 8).map((genre: any) => (
+                                {genres.slice(0, 8).map((genre: Genre) => (
                                     <Link
                                         key={genre.id}
                                         href={`/categories/${genre.id}`}
@@ -141,7 +145,7 @@ function SearchContent() {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-40 text-center">
                         <p className="text-gray-400 text-lg mb-4">
-                            We couldn't find any matches for "{query}"
+                            We couldn&apos;t find any matches for &quot;{query}&quot;
                         </p>
                         <p className="text-gray-600 text-sm">
                             Try searching for movie titles, actors, or genres.
@@ -157,7 +161,6 @@ export default function SearchPage() {
     return (
         <Suspense fallback={
             <main className="min-h-screen bg-black pb-20">
-                <Navbar />
                 <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12">
                     <h1 className="text-2xl md:text-4xl font-black mb-8 animate-pulse text-white">
                         Search Meowly

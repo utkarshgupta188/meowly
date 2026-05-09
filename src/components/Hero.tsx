@@ -42,7 +42,7 @@ const Hero = ({ movies }: HeroProps) => {
 
     useEffect(() => {
         if (!validMovies.length || !heroMovies[current]) return;
-        
+
         const checkWatchlist = () => {
             const movie = heroMovies[current];
             setInWatchlist(isInWatchlist(movie.id.toString(), movie.media_type || 'movie'));
@@ -101,7 +101,7 @@ const Hero = ({ movies }: HeroProps) => {
 
     return (
         <div className="relative h-[75vh] sm:h-[80vh] md:h-[85vh] w-full overflow-hidden bg-black group">
-            <TrailerModal 
+            <TrailerModal
                 isOpen={isTrailerModalOpen}
                 onClose={() => setIsTrailerModalOpen(false)}
                 trailerUrl={trailerUrl}
@@ -127,7 +127,7 @@ const Hero = ({ movies }: HeroProps) => {
                             transition={{ duration: 10, ease: "linear" }}
                             src={`https://image.tmdb.org/t/p/original${heroMovies[current].backdrop_path}`}
                             alt={heroMovies[current].title}
-                            className="w-full h-full object-cover object-[center_30%]"
+                            className="w-full h-full object-cover object-[center_1%]"
                             referrerPolicy="no-referrer"
                         />
                         {/* Cinematic Gradients */}
@@ -148,10 +148,9 @@ const Hero = ({ movies }: HeroProps) => {
                                     className="h-12 sm:h-20 md:h-32 lg:h-40 w-full flex items-start"
                                 >
                                     <img
-                                        src={`${TMDB_CONFIG.imageBase}/original${
-                                            (heroMovies[current].logos as any[]).find((l: any) => l.iso_639_1 === 'en')?.file_path || 
+                                        src={`${TMDB_CONFIG.imageBase}/original${(heroMovies[current].logos as any[]).find((l: any) => l.iso_639_1 === 'en')?.file_path ||
                                             (heroMovies[current].logos as any[])[0].file_path
-                                        }`}
+                                            }`}
                                         alt={heroMovies[current].title || heroMovies[current].name}
                                         className="h-full object-contain object-left drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
                                     />
@@ -234,15 +233,15 @@ const Hero = ({ movies }: HeroProps) => {
                                     <span>Info</span>
                                 </Link>
 
-                                <button 
+                                <button
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleWatchlistToggle();
                                     }}
                                     className={cn(
                                         "p-2 sm:p-2.5 md:p-3.5 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
-                                        inWatchlist 
-                                            ? "bg-accent text-black border-accent" 
+                                        inWatchlist
+                                            ? "bg-accent text-black border-accent"
                                             : "bg-black/40 text-white hover:bg-black/60"
                                     )}
                                 >
