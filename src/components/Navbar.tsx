@@ -163,7 +163,12 @@ const Navbar = () => {
         { name: "Awards", href: "/awards" },
     ];
 
-    if (pathname?.startsWith("/person/") || pathname?.startsWith("/watch/")) {
+    if (
+        pathname?.startsWith("/person/") || 
+        pathname?.startsWith("/watch/") || 
+        pathname?.startsWith("/company/") ||
+        pathname?.startsWith("/network/")
+    ) {
         return null;
     }
 

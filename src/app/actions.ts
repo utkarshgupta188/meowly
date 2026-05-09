@@ -170,3 +170,21 @@ export async function getGenreListAction(type: "movie" | "tv" = "movie") {
         return [];
     }
 }
+
+export async function getDiscoverByCompanyAction(companyId: string, type: "movie" | "tv", page: number) {
+    try {
+        return await tmdb.getDiscoverByCompany(companyId, type, page);
+    } catch (error) {
+        console.error("getDiscoverByCompanyAction error:", error);
+        return { results: [], totalPages: 0, totalResults: 0 };
+    }
+}
+
+export async function getDiscoverByNetworkAction(networkId: string, page: number) {
+    try {
+        return await tmdb.getDiscoverByNetwork(networkId, page);
+    } catch (error) {
+        console.error("getDiscoverByNetworkAction error:", error);
+        return { results: [], totalPages: 0, totalResults: 0 };
+    }
+}

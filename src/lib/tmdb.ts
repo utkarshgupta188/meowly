@@ -242,20 +242,32 @@ export const tmdb = {
         const data = await fetchTMDB(`/network/${id}`);
         return data || null;
     },
-    getDiscoverByCompany: async (companyId: string, type: "movie" | "tv" = "movie"): Promise<Movie[]> => {
+    getDiscoverByCompany: async (companyId: string, type: "movie" | "tv" = "movie", page: number = 1): Promise<{ results: Movie[]; totalPages: number; totalResults: number }> => {
         const data = await fetchTMDB(`/discover/${type}`, {
             with_companies: companyId,
             sort_by: "popularity.desc",
-            include_adult: "false"
+            include_adult: "false",
+            page: page.toString()
         });
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+        const results = (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+        return {
+            results,
+            totalPages: data?.total_pages || 1,
+            totalResults: data?.total_results || 0
+        };
     },
-    getDiscoverByNetwork: async (networkId: string): Promise<Movie[]> => {
+    getDiscoverByNetwork: async (networkId: string, page: number = 1): Promise<{ results: Movie[]; totalPages: number; totalResults: number }> => {
         const data = await fetchTMDB(`/discover/tv`, {
             with_networks: networkId,
             sort_by: "popularity.desc",
-            include_adult: "false"
+            include_adult: "false",
+            page: page.toString()
         });
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+        const results = (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+        return {
+            results,
+            totalPages: data?.total_pages || 1,
+            totalResults: data?.total_results || 0
+        };
     }
 };

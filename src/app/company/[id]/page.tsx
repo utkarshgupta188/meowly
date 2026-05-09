@@ -40,10 +40,13 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
         );
     }
 
-    const [movies, tvShows] = await Promise.all([
+    const [moviesData, tvShowsData] = await Promise.all([
         tmdb.getDiscoverByCompany(id, "movie"),
         tmdb.getDiscoverByCompany(id, "tv")
     ]);
+
+    const movies = moviesData?.results || [];
+    const tvShows = tvShowsData?.results || [];
 
     // Find the most popular movie/show with a backdrop path to use as a beautiful header background
     const allItems = [...movies, ...tvShows].sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
@@ -57,6 +60,10 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
                 movies={movies}
                 tvShows={tvShows}
                 backdropUrl={backdropUrl}
+                moviesTotalResults={moviesData?.totalResults || 0}
+                tvShowsTotalResults={tvShowsData?.totalResults || 0}
+                moviesTotalPages={moviesData?.totalPages || 1}
+                tvShowsTotalPages={tvShowsData?.totalPages || 1}
             />
         </main>
     );

@@ -1,24 +1,87 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MapPin, Globe, Tv, ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import MovieCard from "./MovieCard";
+import { getDiscoverByNetworkAction } from "@/app/actions";
 
 interface NetworkDetailsClientProps {
     network: any;
     tvShows: Movie[];
     backdropUrl: string | null;
+    tvShowsTotalResults?: number;
+    tvShowsTotalPages?: number;
 }
 
 export default function NetworkDetailsClient({
     network,
     tvShows,
     backdropUrl,
+    tvShowsTotalResults = 0,
+    tvShowsTotalPages = 1,
 }: NetworkDetailsClientProps) {
     const router = useRouter();
+    const [loadedTvShows, setLoadedTvShows] = useState<Movie[]>(tvShows);
+    const [tvPage, setTvPage] = useState(1);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const observerTarget = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setLoadedTvShows(tvShows);
+        setTvPage(1);
+    }, [network.id, tvShows]);
+
+    const handleLoadMore = async () => {
+        if (isLoadingMore) return;
+        setIsLoadingMore(true);
+
+        const nextPage = tvPage + 1;
+
+        try {
+            const data = await getDiscoverByNetworkAction(network.id, nextPage);
+            if (data && data.results && data.results.length > 0) {
+                setLoadedTvShows((prev) => {
+                    const existingIds = new Set(prev.map(item => item.id));
+                    const uniqueNew = data.results.filter(item => !existingIds.has(item.id));
+                    return [...prev, ...uniqueNew];
+                });
+                setTvPage(nextPage);
+            }
+        } catch (error) {
+            console.error("Failed to load more:", error);
+        } finally {
+            setIsLoadingMore(false);
+        }
+    };
+
+    const totalResults = tvShowsTotalResults || tvShows.length;
+    const totalPages = tvShowsTotalPages || 1;
+    const hasMore = tvPage < totalPages && loadedTvShows.length < totalResults;
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+                    handleLoadMore();
+                }
+            },
+            { threshold: 0.1, rootMargin: "300px" }
+        );
+
+        const currentTarget = observerTarget.current;
+        if (currentTarget) {
+            observer.observe(currentTarget);
+        }
+
+        return () => {
+            if (currentTarget) {
+                observer.unobserve(currentTarget);
+            }
+        };
+    }, [tvPage, hasMore, isLoadingMore]);
 
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-accent selection:text-black">
@@ -32,7 +95,7 @@ export default function NetworkDetailsClient({
             </button>
 
             {/* Cinematic Hero Backdrop */}
-            <div className="relative w-full min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] overflow-hidden flex items-end">
+            <div className="relative w-full min-h-[30vh] sm:min-h-[35vh] md:min-h-[40vh] overflow-hidden flex items-end">
                 <div className="absolute inset-0 z-0">
                     {backdropUrl ? (
                         <img
@@ -47,7 +110,7 @@ export default function NetworkDetailsClient({
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-10 pt-24">
+                <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-10 pt-16">
                     <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
                         {/* Network Logo Display */}
                         <motion.div
@@ -123,19 +186,19 @@ export default function NetworkDetailsClient({
             </div>
 
             {/* List Header and Content Grid */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mt-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mt-4">
                 <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-4">
                     <div className="w-1.5 h-8 bg-accent rounded-full" />
                     <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">
                         Featured TV Shows
-                        <span className="ml-3 text-gray-500 font-medium text-lg">({tvShows.length})</span>
+                        <span className="ml-3 text-gray-500 font-medium text-lg">({totalResults})</span>
                     </h2>
                 </div>
 
-                {tvShows.length > 0 ? (
+                {loadedTvShows.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                        {tvShows.map((item) => (
-                            <MovieCard key={item.id} movie={item} isFluid={true} />
+                        {loadedTvShows.map((item) => (
+                            <MovieCard key={`${item.id}-${item.media_type}`} movie={item} isFluid={true} />
                         ))}
                     </div>
                 ) : (
@@ -143,6 +206,56 @@ export default function NetworkDetailsClient({
                         <Tv className="w-16 h-16 mb-4 stroke-[1.5] text-gray-600" />
                         <p className="text-lg font-semibold">No TV shows found</p>
                         <p className="text-sm text-gray-600">This network hasn't cataloged any TV shows on TMDB.</p>
+                    </div>
+                )}
+
+                {/* Progress bar / Load More section */}
+                {loadedTvShows.length > 0 && (
+                    <div className="mt-16 flex flex-col items-center justify-center space-y-6 pb-12 border-t border-white/5 pt-12">
+                        {/* Progress Bar Indicator */}
+                        <div className="w-full max-w-md text-center space-y-2">
+                            <p className="text-sm text-gray-400 font-medium">
+                                Showing <span className="text-white font-bold">{loadedTvShows.length}</span> of{" "}
+                                <span className="text-accent font-black">{totalResults}</span> TV shows
+                            </p>
+                            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <motion.div 
+                                    className="h-full bg-gradient-to-r from-accent to-blue-500 rounded-full"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, (loadedTvShows.length / totalResults) * 100)}%` }}
+                                    transition={{ duration: 0.5, ease: "easeOut" }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Infinite Scroll Sentinel / Indicator */}
+                        <div ref={observerTarget} className="w-full flex justify-center py-4">
+                            <AnimatePresence mode="wait">
+                                {hasMore ? (
+                                    <motion.div
+                                        key="loading-indicator"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="flex items-center gap-3 text-sm text-gray-400 font-medium"
+                                    >
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-accent rounded-full animate-spin" />
+                                        <span>Loading more TV Shows...</span>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="all-loaded"
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="text-center py-4 bg-white/5 border border-white/5 px-6 rounded-2xl max-w-sm"
+                                    >
+                                        <p className="text-gray-400 text-sm font-semibold tracking-wider flex items-center justify-center gap-2">
+                                            🍿 You've explored the entire catalog!
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 )}
             </div>

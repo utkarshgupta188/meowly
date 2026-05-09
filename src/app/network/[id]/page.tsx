@@ -40,7 +40,8 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
         );
     }
 
-    const tvShows = await tmdb.getDiscoverByNetwork(id);
+    const tvShowsData = await tmdb.getDiscoverByNetwork(id);
+    const tvShows = tvShowsData?.results || [];
 
     // Find the most popular show with a backdrop path to use as a beautiful header background
     const bestBackdrop = tvShows.find(item => item.backdrop_path)?.backdrop_path;
@@ -52,6 +53,8 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
                 network={network}
                 tvShows={tvShows}
                 backdropUrl={backdropUrl}
+                tvShowsTotalResults={tvShowsData?.totalResults || 0}
+                tvShowsTotalPages={tvShowsData?.totalPages || 1}
             />
         </main>
     );
