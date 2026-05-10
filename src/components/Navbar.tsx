@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, Menu, X, ArrowLeft, Dices } from "lucide-react";
+import { Search, Menu, X, ArrowLeft, Dices, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { surpriseMe } from "@/app/actions";
@@ -21,6 +21,43 @@ const Navbar = () => {
     const searchParams = useSearchParams();
     const mobileInputRef = React.useRef<HTMLInputElement>(null);
     const desktopInputRef = React.useRef<HTMLInputElement>(null);
+
+    const [pwaPrompt, setPwaPrompt] = useState<any>(null);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const handleInstallReady = () => {
+                setPwaPrompt(window.deferredPrompt);
+            };
+            const handleInstalled = () => {
+                setPwaPrompt(null);
+            };
+
+            window.addEventListener("pwa-install-ready", handleInstallReady);
+            window.addEventListener("pwa-installed", handleInstalled);
+
+            if (window.deferredPrompt) {
+                setPwaPrompt(window.deferredPrompt);
+            }
+
+            return () => {
+                window.removeEventListener("pwa-install-ready", handleInstallReady);
+                window.removeEventListener("pwa-installed", handleInstalled);
+            };
+        }
+    }, []);
+
+    const handlePwaInstall = async () => {
+        const promptEvent = pwaPrompt || window.deferredPrompt;
+        if (!promptEvent) return;
+
+        promptEvent.prompt();
+        const { outcome } = await promptEvent.userChoice;
+        console.log(`[PWA Navbar] Install choice: ${outcome}`);
+        setPwaPrompt(null);
+        window.deferredPrompt = null;
+        window.dispatchEvent(new CustomEvent("pwa-installed"));
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -281,6 +318,18 @@ const Navbar = () => {
                                     <Dices className={cn("h-5 w-5", isPending && "animate-spin-slow")} />
                                 </button>
 
+                                {/* PWA Install Action Icon */}
+                                {pwaPrompt && (
+                                    <button
+                                        onClick={handlePwaInstall}
+                                        className="p-2 text-gray-400 hover:text-accent transition-all duration-300 rounded-full hover:bg-white/10 flex items-center justify-center relative group"
+                                        title="Install Meowly"
+                                    >
+                                        <Download className="h-5 w-5 animate-pulse text-amber-400" />
+                                        <span className="absolute -bottom-1 -right-1 w-2 h-2 rounded-full bg-teal-400" />
+                                    </button>
+                                )}
+
                                 {/* Mobile Search Toggle */}
                                 <button
                                     onClick={() => setIsSearchOpen(true)}
@@ -329,6 +378,20 @@ const Navbar = () => {
                                         {pathname === link.href && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
                                     </Link>
                                 ))}
+
+                                {/* PWA Install Button in Drawer */}
+                                {pwaPrompt && (
+                                    <button
+                                        onClick={() => {
+                                            setIsMobileMenuOpen(false);
+                                            handlePwaInstall();
+                                        }}
+                                        className="mt-3 text-[16px] font-bold px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-amber-400 hover:bg-white/10 hover:text-amber-300 transition-all duration-300 flex items-center justify-between group cursor-pointer"
+                                    >
+                                        <span>Install App Extension</span>
+                                        <Download className="h-5 w-5 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </motion.div>
