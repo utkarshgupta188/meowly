@@ -199,59 +199,98 @@ const Hero = ({ movies }: HeroProps) => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.5 }}
-                                className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-4 pt-2 md:pt-4"
+                                className="flex flex-col gap-2 pt-2 md:pt-4"
                             >
-                                <Link
-                                    href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}?resume=true`}
-                                    className="flex items-center space-x-1 sm:space-x-2 bg-white text-black px-3 py-2 sm:px-5 sm:py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-xl shadow-white/10"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <Play className="fill-current w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-                                    <span>Watch Now</span>
-                                </Link>
+                                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-4">
+                                    {(() => {
+                                        const releaseDateStr = heroMovies[current].release_date || heroMovies[current].first_air_date;
+                                        const isReleased = releaseDateStr ? new Date(releaseDateStr) <= new Date() : true;
 
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePlayTrailer();
-                                    }}
-                                    disabled={isTrailerLoading}
-                                    className={cn(
-                                        "flex items-center space-x-1 sm:space-x-2 bg-white/10 backdrop-blur-md text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10",
-                                        isTrailerLoading && "animate-pulse"
-                                    )}
-                                >
-                                    <Clapperboard className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-amber-400" />
-                                    <span>{isTrailerLoading ? "Loading..." : "Trailer"}</span>
-                                </button>
+                                        if (!isReleased) {
+                                            return (
+                                                <button
+                                                    disabled
+                                                    className="flex items-center space-x-1 sm:space-x-2 bg-white/50 text-black/50 px-3 py-2 sm:px-5 sm:py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg cursor-not-allowed shadow-xl shadow-white/10"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <span>Coming Soon</span>
+                                                </button>
+                                            );
+                                        }
 
-                                <Link
-                                    href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}`}
-                                    className="flex items-center space-x-1 sm:space-x-2 bg-white/10 backdrop-blur-md text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <Info className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-accent" />
-                                    <span>Info</span>
-                                </Link>
+                                        return (
+                                            <Link
+                                                href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}?resume=true`}
+                                                className="flex items-center space-x-1 sm:space-x-2 bg-white text-black px-3 py-2 sm:px-5 sm:py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-gray-200 transition-all hover:scale-105 shadow-xl shadow-white/10"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <Play className="fill-current w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+                                                <span>Watch Now</span>
+                                            </Link>
+                                        );
+                                    })()}
 
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleWatchlistToggle();
-                                    }}
-                                    className={cn(
-                                        "p-2 sm:p-2.5 md:p-3.5 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
-                                        inWatchlist
-                                            ? "bg-accent text-black border-accent"
-                                            : "bg-black/40 text-white hover:bg-black/60"
-                                    )}
-                                >
-                                    {inWatchlist ? (
-                                        <Check className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-                                    ) : (
-                                        <Plus className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-                                    )}
-                                </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePlayTrailer();
+                                        }}
+                                        disabled={isTrailerLoading}
+                                        className={cn(
+                                            "flex items-center space-x-1 sm:space-x-2 bg-white/10 backdrop-blur-md text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10",
+                                            isTrailerLoading && "animate-pulse"
+                                        )}
+                                    >
+                                        <Clapperboard className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-amber-400" />
+                                        <span>{isTrailerLoading ? "Loading..." : "Trailer"}</span>
+                                    </button>
+
+                                    <Link
+                                        href={`/watch/${heroMovies[current].media_type || 'movie'}/${heroMovies[current].id}`}
+                                        className="flex items-center space-x-1 sm:space-x-2 bg-white/10 backdrop-blur-md text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base lg:text-lg hover:bg-white/20 transition-all hover:scale-105 border border-white/10"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <Info className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-accent" />
+                                        <span>Info</span>
+                                    </Link>
+
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleWatchlistToggle();
+                                        }}
+                                        className={cn(
+                                            "p-2 sm:p-2.5 md:p-3.5 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",
+                                            inWatchlist
+                                                ? "bg-accent text-black border-accent"
+                                                : "bg-black/40 text-white hover:bg-black/60"
+                                        )}
+                                    >
+                                        {inWatchlist ? (
+                                            <Check className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+                                        ) : (
+                                            <Plus className="w-3.5 h-3.5 sm:w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+                                        )}
+                                    </button>
+                                </div>
+                                {(() => {
+                                    const releaseDateStr = heroMovies[current].release_date || heroMovies[current].first_air_date;
+                                    const releaseDate = releaseDateStr ? new Date(releaseDateStr) : null;
+                                    if (!releaseDate) return null;
+                                    
+                                    const now = new Date();
+                                    const twoDaysAgo = new Date();
+                                    twoDaysAgo.setDate(now.getDate() - 2);
+                                    
+                                    if (releaseDate <= now && releaseDate >= twoDaysAgo) {
+                                        return (
+                                            <span className="text-[11px] sm:text-xs text-gray-300 font-medium ml-1">
+                                                *Released recently. Check if available, if not try again later.
+                                            </span>
+                                        );
+                                    }
+                                    return null;
+                                })()}
                             </motion.div>
                         </div>
                     </div>

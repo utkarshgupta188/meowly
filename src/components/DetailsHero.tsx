@@ -206,29 +206,72 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                         className="flex flex-col gap-8 pt-4"
                     >
                         {/* Primary action buttons */}
-                        <div className="flex flex-wrap items-center gap-4">
-                            <button
-                                onClick={onPlay}
-                                className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
-                            >
-                                <Play className="fill-current w-5 h-5 md:w-7 md:h-7" />
-                                <div className="flex flex-col items-start leading-none text-left">
-                                    <span className="text-[10px] uppercase font-black tracking-wider text-black/70">
-                                        {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
-                                    </span>
-                                    <span>{type === 'tv' ? "Continue watching" : "Watch now"}</span>
-                                </div>
-                            </button>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex flex-wrap items-center gap-4">
+                                {(() => {
+                                    const releaseDateStr = tmdbData.release_date || tmdbData.first_air_date;
+                                    const isReleased = releaseDateStr ? new Date(releaseDateStr) <= new Date() : true;
 
-                            {trailer && (
-                                <button
-                                    onClick={() => setShowTrailer(true)}
-                                    className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
-                                >
-                                    <Play className="w-5 h-5 md:w-6 md:h-6" />
-                                    <span>Trailer</span>
-                                </button>
-                            )}
+                                    if (!isReleased) {
+                                        return (
+                                            <button
+                                                disabled
+                                                className="flex items-center space-x-3 bg-white/50 text-black/50 px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg cursor-not-allowed shadow-xl shadow-white/10"
+                                            >
+                                                <div className="flex flex-col items-start leading-none text-left">
+                                                    <span className="text-[10px] uppercase font-black tracking-wider text-black/40">
+                                                        {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
+                                                    </span>
+                                                    <span>Coming Soon</span>
+                                                </div>
+                                            </button>
+                                        );
+                                    }
+
+                                    return (
+                                        <button
+                                            onClick={onPlay}
+                                            className="flex items-center space-x-3 bg-white hover:bg-gray-200 text-black px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/10"
+                                        >
+                                            <Play className="fill-current w-5 h-5 md:w-7 md:h-7" />
+                                            <div className="flex flex-col items-start leading-none text-left">
+                                                <span className="text-[10px] uppercase font-black tracking-wider text-black/70">
+                                                    {type === 'tv' ? `Episode ${currentEpisode}` : "Movie"}
+                                                </span>
+                                                <span>{type === 'tv' ? "Continue watching" : "Watch now"}</span>
+                                            </div>
+                                        </button>
+                                    );
+                                })()}
+
+                                {trailer && (
+                                    <button
+                                        onClick={() => setShowTrailer(true)}
+                                        className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 text-white px-5 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover:scale-105 active:scale-95 backdrop-blur-md border border-white/10"
+                                    >
+                                        <Play className="w-5 h-5 md:w-6 md:h-6" />
+                                        <span>Trailer</span>
+                                    </button>
+                                )}
+                            </div>
+                            {(() => {
+                                const releaseDateStr = tmdbData.release_date || tmdbData.first_air_date;
+                                const releaseDate = releaseDateStr ? new Date(releaseDateStr) : null;
+                                if (!releaseDate) return null;
+                                
+                                const now = new Date();
+                                const twoDaysAgo = new Date();
+                                twoDaysAgo.setDate(now.getDate() - 2);
+                                
+                                if (releaseDate <= now && releaseDate >= twoDaysAgo) {
+                                    return (
+                                        <span className="text-[11px] sm:text-xs text-gray-300 font-medium ml-1">
+                                            *Released recently. Check if available, if not try again later.
+                                        </span>
+                                    );
+                                }
+                                return null;
+                            })()}
                         </div>
 
                         {/* TV Season selector */}
