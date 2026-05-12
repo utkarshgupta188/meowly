@@ -43,6 +43,7 @@ import AdBlockerPopup from "@/components/AdBlockerPopup";
 import Navbar from "@/components/Navbar";
 import PwaRegister from "@/components/PwaRegister";
 import DataMigration from "@/components/DataMigration";
+import DomainRedirectPopup from "@/components/DomainRedirectPopup";
 
 export default function RootLayout({
   children,
@@ -65,6 +66,7 @@ export default function RootLayout({
         <AdBlockerPopup />
         <PwaRegister />
         <DataMigration />
+        <DomainRedirectPopup />
       </body>
     </html>
   );
