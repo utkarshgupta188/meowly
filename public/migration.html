@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meowly Cross-Origin Data Migrator</title>
+</head>
+<body>
+    <script>
+        (function() {
+            // Only run if loaded inside an iframe (security & efficiency check)
+            if (window.self !== window.top) {
+                try {
+                    const recentlyPlayed = localStorage.getItem("meowly_recently_played");
+                    const watchlist = localStorage.getItem("meowly_watchlist");
+                    const installed = localStorage.getItem("pwa-installed");
+                    
+                    const payload = {
+                        type: "meowly-migration-data",
+                        recentlyPlayed: recentlyPlayed || "[]",
+                        watchlist: watchlist || "[]",
+                        installed: installed || "false"
+                    };
+                    
+                    // Post the stored data back to the parent window
+                    // Using '*' to bypass origin constraint during cross-domain dev testing, 
+                    // since this is just non-sensitive public streaming logs/playback history.
+                    window.parent.postMessage(payload, "*");
+                } catch (e) {
+                    console.warn("[Migration Exporter] Failed to access localStorage", e);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -42,6 +42,7 @@ import AmbientBackground from "@/components/AmbientBackground";
 import AdBlockerPopup from "@/components/AdBlockerPopup";
 import Navbar from "@/components/Navbar";
 import PwaRegister from "@/components/PwaRegister";
+import DataMigration from "@/components/DataMigration";
 
 export default function RootLayout({
   children,
@@ -63,6 +64,7 @@ export default function RootLayout({
         <Footer />
         <AdBlockerPopup />
         <PwaRegister />
+        <DataMigration />
       </body>
     </html>
   );

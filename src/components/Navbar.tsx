@@ -54,6 +54,17 @@ const Navbar = () => {
         promptEvent.prompt();
         const { outcome } = await promptEvent.userChoice;
         console.log(`[PWA Navbar] Install choice: ${outcome}`);
+        
+        try {
+            if (outcome === "accepted") {
+                localStorage.setItem("pwa-installed", "true");
+            } else {
+                localStorage.setItem("pwa-prompt-dismissed-time", Date.now().toString());
+            }
+        } catch (e) {
+            console.warn("localStorage set item failed in Navbar:", e);
+        }
+
         setPwaPrompt(null);
         window.deferredPrompt = null;
         window.dispatchEvent(new CustomEvent("pwa-installed"));

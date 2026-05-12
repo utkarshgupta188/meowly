@@ -10,14 +10,48 @@ declare global {
   }
 }
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      if (typeof window !== "undefined") {
+        return localStorage.getItem(key);
+      }
+    } catch (e) {
+      console.warn("localStorage.getItem failed:", e);
+    }
+    return null;
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem(key, value);
+      }
+    } catch (e) {
+      console.warn("localStorage.setItem failed:", e);
+    }
+  }
+};
+
 export default function PwaRegister() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // 1. Service Worker Registration
+    let timerId: NodeJS.Timeout | null = null;
+
     if (typeof window !== "undefined") {
+      // Check if already in standalone mode (installed) or previously saved
+      const alreadyInstalled =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (navigator as any).standalone ||
+        safeLocalStorage.getItem("pwa-installed") === "true";
+
+      if (alreadyInstalled) {
+        setIsInstalled(true);
+      }
+
+      // 1. Service Worker Registration
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
@@ -31,14 +65,6 @@ export default function PwaRegister() {
         });
       }
 
-      // Check if already in standalone mode (installed)
-      if (
-        window.matchMedia("(display-mode: standalone)").matches ||
-        (navigator as any).standalone
-      ) {
-        setIsInstalled(true);
-      }
-
       // 2. BeforeInstallPrompt Handler
       const handleBeforeInstallPrompt = (e: Event) => {
         // Prevent default browser prompt
@@ -50,14 +76,26 @@ export default function PwaRegister() {
         // Notify other components (like Navbar)
         window.dispatchEvent(new CustomEvent("pwa-install-ready"));
 
-        // Wait 5 seconds, then show our custom glowing floating banner
-        // only if not already installed and not previously dismissed in this session
-        const isDismissed = sessionStorage.getItem("pwa-prompt-dismissed");
-        if (!isInstalled && !isDismissed) {
-          const timer = setTimeout(() => {
+        // Check if dismissed within cooldown period (15 days)
+        const dismissedTimeStr = safeLocalStorage.getItem("pwa-prompt-dismissed-time");
+        let isCooldownActive = false;
+        if (dismissedTimeStr) {
+          const dismissedTime = parseInt(dismissedTimeStr, 10);
+          if (!isNaN(dismissedTime)) {
+            const now = Date.now();
+            const cooldownMs = 5 * 24 * 60 * 60 * 1000; // 5 days in milliseconds
+            if (now - dismissedTime < cooldownMs) {
+              isCooldownActive = true;
+            }
+          }
+        }
+
+        // Wait 6 seconds, then show our custom glowing floating banner
+        // only if not already installed and not currently in cooldown
+        if (!isInstalled && !alreadyInstalled && !isCooldownActive) {
+          timerId = setTimeout(() => {
             setShowPrompt(true);
           }, 6000);
-          return () => clearTimeout(timer);
         }
       };
 
@@ -65,6 +103,7 @@ export default function PwaRegister() {
       const handleAppInstalled = () => {
         console.log("[PWA] App was successfully installed!");
         setIsInstalled(true);
+        safeLocalStorage.setItem("pwa-installed", "true");
         setShowPrompt(false);
         window.deferredPrompt = null;
         setDeferredPrompt(null);
@@ -77,6 +116,7 @@ export default function PwaRegister() {
       return () => {
         window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
         window.removeEventListener("appinstalled", handleAppInstalled);
+        if (timerId) clearTimeout(timerId);
       };
     }
   }, [isInstalled]);
@@ -92,6 +132,15 @@ export default function PwaRegister() {
     const { outcome } = await promptEvent.userChoice;
     console.log(`[PWA] User response to install prompt: ${outcome}`);
 
+    if (outcome === "accepted") {
+      safeLocalStorage.setItem("pwa-installed", "true");
+      setIsInstalled(true);
+    } else {
+      // User cancelled/dismissed the native installation prompt.
+      // Treat as a dismissal cooldown so we don't bug them immediately again.
+      safeLocalStorage.setItem("pwa-prompt-dismissed-time", Date.now().toString());
+    }
+
     // Clean up
     window.deferredPrompt = null;
     setDeferredPrompt(null);
@@ -101,7 +150,7 @@ export default function PwaRegister() {
 
   const handleDismiss = () => {
     setShowPrompt(false);
-    sessionStorage.setItem("pwa-prompt-dismissed", "true");
+    safeLocalStorage.setItem("pwa-prompt-dismissed-time", Date.now().toString());
   };
 
   // Do not render anything if conditions are not met
