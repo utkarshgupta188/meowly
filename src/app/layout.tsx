@@ -42,7 +42,6 @@ import AmbientBackground from "@/components/AmbientBackground";
 import AdBlockerPopup from "@/components/AdBlockerPopup";
 import Navbar from "@/components/Navbar";
 import PwaRegister from "@/components/PwaRegister";
-import DataMigration from "@/components/DataMigration";
 import DomainRedirectPopup from "@/components/DomainRedirectPopup";
 
 export default function RootLayout({
@@ -65,7 +64,6 @@ export default function RootLayout({
         <Footer />
         <AdBlockerPopup />
         <PwaRegister />
-        <DataMigration />
         <DomainRedirectPopup />
       </body>
     </html>
