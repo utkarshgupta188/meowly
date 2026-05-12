@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function DomainRedirectPopup() {
   const [show, setShow] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(7);
   const [newUrl, setNewUrl] = useState("");
 
   useEffect(() => {
