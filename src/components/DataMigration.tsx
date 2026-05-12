@@ -128,7 +128,6 @@ export default function DataMigration() {
       src={MIGRATION_URL}
       style={{ display: "none", width: 0, height: 0, border: "none" }}
       title="Meowly Cross-Domain Migration"
-      sandbox="allow-scripts allow-same-origin"
     />
   );
 }
