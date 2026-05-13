@@ -43,61 +43,61 @@ const SERVERS = [
         useSandbox: false
     },
     {
-        name: "VidFast",
+        name: "Server 5",
         movie: (id: string) => `https://vidfast.net/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidfast.net/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "PrimeSrc",
+        name: "Server 6",
         movie: (id: string) => `https://primesrc.me/embed/movie?tmdb=${id}`,
         show: (id: string, s: number, e: number) => `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
         useSandbox: false
     },
     {
-        name: "VidSrc RU",
+        name: "Server 7",
         movie: (id: string) => `https://vidsrc-embed.ru/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "VidRock",
+        name: "Server 8",
         movie: (id: string) => `https://vidrock.net/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "VidSrc CC",
+        name: "Server 9",
         movie: (id: string) => `https://vidsrc.cc/v2/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "Vidify",
+        name: "Server 10",
         movie: (id: string) => `https://pro.vidify.top/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://pro.vidify.top/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "Vidzee",
+        name: "Server 11",
         movie: (id: string) => `https://player.vidzee.wtf/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://player.vidzee.wtf/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "2Embed",
+        name: "Server 12",
         movie: (id: string) => `https://www.2embed.skin/embed/${id}`,
         show: (id: string, s: number, e: number) => `https://www.2embed.skin/embedtv/${id}&s=${s}&e=${e}`,
         useSandbox: false
     },
     {
-        name: "HnEmbed",
+        name: "Server 13",
         movie: (id: string) => `https://hnembed.cc/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://hnembed.cc/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "MoStream",
+        name: "Server 14",
         movie: (id: string) => `https://mostream.us/embed.php?tmdb=${id}`,
         show: (id: string, s: number, e: number) => `https://mostream.us/embed.php?tmdb=${id}&season=${s}&episode=${e}`,
         useSandbox: false
@@ -161,6 +161,26 @@ export default function VideoPlayer({
         }
     }, [id, type, tmdbData, currentSeason, currentEpisode]);
 
+    const iframeRef = React.useRef<HTMLIFrameElement>(null);
+
+    // Keep focus on player when pressing Space
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+                return;
+            }
+            if (e.code === "Space" || e.key === " ") {
+                e.preventDefault(); // Prevent default page scrolling
+                if (iframeRef.current) {
+                    iframeRef.current.focus();
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
     const currentServer = SERVERS[selectedServer];
     const playerUrl = type === "movie"
         ? currentServer.movie(id)
@@ -172,10 +192,11 @@ export default function VideoPlayer({
         <div className="flex flex-col w-full h-full">
             {/* Player Frame */}
             <div className={cn(
-                "relative w-full aspect-[14/10] sm:aspect-video md:h-[75vh] bg-black group transition-all duration-500",
+                "relative w-full aspect-[14/10] sm:aspect-video md:h-[85vh] bg-black group transition-all duration-500",
                 isTheaterMode && "md:h-[90vh] z-40"
             )}>
                 <iframe
+                    ref={iframeRef}
                     key={`${selectedServer}-${currentSeason}-${currentEpisode}-${playerKey}`}
                     src={playerUrl}
                     className="w-full h-full border-none"
