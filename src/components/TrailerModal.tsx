@@ -55,6 +55,7 @@ const TrailerModal = ({ isOpen, onClose, trailerUrl, title }: TrailerModalProps)
                             className="w-full h-full border-none"
                             allowFullScreen
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            loading="lazy"
                         ></iframe>
                     ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center space-y-4 text-center p-8">

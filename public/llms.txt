@@ -1,0 +1,35 @@
+# Meowly
+
+Meowly is a premium-quality streaming discovery platform for movie and TV show enthusiasts. It provides a seamless, high-performance interface inspired by industry-leading streaming services like Prime Video.
+
+## Key Features
+- **Extensive Library**: Powered by the TMDB (The Movie Database) API, offering information on millions of movies and TV shows.
+- **Dynamic Rows**: Trending, Popular, Top Rated, and Genre-specific rows for easy discovery.
+- **Detailed Metadata**: Comprehensive information about casts, directors, release dates, and ratings.
+- **Search Engine**: Lightning-fast search for titles, people, and production companies.
+- **Watchlist**: Users can save their favorite titles to a personal watchlist.
+- **PWA Support**: Installable as a progressive web app for a native-like experience.
+
+## Tech Stack
+- **Framework**: Next.js (App Router)
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
+- **Data Source**: TMDB API
+
+## Important Pages
+- `/`: Home page with trending and popular content.
+- `/movies`: Dedicated section for feature films.
+- `/tv`: Dedicated section for television series.
+- `/search`: Interactive search interface.
+- `/awards`: Curated lists of award-winning masterpieces.
+- `/categories`: Browse content by genre.
+- `/people`: Explore actors and creators.
+- `/companies`: Discover production studios.
+- `/watchlist`: User's saved movies and shows.
+
+## Legal & Info
+- `/privacy`: Privacy Policy.
+- `/dmca`: DMCA Policy and copyright information.
+- `/terms`: Terms of Service.
+- `/about`: About Meowly and its mission.

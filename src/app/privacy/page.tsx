@@ -1,20 +1,25 @@
 import React from "react";
 import { Shield, Lock, Eye, FileText, Globe, Bell } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 export const metadata = {
   title: "Privacy Policy",
   description: "Learn how Meowly protects your privacy and handles your data.",
+  alternates: {
+    canonical: "https://meowly.qzz.io/privacy",
+  },
 };
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-prime-dark text-gray-300 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <main className="min-h-screen bg-prime-dark text-gray-300 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <BackButton />
       {/* Ambient background glow */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-500/5 rounded-full blur-[120px] -z-10" />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-16">
+        <header className="text-center mb-16">
           <div className="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-6 border border-accent/20">
             <Shield className="h-8 w-8 text-accent" />
           </div>
@@ -24,7 +29,7 @@ export default function PrivacyPolicy() {
           <p className="text-gray-400 text-lg">
             Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
-        </div>
+        </header>
 
         <div className="space-y-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12">
           <section>
@@ -97,6 +102,6 @@ export default function PrivacyPolicy() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

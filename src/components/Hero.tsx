@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Play, Info, Plus, Check, X, Clapperboard } from "lucide-react";
 import { Movie, TMDB_CONFIG } from "@/lib/tmdb";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { addToWatchlist, removeFromWatchlist, isInWatchlist } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import { getTrailerAction } from "@/app/actions";
@@ -122,12 +123,12 @@ const Hero = ({ movies }: HeroProps) => {
                     {/* Background */}
                     <div className="absolute inset-0">
                         <motion.img
-                            initial={{ scale: 1.1 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 10, ease: "linear" }}
-                            style={{ willChange: "transform" }}
-                            src={`https://image.tmdb.org/t/p/original${heroMovies[current].backdrop_path}`}
-                            alt={heroMovies[current].title}
+                            key={heroMovies[current].id}
+                            initial={{ scale: 1.05, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            src={`https://image.tmdb.org/t/p/${typeof window !== 'undefined' && window.innerWidth < 768 ? 'w780' : 'w1280'}${heroMovies[current].backdrop_path}`}
+                            alt={heroMovies[current].title || heroMovies[current].name}
                             className="w-full h-full object-cover object-[center_1%]"
                             referrerPolicy="no-referrer"
                         />
@@ -148,6 +149,7 @@ const Hero = ({ movies }: HeroProps) => {
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                     className="h-12 sm:h-20 md:h-32 lg:h-40 w-full flex items-start"
                                 >
+                                    <h2 className="sr-only">{heroMovies[current].title || heroMovies[current].name}</h2>
                                     <img
                                         src={`${TMDB_CONFIG.imageBase}/original${(heroMovies[current].logos as any[]).find((l: any) => l.iso_639_1 === 'en')?.file_path ||
                                             (heroMovies[current].logos as any[])[0].file_path
@@ -157,14 +159,14 @@ const Hero = ({ movies }: HeroProps) => {
                                     />
                                 </motion.div>
                             ) : (
-                                <motion.h1
+                                <motion.h2
                                     initial={{ opacity: 0, x: -30 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                     className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none drop-shadow-2xl"
                                 >
                                     {heroMovies[current].title || heroMovies[current].name}
-                                </motion.h1>
+                                </motion.h2>
                             )}
 
                             {/* Metadata Row */}

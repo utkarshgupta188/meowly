@@ -1,20 +1,26 @@
 import React from "react";
 import { Gavel, Scale, AlertCircle, CheckCircle, ShieldCheck, HelpCircle } from "lucide-react";
+import BackButton from "@/components/BackButton";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Read the terms and conditions for using Meowly.",
+  alternates: {
+    canonical: "https://meowly.qzz.io/terms",
+  },
 };
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-prime-dark text-gray-300 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <main className="min-h-screen bg-prime-dark text-gray-300 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <BackButton />
       {/* Ambient background glow */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[120px] -z-10" />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-16">
+        <header className="text-center mb-16">
           <div className="inline-flex items-center justify-center p-3 bg-amber-500/10 rounded-2xl mb-6 border border-amber-500/20">
             <Gavel className="h-8 w-8 text-amber-500" />
           </div>
@@ -24,7 +30,7 @@ export default function TermsOfService() {
           <p className="text-gray-400 text-lg">
             Effective Date: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
-        </div>
+        </header>
 
         <div className="space-y-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12">
           <section>
@@ -83,6 +89,6 @@ export default function TermsOfService() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

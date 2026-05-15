@@ -1,16 +1,27 @@
 import React from 'react';
+import BackButton from "@/components/BackButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "DMCA Policy",
+    description: "Meowly respects the intellectual property rights of others and expects its users to do the same.",
+    alternates: {
+        canonical: "https://meowly.qzz.io/dmca",
+    },
+};
 
 export default function DMCA() {
     return (
         <main className="min-h-screen bg-black text-gray-300">
+            <BackButton />
 
             <div className="max-w-3xl mx-auto px-6 pt-40 md:pt-32 pb-24 space-y-8">
-                <div className="space-y-4 border-b border-gray-800 pb-8">
+                <header className="space-y-4 border-b border-gray-800 pb-8">
                     <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight">DMCA Policy</h1>
                     <p className="text-lg text-gray-400">
                         Is Meowly Legal?
                     </p>
-                </div>
+                </header>
 
                 <section className="space-y-4">
                     <p>

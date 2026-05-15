@@ -15,7 +15,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://meowly.qzz.io"),
   title: {
-    default: "Meowly | Watch Movies & TV Shows",
+    default: "Meowly | Stream Unlimited Movies & TV Shows Online Free",
     template: "%s | Meowly"
   },
   description: "Unlimited movies and TV shows for free. Inspired by Prime Video aesthetics, Meowly offers a premium streaming experience.",
@@ -24,9 +24,6 @@ export const metadata: Metadata = {
   creator: "Meowly",
   publisher: "Meowly",
   referrer: "origin",
-  alternates: {
-    canonical: "/",
-  },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
@@ -42,7 +39,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://meowly.qzz.io",
     siteName: "Meowly",
-    title: "Meowly | Watch Movies & TV Shows",
+    title: "Meowly | Stream Unlimited Movies & TV Shows Online Free",
     description: "Unlimited movies and TV shows for free. Premium streaming experience with no ads.",
     images: [
       {
@@ -55,7 +52,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meowly | Watch Movies & TV Shows",
+    title: "Meowly | Stream Unlimited Movies & TV Shows Online Free",
     description: "Unlimited movies and TV shows for free. Premium streaming experience.",
     images: ["/icon-512.png"],
     creator: "@meowly",
@@ -78,13 +75,12 @@ export const metadata: Metadata = {
   },
 };
 
-import Footer from "@/components/Footer";
+import dynamic from 'next/dynamic';
 import PageTransition from "@/components/PageTransition";
-import AmbientBackground from "@/components/AmbientBackground";
-import AdBlockerPopup from "@/components/AdBlockerPopup";
 import Navbar from "@/components/Navbar";
-import PwaRegister from "@/components/PwaRegister";
-import DomainRedirectPopup from "@/components/DomainRedirectPopup";
+import Footer from "@/components/Footer";
+
+import ClientOnlyComponents from "@/components/ClientOnlyComponents";
 
 export default function RootLayout({
   children,
@@ -93,8 +89,55 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-CSBPEBZBJF"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-CSBPEBZBJF');
+            `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Meowly",
+              "url": "https://meowly.qzz.io",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://meowly.qzz.io/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Meowly",
+              "url": "https://meowly.qzz.io",
+              "logo": "https://meowly.qzz.io/icon-512.png",
+              "sameAs": [
+                "https://twitter.com/meowly",
+                "https://github.com/utkarshgupta188/meowly"
+              ]
+            })
+          }}
+        />
+      </head>
       <body className={`${inter.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white relative`}>
-        <AmbientBackground />
         <Suspense fallback={null}>
           <Navbar />
         </Suspense>
@@ -104,9 +147,7 @@ export default function RootLayout({
           </PageTransition>
         </div>
         <Footer />
-        <AdBlockerPopup />
-        <PwaRegister />
-        <DomainRedirectPopup />
+        <ClientOnlyComponents />
       </body>
     </html>
   );

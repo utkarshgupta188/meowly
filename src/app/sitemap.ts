@@ -9,7 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/awards',
     '/categories',
     '/companies',
-    '/network',
     '/people',
     '/search',
     '/privacy',

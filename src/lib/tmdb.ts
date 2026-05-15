@@ -6,9 +6,9 @@ export const TMDB_CONFIG = {
     baseUrl: BASE_URL,
     imageBase: IMAGE_BASE_URL,
     posterSizes: {
-        small: `${IMAGE_BASE_URL}/w200`,
-        medium: `${IMAGE_BASE_URL}/w500`,
-        large: `${IMAGE_BASE_URL}/original`,
+        small: `${IMAGE_BASE_URL}/w185`,
+        medium: `${IMAGE_BASE_URL}/w342`,
+        large: `${IMAGE_BASE_URL}/w780`,
     },
     backdropSizes: {
         small: `${IMAGE_BASE_URL}/w300`,

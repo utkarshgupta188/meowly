@@ -217,7 +217,11 @@ const Navbar = () => {
         pathname?.startsWith("/person/") ||
         pathname?.startsWith("/watch/") ||
         pathname?.startsWith("/company/") ||
-        pathname?.startsWith("/network/")
+        pathname?.startsWith("/network/") ||
+        pathname === "/terms" ||
+        pathname === "/dmca" ||
+        pathname === "/privacy" ||
+        pathname === "/about"
     ) {
         return null;
     }

@@ -272,6 +272,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className={cn("space-y-2 md:space-y-4 px-4 sm:px-8 md:px-12 group/row", className)}
+            style={{ contentVisibility: 'auto', containIntrinsicSize: '0 400px' }}
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3 group/header cursor-pointer select-none">

@@ -135,9 +135,11 @@ function SearchContent() {
         <main className="min-h-screen bg-black pb-20">
 
             <div className="pt-24 sm:pt-28 md:pt-32 px-4 sm:px-8 md:px-12">
-                <h1 className="text-2xl md:text-4xl font-black mb-8 transition-all animate-in fade-in slide-in-from-left duration-700 truncate max-w-full pb-2">
-                    {query ? `Results for "${query}"` : "Search Meowly"}
-                </h1>
+                <header>
+                    <h1 className="text-2xl md:text-4xl font-black mb-8 transition-all animate-in fade-in slide-in-from-left duration-700 truncate max-w-full pb-2">
+                        {query ? `Results for "${query}"` : "Search Meowly"}
+                    </h1>
+                </header>
 
                 {isLoading ? (
                     <SearchSkeleton />
@@ -251,7 +253,7 @@ function SearchContent() {
                 ) : !query ? (
                     <div className="space-y-12">
                         {/* Top Genres */}
-                        <div className="space-y-4">
+                        <section className="space-y-4">
                             <h2 className="text-lg font-semibold text-gray-400">Top Genres</h2>
                             <div className="flex flex-wrap gap-3">
                                 {genres.slice(0, 8).map((genre: Genre) => (
@@ -264,10 +266,10 @@ function SearchContent() {
                                     </Link>
                                 ))}
                             </div>
-                        </div>
+                        </section>
 
                         {/* Trending Now */}
-                        <div className="space-y-6">
+                        <section className="space-y-6">
                             <div className="flex items-center gap-3">
                                 <div className="w-1 h-6 bg-accent rounded-full" />
                                 <h2 className="text-xl font-bold">Trending Now</h2>
@@ -277,7 +279,7 @@ function SearchContent() {
                                     <MovieCard key={item.id} movie={item} isFluid={true} />
                                 ))}
                             </div>
-                        </div>
+                        </section>
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-40 text-center">
@@ -289,6 +291,40 @@ function SearchContent() {
                         </p>
                     </div>
                 )}
+            </div>
+
+            {/* SEO Rich Text Content Section */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mt-20 md:mt-32 border-t border-white/5 pt-16 pb-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start text-gray-400">
+                    <div className="space-y-6">
+                        <h2 className="text-2xl font-bold text-white">Advanced Search Features</h2>
+                        <p className="leading-relaxed">
+                            Meowly's powerful search engine allows you to find your favorite entertainment in seconds. 
+                            Our deep integration with the TMDB database means you can search not just by movie or TV show titles, but also by actors, directors, production companies, and specific genres.
+                        </p>
+                        <p className="leading-relaxed">
+                            Whether you're looking for the latest "Trending Now" titles or a specific hidden gem from decades ago, our search tool provides accurate, lightning-fast results. 
+                            Use the category filters to narrow down your search and find exactly what you're looking for, whether it's a feature film, a multi-season TV series, or information about your favorite actor.
+                        </p>
+                    </div>
+                    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 space-y-6">
+                        <h3 className="text-lg font-bold text-white mb-4">Search Tips</h3>
+                        <ul className="space-y-4 text-sm leading-relaxed list-disc pl-4">
+                            <li>
+                                <strong className="text-white">Use Keywords:</strong> Instead of full titles, try using key words to find related matches more broadly.
+                            </li>
+                            <li>
+                                <strong className="text-white">Filter by Type:</strong> Switch between Movies, TV Shows, and People tabs to refine your results efficiently.
+                            </li>
+                            <li>
+                                <strong className="text-white">Discover Genres:</strong> Click on the genre badges to explore entire categories of content similar to your favorites.
+                            </li>
+                            <li>
+                                <strong className="text-white">Cast & Crew:</strong> Search for actors to see their full filmography and discover their other works.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </main>
     );
