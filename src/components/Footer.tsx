@@ -15,7 +15,10 @@ const Footer = () => {
                     </span>
                     <nav className="flex gap-4">
                         <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                        <Link href="/about" className="hover:text-white transition-colors">About</Link>
                         <Link href="/dmca" className="hover:text-white transition-colors">DMCA</Link>
+                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                        <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
                     </nav>
                 </div>
 

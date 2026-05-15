@@ -69,8 +69,33 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
         );
     }
 
+    const title = movie.title || movie.name;
+    const year = (movie.release_date || movie.first_air_date)?.split("-")[0];
+
+    // Prepare JSON-LD structured data
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": type === "movie" ? "Movie" : "TVSeries",
+        "name": title,
+        "description": movie.overview,
+        "image": `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`,
+        "datePublished": movie.release_date || movie.first_air_date,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": movie.vote_average,
+            "bestRating": "10",
+            "worstRating": "1",
+            "ratingCount": movie.vote_count
+        }
+    };
+
     return (
         <main className="min-h-screen bg-black pb-20">
+            {/* Add JSON-LD to the page */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <WatchContainer 
                 type={type} 
                 id={id} 

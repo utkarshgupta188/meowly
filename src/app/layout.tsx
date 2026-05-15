@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   verification: {
-    google: "your-google-verification-code",
+    google: "MFXUidrMrxwBxIyEzqURpd37qb60RTjPyxP8ZirR4KQ",
     yandex: "your-yandex-verification-code",
     yahoo: "your-yahoo-verification-code",
     // other: {
