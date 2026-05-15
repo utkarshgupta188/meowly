@@ -13,9 +13,20 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Meowly | Watch Movies & TV Shows",
-  description: "Unlimited movies and TV shows for free. Inspired by Prime Video.",
+  metadataBase: new URL("https://meowly.qzz.io"),
+  title: {
+    default: "Meowly | Watch Movies & TV Shows",
+    template: "%s | Meowly"
+  },
+  description: "Unlimited movies and TV shows for free. Inspired by Prime Video aesthetics, Meowly offers a premium streaming experience.",
+  keywords: ["movies", "tv shows", "streaming", "free movies", "watch online", "meowly", "meowtv"],
+  authors: [{ name: "Meowly Team" }],
+  creator: "Meowly",
+  publisher: "Meowly",
   referrer: "origin",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
@@ -26,6 +37,29 @@ export const metadata: Metadata = {
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
     ],
   },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://meowly.qzz.io",
+    siteName: "Meowly",
+    title: "Meowly | Watch Movies & TV Shows",
+    description: "Unlimited movies and TV shows for free. Premium streaming experience with no ads.",
+    images: [
+      {
+        url: "/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "Meowly Cinema",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Meowly | Watch Movies & TV Shows",
+    description: "Unlimited movies and TV shows for free. Premium streaming experience.",
+    images: ["/icon-512.png"],
+    creator: "@meowly",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -33,6 +67,14 @@ export const metadata: Metadata = {
   },
   formatDetection: {
     telephone: false,
+  },
+  verification: {
+    google: "your-google-verification-code",
+    yandex: "your-yandex-verification-code",
+    yahoo: "your-yahoo-verification-code",
+    // other: {
+    //   me: ['my-email', 'my-link'],
+    // },
   },
 };
 
