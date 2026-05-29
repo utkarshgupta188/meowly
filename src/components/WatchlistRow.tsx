@@ -7,7 +7,12 @@ import { Movie } from "@/lib/tmdb";
 import { motion } from "framer-motion";
 
 const WatchlistRow = () => {
-    const [watchlist, setWatchlist] = useState<any[]>([]);
+    const [watchlist, setWatchlist] = useState<any[]>(() => {
+        if (typeof window !== "undefined") {
+            return getWatchlist();
+        }
+        return [];
+    });
 
     const loadWatchlist = () => {
         const items = getWatchlist();
@@ -15,8 +20,6 @@ const WatchlistRow = () => {
     };
 
     useEffect(() => {
-        loadWatchlist();
-
         // Listen for updates from other components
         window.addEventListener("watchlistUpdated", loadWatchlist);
         return () => window.removeEventListener("watchlistUpdated", loadWatchlist);

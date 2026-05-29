@@ -20,8 +20,8 @@ interface VideoPlayerProps {
 const SERVERS = [
     {
         name: "Server 1",
-        movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}`,
+        movie: (id: string) => `https://player.videasy.net/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://player.videasy.net/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
@@ -32,8 +32,8 @@ const SERVERS = [
     },
     {
         name: "Server 3",
-        movie: (id: string) => `https://player.videasy.net/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://player.videasy.net/tv/${id}/${s}/${e}`,
+        movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {

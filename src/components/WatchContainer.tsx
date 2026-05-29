@@ -13,6 +13,26 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import MoctaleReviews from "@/components/MoctaleReviews";
 
+interface TabButtonProps {
+    name: "episodes" | "related" | "details" | "clips" | "photos" | "reviews";
+    label: string;
+    activeTab: "episodes" | "related" | "details" | "clips" | "photos" | "reviews";
+    setActiveTab: (name: "episodes" | "related" | "details" | "clips" | "photos" | "reviews") => void;
+}
+
+const TabButton = ({ name, label, activeTab, setActiveTab }: TabButtonProps) => (
+    <button
+        onClick={() => setActiveTab(name)}
+        className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${activeTab === name ? "text-accent" : "text-gray-400 hover:text-white"
+            }`}
+    >
+        {label}
+        {activeTab === name && (
+            <span className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+        )}
+    </button>
+);
+
 interface WatchContainerProps {
     type: "movie" | "tv";
     id: string;
@@ -189,19 +209,6 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
         }))
         : []);
 
-    const TabButton = ({ name, label }: { name: typeof activeTab, label: string }) => (
-        <button
-            onClick={() => setActiveTab(name)}
-            className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${activeTab === name ? "text-accent" : "text-gray-400 hover:text-white"
-                }`}
-        >
-            {label}
-            {activeTab === name && (
-                <span className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-            )}
-        </button>
-    );
-
     // Playback state
 
     return (
@@ -256,12 +263,12 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                 "bg-prime-dark/95 backdrop-blur-sm sticky z-30 border-b border-gray-800 shadow-md transition-all duration-500 top-0"
             )}>
                 <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none px-4 md:px-12 pb-0.5">
-                    {type === 'tv' && <TabButton name="episodes" label="Episodes" />}
-                    <TabButton name="related" label="Related" />
-                    <TabButton name="details" label="Details" />
-                    {tmdbData.videos?.results?.length > 0 && <TabButton name="clips" label="Clips" />}
-                    {(tmdbData.images?.backdrops?.length > 0 || tmdbData.images?.posters?.length > 0) && <TabButton name="photos" label="Photos" />}
-                    <TabButton name="reviews" label="Reviews" />
+                    {type === 'tv' && <TabButton name="episodes" label="Episodes" activeTab={activeTab} setActiveTab={setActiveTab} />}
+                    <TabButton name="related" label="Related" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <TabButton name="details" label="Details" activeTab={activeTab} setActiveTab={setActiveTab} />
+                    {tmdbData.videos?.results?.length > 0 && <TabButton name="clips" label="Clips" activeTab={activeTab} setActiveTab={setActiveTab} />}
+                    {(tmdbData.images?.backdrops?.length > 0 || tmdbData.images?.posters?.length > 0) && <TabButton name="photos" label="Photos" activeTab={activeTab} setActiveTab={setActiveTab} />}
+                    <TabButton name="reviews" label="Reviews" activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
             </div>
 

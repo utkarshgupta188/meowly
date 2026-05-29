@@ -59,7 +59,7 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
 
             const data = await res.json();
             return data;
-        } catch (error: any) {
+        } catch {
             attempt++;
 
             if (attempt >= MAX_RETRIES) {

@@ -57,7 +57,7 @@ export function saveToRecentlyPlayed(item: RecentItem) {
         
         // Dispatch a custom event to notify other components
         window.dispatchEvent(new Event("recentlyPlayedUpdated"));
-    } catch (error) {
+    } catch {
         // Silently fail
     }
 }
@@ -70,7 +70,7 @@ export function getRecentlyPlayed(): RecentItem[] {
         const stored = localStorage.getItem(RECENTLY_PLAYED_KEY);
         cachedRecentlyPlayed = stored ? JSON.parse(stored) : [];
         return cachedRecentlyPlayed!;
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -88,7 +88,7 @@ export function removeFromRecentlyPlayed(id: string, type: string) {
         localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(items));
         cachedRecentlyPlayed = items;
         window.dispatchEvent(new Event("recentlyPlayedUpdated"));
-    } catch (error) {
+    } catch {
         // Silently fail
     }
 }
@@ -99,7 +99,7 @@ export function addToWatchlist(item: RecentItem) {
 
     try {
         const stored = localStorage.getItem(WATCHLIST_KEY);
-        let items: RecentItem[] = stored ? JSON.parse(stored) : [];
+        const items: RecentItem[] = stored ? JSON.parse(stored) : [];
 
         // Check if already in watchlist
         const exists = items.some(i => i.id === item.id && i.type === item.type);
@@ -109,7 +109,7 @@ export function addToWatchlist(item: RecentItem) {
         localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
         cachedWatchlist = items;
         window.dispatchEvent(new Event("watchlistUpdated"));
-    } catch (error) {
+    } catch {
         // Silently fail
     }
 }
@@ -127,7 +127,7 @@ export function removeFromWatchlist(id: string, type: string) {
         localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
         cachedWatchlist = items;
         window.dispatchEvent(new Event("watchlistUpdated"));
-    } catch (error) {
+    } catch {
         // Silently fail
     }
 }
@@ -145,7 +145,7 @@ export function getWatchlist(): RecentItem[] {
         const stored = localStorage.getItem(WATCHLIST_KEY);
         cachedWatchlist = stored ? JSON.parse(stored) : [];
         return cachedWatchlist!;
-    } catch (error) {
+    } catch {
         return [];
     }
 }

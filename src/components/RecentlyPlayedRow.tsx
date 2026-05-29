@@ -7,7 +7,12 @@ import { Movie } from "@/lib/tmdb";
 import { motion } from "framer-motion";
 
 const RecentlyPlayedRow = () => {
-    const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+    const [recentItems, setRecentItems] = useState<RecentItem[]>(() => {
+        if (typeof window !== "undefined") {
+            return getRecentlyPlayed();
+        }
+        return [];
+    });
 
     const loadRecent = () => {
         const items = getRecentlyPlayed();
@@ -15,8 +20,6 @@ const RecentlyPlayedRow = () => {
     };
 
     useEffect(() => {
-        loadRecent();
-
         // Listen for updates from other components
         window.addEventListener("recentlyPlayedUpdated", loadRecent);
         return () => window.removeEventListener("recentlyPlayedUpdated", loadRecent);
