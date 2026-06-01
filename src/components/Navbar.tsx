@@ -341,7 +341,6 @@ const Navbar = () => {
                                         title="Install Meowly"
                                     >
                                         <Download className="h-5 w-5 animate-pulse text-amber-400" />
-                                        <span className="absolute -bottom-1 -right-1 w-2 h-2 rounded-full bg-teal-400" />
                                     </button>
                                 )}
 
