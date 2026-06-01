@@ -289,6 +289,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 episodes={episodesList as any[]}
                                 currentSeason={season}
                                 currentEpisode={episode}
+                                isPlaying={isPlaying}
                                 onEpisodeSelect={(ep) => {
                                     setEpisode(ep);
                                     setIsPlaying(true);

@@ -18,15 +18,16 @@ interface EpisodeListProps {
     currentSeason: number;
     currentEpisode: number;
     onEpisodeSelect: (episode: number) => void;
+    isPlaying?: boolean;
 }
 
-export default function EpisodeList({ episodes, currentSeason, currentEpisode, onEpisodeSelect }: EpisodeListProps) {
+export default function EpisodeList({ episodes, currentSeason, currentEpisode, onEpisodeSelect, isPlaying = false }: EpisodeListProps) {
     const activeEpisode = episodes.find((ep) => ep.episode_number === currentEpisode) || episodes[0] || null;
 
     return (
         <div className="space-y-8">
             {/* Active Episode Featured Details Card at the Top */}
-            {activeEpisode && (
+            {activeEpisode && isPlaying && (
                 <div className="bg-gradient-to-br from-[#1c2836] to-[#0d151f] rounded-3xl p-6 md:p-8 border border-accent/20 shadow-2xl relative overflow-hidden group">
                     {/* Background Glow Effect */}
                     <div className="absolute -right-20 -top-20 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />

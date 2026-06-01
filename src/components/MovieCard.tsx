@@ -36,6 +36,8 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
 
         window.addEventListener("watchlistUpdated", handleUpdate);
         return () => window.removeEventListener("watchlistUpdated", handleUpdate);
+    }, [movie.id, movie.media_type]);
+
     useEffect(() => {
         const handleVisibilityOrBlur = () => {
             if (typeof window !== "undefined" && window.location.pathname === "/") {
@@ -70,9 +72,9 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                     const url = await getTrailerAction(mediaType, movie.id.toString());
                     if (!active) return;
                     if (url) {
-                        // Append parameters for silent looped YouTube play
+                        // Rebuild URL from scratch using key
                         const key = url.split("/embed/")?.[1]?.split("?")?.[0];
-                        const silentEmbedUrl = `${url}${url.includes("?") ? "&" : "?"}mute=1&autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${key}`;
+                        const silentEmbedUrl = `https://www.youtube.com/embed/${key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${key}`;
                         setTrailerUrl(silentEmbedUrl);
                     }
                 } catch (e) {
@@ -82,7 +84,7 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                         setIsLoadingTrailer(false);
                     }
                 }
-            }, 1200); // 1.2s delay to prevent accidental activation
+            }, 2000); // 2s delay to prevent accidental activation
         } else {
             setTrailerUrl(null);
             setIsLoadingTrailer(false);
@@ -225,14 +227,16 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
 
                 {/* Silent YouTube Hover Trailer Preview Overlay */}
                 {trailerUrl && (
-                    <div className="absolute inset-0 w-full h-full z-10 overflow-hidden bg-black transition-all duration-500">
+                    <div className="absolute inset-0 w-full h-full z-10 overflow-hidden bg-black transition-all duration-500 pointer-events-auto">
                         <iframe
                             src={trailerUrl}
-                            className="w-[140%] h-[140%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                            allow="autoplay; encrypted-media"
+                            className="w-[195%] h-[195%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                            allow="autoplay"
                             frameBorder="0"
                             scrolling="no"
                         ></iframe>
+                        {/* Transparent Pointer Guard panel: Intercepts all clicks and touches so YouTube never shows control bars */}
+                        <div className="absolute inset-0 z-20 bg-black/[0.001] cursor-pointer" />
                     </div>
                 )}
 
