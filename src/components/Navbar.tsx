@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, Menu, X, ArrowLeft, Dices, Download } from "lucide-react";
+import { Search, Menu, X, ArrowLeft, Dices, Download, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { surpriseMe } from "@/app/actions";
@@ -23,6 +23,56 @@ const Navbar = () => {
     const desktopInputRef = React.useRef<HTMLInputElement>(null);
 
     const [pwaPrompt, setPwaPrompt] = useState<any>(null);
+    const [isListening, setIsListening] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    const handleVoiceSearch = () => {
+        if (typeof window === "undefined") return;
+
+        const SpeechRecognition =
+            (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            alert("Voice search is not supported in your browser. Please try Chrome or Safari.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+            setIsListening(true);
+        };
+
+        recognition.onerror = (event: any) => {
+            console.error("Speech recognition error", event.error);
+            setIsListening(false);
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+
+        recognition.onresult = (event: any) => {
+            const transcript = event.results[0][0].transcript;
+            if (transcript) {
+                setSearchQuery(transcript);
+                setTimeout(() => {
+                    router.push(`/search?q=${encodeURIComponent(transcript.trim())}`, { scroll: false });
+                    setIsSearchOpen(false);
+                    setIsMobileMenuOpen(false);
+                }, 400);
+            }
+        };
+
+        recognition.start();
+    };
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -255,7 +305,7 @@ const Navbar = () => {
                             >
                                 <ArrowLeft className="h-5 w-5" />
                             </button>
-                            <input
+                             <input
                                 ref={mobileInputRef}
                                 autoFocus
                                 type="text"
@@ -265,6 +315,19 @@ const Navbar = () => {
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                                 className="bg-transparent border-none outline-none text-white text-base w-full placeholder-gray-500 py-2"
                             />
+                            {isMounted && (
+                                <button
+                                    type="button"
+                                    onClick={handleVoiceSearch}
+                                    className={cn(
+                                        "p-2 rounded-full transition-all text-gray-400 hover:text-white mr-1",
+                                        isListening && "text-red-500 animate-pulse bg-red-500/10 scale-110"
+                                    )}
+                                    title="Voice Search"
+                                >
+                                    <Mic className="h-5 w-5" />
+                                </button>
+                            )}
                             {searchQuery && (
                                 <button
                                     onClick={() => handleSearchInputChange("")}
@@ -307,7 +370,7 @@ const Navbar = () => {
 
                             <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
                                 {/* Desktop Search */}
-                                <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-2.5 md:px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
+                                 <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-2.5 md:px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-accent/50 transition-all gap-1">
                                     <input
                                         ref={desktopInputRef}
                                         type="text"
@@ -317,7 +380,20 @@ const Navbar = () => {
                                         onKeyDown={handleKeyDown}
                                         className="bg-transparent border-none py-1 text-[13px] text-white placeholder-gray-500 outline-none w-20 md:w-24 lg:w-32 focus:w-40 lg:focus:w-48 transition-all duration-300"
                                     />
-                                    <Search className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white transition-colors ml-2" onClick={() => handleSearch()} />
+                                    {isMounted && (
+                                        <button
+                                            type="button"
+                                            onClick={handleVoiceSearch}
+                                            className={cn(
+                                                "p-1 rounded-full transition-all text-gray-500 hover:text-white flex items-center justify-center",
+                                                isListening && "text-red-500 animate-pulse bg-red-500/10 scale-110"
+                                            )}
+                                            title="Voice Search"
+                                        >
+                                            <Mic className="h-4 w-4" />
+                                        </button>
+                                    )}
+                                    <Search className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white transition-colors ml-1" onClick={() => handleSearch()} />
                                 </div>
 
                                 {/* Surprise Me Button */}

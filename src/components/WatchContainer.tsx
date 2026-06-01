@@ -39,10 +39,11 @@ interface WatchContainerProps {
     tmdbData: any;
     initialSeason?: number;
     initialEpisode?: number;
+    initialServer?: number;
     startPlaying?: boolean;
 }
 
-export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, initialEpisode = 1, startPlaying = false }: WatchContainerProps) {
+export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, initialEpisode = 1, initialServer = 0, startPlaying = false }: WatchContainerProps) {
     const [season, setSeason] = useState(initialSeason);
     const [episode, setEpisode] = useState(initialEpisode);
     const [isPlaying, setIsPlaying] = useState(startPlaying);
@@ -249,6 +250,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                         tmdbData={tmdbData}
                         season={season}
                         episode={episode}
+                        initialServer={initialServer}
                         onSeasonChange={(s) => {
                             setSeason(s);
                             setEpisode(1); // Reset episode on season change

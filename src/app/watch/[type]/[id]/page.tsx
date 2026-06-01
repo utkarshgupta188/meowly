@@ -12,6 +12,7 @@ interface WatchPageProps {
         s?: string;
         e?: string;
         resume?: string;
+        server?: string;
     }>;
 }
 
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: WatchPageProps) {
 
 export default async function WatchPage({ params, searchParams }: WatchPageProps) {
     const { type, id } = await params;
-    const { s, e, resume } = await searchParams;
+    const { s, e, resume, server } = await searchParams;
     
     const movie = await tmdb.getDetails(type, id);
 
@@ -102,6 +103,7 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
                 tmdbData={movie} 
                 initialSeason={s ? parseInt(s) : 1}
                 initialEpisode={e ? parseInt(e) : 1}
+                initialServer={server ? parseInt(server) : 0}
                 startPlaying={resume === "true"}
             />
         </main>

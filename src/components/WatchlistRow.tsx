@@ -7,12 +7,8 @@ import { Movie } from "@/lib/tmdb";
 import { motion } from "framer-motion";
 
 const WatchlistRow = () => {
-    const [watchlist, setWatchlist] = useState<any[]>(() => {
-        if (typeof window !== "undefined") {
-            return getWatchlist();
-        }
-        return [];
-    });
+    const [watchlist, setWatchlist] = useState<any[]>([]);
+    const [isMounted, setIsMounted] = useState(false);
 
     const loadWatchlist = () => {
         const items = getWatchlist();
@@ -20,12 +16,14 @@ const WatchlistRow = () => {
     };
 
     useEffect(() => {
+        setIsMounted(true);
+        loadWatchlist();
         // Listen for updates from other components
         window.addEventListener("watchlistUpdated", loadWatchlist);
         return () => window.removeEventListener("watchlistUpdated", loadWatchlist);
     }, []);
 
-    if (watchlist.length === 0) return null;
+    if (!isMounted || watchlist.length === 0) return null;
 
     // Map stored items to Movie type for MovieRow
     const movies: Movie[] = watchlist.map(item => ({

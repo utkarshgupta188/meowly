@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Server, Maximize2, Minimize2, RefreshCcw } from "lucide-react";
+import { Server, Maximize2, Minimize2, RefreshCcw, Share2, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveToRecentlyPlayed } from "@/lib/storage";
 import Dropdown from "@/components/ui/Dropdown";
@@ -13,6 +13,7 @@ interface VideoPlayerProps {
     tmdbData: any;
     season?: number;
     episode?: number;
+    initialServer?: number;
     onSeasonChange?: (season: number) => void;
     onEpisodeChange?: (episode: number) => void;
 }
@@ -110,14 +111,16 @@ export default function VideoPlayer({
     tmdbData,
     season: controlledSeason,
     episode: controlledEpisode,
+    initialServer,
     onSeasonChange,
     onEpisodeChange
 }: VideoPlayerProps) {
     const [internalSeason, setInternalSeason] = useState(1);
     const [internalEpisode, setInternalEpisode] = useState(1);
-    const [selectedServer, setSelectedServer] = useState(0);
+    const [selectedServer, setSelectedServer] = useState(initialServer ?? 0);
     const [isTheaterMode, setIsTheaterMode] = useState(false);
     const [playerKey, setPlayerKey] = useState(0); // For reloading iframe
+    const [copied, setCopied] = useState(false);
 
     const isControlled = controlledSeason !== undefined && controlledEpisode !== undefined;
     const currentSeason = isControlled ? controlledSeason : internalSeason;
@@ -180,6 +183,21 @@ export default function VideoPlayer({
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
+
+    const handleShare = () => {
+        const shareUrl = `${window.location.origin}/watch/${type}/${id}?resume=true` +
+            (type === 'tv' ? `&s=${currentSeason}&e=${currentEpisode}` : '') +
+            `&server=${selectedServer}`;
+        
+        navigator.clipboard.writeText(shareUrl)
+            .then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            })
+            .catch((err) => {
+                console.error("Failed to copy link: ", err);
+            });
+    };
 
     const currentServer = SERVERS[selectedServer];
     const playerUrl = type === "movie"
@@ -247,6 +265,29 @@ export default function VideoPlayer({
                     >
                         <RefreshCcw className="h-4 w-4" />
                     </button>
+
+                    <button
+                        onClick={handleShare}
+                        className={cn(
+                            "flex items-center space-x-2 px-3 py-1.5 rounded-lg transition-all border",
+                            copied 
+                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" 
+                                : "bg-prime-hover text-gray-300 hover:text-white border-white/5 hover:border-white/10"
+                        )}
+                        title="Copy Playback Link"
+                    >
+                        {copied ? (
+                            <>
+                                <Check className="h-4 w-4" />
+                                <span className="text-xs font-bold">Copied!</span>
+                            </>
+                        ) : (
+                            <>
+                                <Share2 className="h-4 w-4" />
+                                <span className="text-xs font-bold">Share Link</span>
+                            </>
+                        )}
+                    </button>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -279,7 +320,7 @@ export default function VideoPlayer({
                                 />
                             </div>
 
-                            <div className="flex items-center space-x-2">
+                             <div className="flex items-center space-x-2">
                                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Episode</span>
                                 <Dropdown
                                     value={currentEpisode}

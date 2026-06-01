@@ -271,8 +271,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className={cn("space-y-2 md:space-y-4 px-4 sm:px-8 md:px-12 group/row", className)}
-            style={{ contentVisibility: 'auto', containIntrinsicSize: '0 400px' }}
+            className={cn("space-y-2 md:space-y-4 px-4 sm:px-8 md:px-12 group/row relative hover:z-50 transition-all duration-300", className)}
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3 group/header cursor-pointer select-none">
@@ -302,7 +301,7 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
                 )}
             </div>
 
-            <div className="relative group/nav" style={{ overflow: 'clip', overflowClipMargin: '40px' }}>
+            <div className="relative group/nav" style={{ overflow: 'visible' }}>
                 <button
                     onClick={() => scroll("left")}
                     className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-black/60 rounded-full opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center justify-center hover:bg-black/80 cursor-pointer -ml-6"
@@ -312,16 +311,18 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
 
                 <div
                     ref={rowRef}
-                    className="flex items-start space-x-4 overflow-x-auto overflow-y-visible scrollbar-hide px-4 py-3 md:py-8 scroll-smooth"
+                    className="flex items-start space-x-4 overflow-x-auto overflow-y-visible scrollbar-hide px-4 pt-16 -mt-16 pb-[180px] -mb-[180px] md:pt-24 md:-mt-24 md:pb-[240px] md:-mb-[240px] scroll-smooth"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                    {movies.map((movie) => (
+                    {movies.map((movie, index) => (
                         <MovieCard
                             key={`${movie.id}-${movie.media_type}`}
                             movie={movie}
                             isResume={isResume}
                             className={cardClassName}
                             onRemove={onRemove}
+                            isFirst={index === 0}
+                            isLast={index === movies.length - 1}
                         />
                     ))}
                 </div>
