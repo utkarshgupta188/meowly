@@ -20,6 +20,7 @@ export default function Dropdown({ value, onChange, options, className, menuClas
     const [isOpen, setIsOpen] = useState(false);
     const [openUpward, setOpenUpward] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
 
     const selectedOption = options.find((opt) => opt.value === value) || options[0];
 
@@ -42,6 +43,22 @@ export default function Dropdown({ value, onChange, options, className, menuClas
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (isOpen && menuRef.current) {
+            const container = menuRef.current;
+            const selectedElement = container.querySelector('[data-selected="true"]') as HTMLElement;
+            if (selectedElement) {
+                const timeoutId = setTimeout(() => {
+                    const containerRect = container.getBoundingClientRect();
+                    const selectedRect = selectedElement.getBoundingClientRect();
+                    const relativeTop = selectedRect.top - containerRect.top + container.scrollTop;
+                    container.scrollTop = relativeTop - (container.clientHeight / 2) + (selectedElement.clientHeight / 2);
+                }, 50);
+                return () => clearTimeout(timeoutId);
+            }
+        }
+    }, [isOpen]);
+
     return (
         <div className="relative inline-block" ref={containerRef}>
             <button
@@ -59,6 +76,7 @@ export default function Dropdown({ value, onChange, options, className, menuClas
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
+                        ref={menuRef}
                         initial={{ opacity: 0, y: openUpward ? -8 : 8, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: openUpward ? -8 : 8, scale: 0.95 }}
@@ -80,6 +98,7 @@ export default function Dropdown({ value, onChange, options, className, menuClas
                                     <button
                                         key={option.value}
                                         type="button"
+                                        data-selected={isSelected}
                                         onClick={() => {
                                             onChange(option.value);
                                             setIsOpen(false);

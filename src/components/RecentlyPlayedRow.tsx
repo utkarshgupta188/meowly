@@ -7,12 +7,8 @@ import { Movie } from "@/lib/tmdb";
 import { motion } from "framer-motion";
 
 const RecentlyPlayedRow = () => {
-    const [recentItems, setRecentItems] = useState<RecentItem[]>(() => {
-        if (typeof window !== "undefined") {
-            return getRecentlyPlayed();
-        }
-        return [];
-    });
+    const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+    const [isMounted, setIsMounted] = useState(false);
 
     const loadRecent = () => {
         const items = getRecentlyPlayed();
@@ -20,6 +16,8 @@ const RecentlyPlayedRow = () => {
     };
 
     useEffect(() => {
+        setIsMounted(true);
+        loadRecent();
         // Listen for updates from other components
         window.addEventListener("recentlyPlayedUpdated", loadRecent);
         return () => window.removeEventListener("recentlyPlayedUpdated", loadRecent);
@@ -29,7 +27,7 @@ const RecentlyPlayedRow = () => {
         removeFromRecentlyPlayed(id, type);
     };
 
-    if (recentItems.length === 0) return null;
+    if (!isMounted || recentItems.length === 0) return null;
 
     // Map RecentItem to Movie type for MovieRow
     const movies: Movie[] = recentItems.map(item => ({
