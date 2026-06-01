@@ -304,9 +304,9 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
             <div className="relative group/nav" style={{ overflow: 'visible' }}>
                 <button
                     onClick={() => scroll("left")}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-black/60 rounded-full opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center justify-center hover:bg-black/80 cursor-pointer -ml-6"
+                    className="absolute left-2 sm:left-0 sm:-ml-4 md:-ml-6 top-[115px] sm:top-[130px] md:top-[170px] lg:top-[180px] xl:top-[190px] -translate-y-1/2 z-30 w-9 h-9 bg-white/10 hover:bg-accent border border-white/10 hover:border-accent hover:scale-110 text-white hover:text-black backdrop-blur-md rounded-full opacity-0 group-hover/row:opacity-100 transition-all duration-300 flex items-center justify-center cursor-pointer shadow-2xl"
                 >
-                    <ChevronLeft className="h-8 w-8 text-white" />
+                    <ChevronLeft className="h-5 w-5" />
                 </button>
 
                 <div
@@ -329,9 +329,9 @@ const MovieRow = ({ title, movies, className, cardClassName, isResume = false, o
 
                 <button
                     onClick={() => scroll("right")}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-black/60 rounded-full opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center justify-center hover:bg-black/80 cursor-pointer -mr-6"
+                    className="absolute right-2 sm:right-0 sm:-mr-4 sm:translate-x-0 md:-mr-6 top-[115px] sm:top-[130px] md:top-[170px] lg:top-[180px] xl:top-[190px] -translate-y-1/2 z-30 w-9 h-9 bg-white/10 hover:bg-accent border border-white/10 hover:border-accent hover:scale-110 text-white hover:text-black backdrop-blur-md rounded-full opacity-0 group-hover/row:opacity-100 transition-all duration-300 flex items-center justify-center cursor-pointer shadow-2xl"
                 >
-                    <ChevronRight className="h-8 w-8 text-white" />
+                    <ChevronRight className="h-5 w-5" />
                 </button>
             </div>
         </motion.div>

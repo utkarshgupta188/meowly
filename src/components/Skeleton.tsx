@@ -18,7 +18,7 @@ export const Skeleton = ({ className }: SkeletonProps) => {
 export const MovieCardSkeleton = () => {
     return (
         <div className="space-y-3">
-            <Skeleton className="aspect-[2/3] rounded-2xl w-full" />
+            <Skeleton className="aspect-video rounded-xl w-full" />
             <div className="space-y-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-1/2" />
@@ -45,9 +45,9 @@ export const MovieRowSkeleton = () => {
         <div className="space-y-4 px-4 sm:px-8 md:px-12 py-4">
             <Skeleton className="h-7 w-48 mb-6" />
             <div className="flex space-x-4 overflow-hidden">
-                {[...Array(8)].map((_, i) => (
-                    <div key={i} className="flex-none w-[160px] md:w-[220px]">
-                        <Skeleton className="aspect-[2/3] rounded-2xl w-full mb-3" />
+                {[...Array(6)].map((_, i) => (
+                    <div key={i} className="flex-none w-[190px] sm:w-[230px] md:w-[270px] lg:w-[310px] xl:w-[330px]">
+                        <Skeleton className="aspect-video rounded-xl w-full mb-3" />
                         <Skeleton className="h-4 w-3/4 mb-2" />
                         <Skeleton className="h-3 w-1/2" />
                     </div>
