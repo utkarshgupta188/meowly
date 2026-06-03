@@ -428,6 +428,9 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             <img
                                 src={`${TMDB_CONFIG.posterSizes.large}${tmdbData.poster_path}`}
                                 alt={tmdbData.title || tmdbData.name}
+                                style={{
+                                    viewTransitionName: `media-${tmdbData.id}`
+                                }}
                                 className="w-full h-full object-cover"
                             />
                         )}

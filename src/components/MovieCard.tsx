@@ -116,13 +116,39 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     const handlePlayClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        router.push(playUrl);
+        const url = playUrl;
+        if (typeof document !== "undefined" && (document as any).startViewTransition) {
+            try {
+                const transition = (document as any).startViewTransition(() => {
+                    router.push(url);
+                });
+                transition.finished?.catch(() => {});
+                transition.ready?.catch(() => {});
+            } catch (err) {
+                router.push(url);
+            }
+        } else {
+            router.push(url);
+        }
     };
 
     const handleInfoClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        router.push(detailsUrl);
+        const url = detailsUrl;
+        if (typeof document !== "undefined" && (document as any).startViewTransition) {
+            try {
+                const transition = (document as any).startViewTransition(() => {
+                    router.push(url);
+                });
+                transition.finished?.catch(() => {});
+                transition.ready?.catch(() => {});
+            } catch (err) {
+                router.push(url);
+            }
+        } else {
+            router.push(url);
+        }
     };
 
     const handleWatchlistClick = (e: React.MouseEvent) => {
@@ -155,12 +181,24 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     };
 
     const handleCardClick = () => {
-        if (isPerson) {
-            router.push(`/person/${movie.id}`);
-        } else if (isCompany) {
-            router.push(`/company/${movie.id}`);
+        const url = isPerson
+            ? `/person/${movie.id}`
+            : isCompany
+                ? `/company/${movie.id}`
+                : (isResume ? detailsUrl : watchUrl);
+
+        if (typeof document !== "undefined" && (document as any).startViewTransition) {
+            try {
+                const transition = (document as any).startViewTransition(() => {
+                    router.push(url);
+                });
+                transition.finished?.catch(() => {});
+                transition.ready?.catch(() => {});
+            } catch (err) {
+                router.push(url);
+            }
         } else {
-            router.push(isResume ? detailsUrl : watchUrl);
+            router.push(url);
         }
     };
 
@@ -216,7 +254,10 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                                 "transition-transform duration-700 group-hover:scale-110",
                                 isCompany ? "max-w-full max-h-full object-contain" : "w-full h-full object-cover"
                             )}
-                            style={{ willChange: "transform" }}
+                            style={{ 
+                                willChange: "transform",
+                                viewTransitionName: `media-${movie.id}`
+                            }}
                             loading="lazy"
                             referrerPolicy="no-referrer"
                         />

@@ -21,12 +21,12 @@ export default function WatchlistPage() {
         return () => window.removeEventListener("watchlistUpdated", loadWatchlist);
     }, []);
 
-    // Map stored items to Movie type
     const movies: Movie[] = watchlist.map(item => ({
         id: parseInt(item.id),
         title: item.title,
         name: item.title,
-        overview: "", 
+        overview: item.overview || "", 
+        tagline: item.tagline || "",
         poster_path: item.poster_path,
         backdrop_path: item.backdrop_path || "",
         vote_average: item.vote_average || 0,
