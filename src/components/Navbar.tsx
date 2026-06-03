@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, Menu, X, ArrowLeft, Dices, Download, Mic } from "lucide-react";
+import { Search, Menu, X, ArrowLeft, Dices, Download, Mic, Cat } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { surpriseMe } from "@/app/actions";
@@ -346,7 +346,13 @@ const Navbar = () => {
                             className="flex items-center justify-between w-full gap-4 md:gap-6 lg:gap-8 xl:gap-10"
                         >
                             <div className="flex items-center gap-2 md:gap-3.5 lg:gap-6 xl:gap-8 min-w-0">
-                                <Link href="/" className="group flex-shrink-0 flex items-center">
+                                <Link href="/" className="group flex-shrink-0 flex items-center gap-2">
+                                    <motion.div
+                                        whileHover={{ rotate: [0, -15, 15, -15, 0], scale: 1.15 }}
+                                        transition={{ duration: 0.5 }}
+                                    >
+                                        <Cat className="h-5 w-5 text-accent" />
+                                    </motion.div>
                                     <span className="text-xl font-black tracking-tighter text-white">
                                         MEOW<span className="text-accent italic">LY</span>
                                     </span>
@@ -397,17 +403,53 @@ const Navbar = () => {
                                 </div>
 
                                 {/* Surprise Me Button */}
-                                <button
+                                <motion.button
                                     disabled={isPending}
                                     onClick={() => startTransition(() => surpriseMe())}
+                                    whileHover="hover"
                                     className={cn(
-                                        "p-2 text-gray-400 hover:text-accent transition-all duration-300 rounded-full hover:bg-white/10 flex items-center justify-center",
+                                        "p-2 text-gray-400 hover:text-accent transition-all duration-300 rounded-full hover:bg-white/10 flex items-center justify-center relative",
                                         isPending && "animate-pulse opacity-50"
                                     )}
                                     title="Surprise Me"
                                 >
-                                    <Dices className={cn("h-5 w-5", isPending && "animate-spin-slow")} />
-                                </button>
+                                    <motion.div
+                                        variants={{
+                                            hover: { rotate: 360, scale: 1.15 }
+                                        }}
+                                        transition={{ type: "spring", stiffness: 200 }}
+                                    >
+                                        <Dices className={cn("h-5 w-5", isPending && "animate-spin-slow")} />
+                                    </motion.div>
+
+                                    {/* Floating paw print particles on hover */}
+                                    <motion.span
+                                        className="absolute -top-3 -right-1 text-[10px] pointer-events-none opacity-0 select-none"
+                                        variants={{
+                                            hover: {
+                                                opacity: [0, 1, 0],
+                                                y: [-5, -15],
+                                                x: [0, 5],
+                                                transition: { duration: 0.8, repeat: Infinity }
+                                            }
+                                        }}
+                                    >
+                                        🐾
+                                    </motion.span>
+                                    <motion.span
+                                        className="absolute -top-4 -left-1 text-[8px] pointer-events-none opacity-0 select-none"
+                                        variants={{
+                                            hover: {
+                                                opacity: [0, 1, 0],
+                                                y: [-4, -18],
+                                                x: [0, -4],
+                                                transition: { duration: 0.8, delay: 0.3, repeat: Infinity }
+                                            }
+                                        }}
+                                    >
+                                        🐾
+                                    </motion.span>
+                                </motion.button>
 
                                 {/* PWA Install Action Icon */}
                                 {pwaPrompt && (

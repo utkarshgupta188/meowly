@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
   themeColor: "#000000",
@@ -137,7 +137,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white relative`}>
+      <body className={`${plusJakartaSans.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white relative`}>
         <Suspense fallback={null}>
           <Navbar />
         </Suspense>
