@@ -132,6 +132,13 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
         if (inWatchlist) {
             removeFromWatchlist(movie.id.toString(), movie.media_type || 'movie');
         } else {
+            // Trigger flying cat paw particle animation
+            window.dispatchEvent(
+                new CustomEvent("watchlistFlyEffect", {
+                    detail: { startX: e.clientX, startY: e.clientY }
+                })
+            );
+
             addToWatchlist({
                 id: movie.id.toString(),
                 type: (movie.media_type as "movie" | "tv") || "movie",

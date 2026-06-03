@@ -75,6 +75,7 @@ export const metadata: Metadata = {
   },
 };
 
+import Script from "next/script";
 import dynamic from 'next/dynamic';
 import PageTransition from "@/components/PageTransition";
 import Navbar from "@/components/Navbar";
@@ -93,17 +94,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
         {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-CSBPEBZBJF"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-CSBPEBZBJF');
-            `,
-          }}
-        />
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-CSBPEBZBJF" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-CSBPEBZBJF');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

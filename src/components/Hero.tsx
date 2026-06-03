@@ -58,11 +58,18 @@ const Hero = ({ movies }: HeroProps) => {
 
     const heroMovies = validMovies.slice(0, 10);
 
-    const handleWatchlistToggle = () => {
+    const handleWatchlistToggle = (e: React.MouseEvent) => {
         const movie = heroMovies[current];
         if (inWatchlist) {
             removeFromWatchlist(movie.id.toString(), movie.media_type || 'movie');
         } else {
+            // Trigger flying cat paw particle animation
+            window.dispatchEvent(
+                new CustomEvent("watchlistFlyEffect", {
+                    detail: { startX: e.clientX, startY: e.clientY }
+                })
+            );
+
             addToWatchlist({
                 id: movie.id.toString(),
                 type: (movie.media_type as "movie" | "tv") || "movie",
@@ -259,7 +266,7 @@ const Hero = ({ movies }: HeroProps) => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleWatchlistToggle();
+                                            handleWatchlistToggle(e);
                                         }}
                                         className={cn(
                                             "p-2 sm:p-2.5 md:p-3.5 rounded-full backdrop-blur-md transition-all hover:scale-110 border border-white/20",

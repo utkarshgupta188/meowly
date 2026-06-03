@@ -23,12 +23,16 @@ interface TabButtonProps {
 const TabButton = ({ name, label, activeTab, setActiveTab }: TabButtonProps) => (
     <button
         onClick={() => setActiveTab(name)}
-        className={`relative px-6 py-3 text-lg font-bold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${activeTab === name ? "text-accent" : "text-gray-400 hover:text-white"
+        className={`relative px-6 py-3 text-lg font-bold transition-colors duration-300 whitespace-nowrap flex-shrink-0 ${activeTab === name ? "text-accent font-black" : "text-gray-400 hover:text-white"
             }`}
     >
         {label}
         {activeTab === name && (
-            <span className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+            <motion.span
+                layoutId="activeWatchTab"
+                className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-t-full shadow-[0_0_15px_rgba(255,159,28,0.5)]"
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            />
         )}
     </button>
 );

@@ -102,10 +102,17 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const handleWatchlistToggle = () => {
+    const handleWatchlistToggle = (e: React.MouseEvent) => {
         if (inWatchlist) {
             removeFromWatchlist(tmdbData.id.toString(), type);
         } else {
+            // Trigger flying cat paw particle animation
+            window.dispatchEvent(
+                new CustomEvent("watchlistFlyEffect", {
+                    detail: { startX: e.clientX, startY: e.clientY }
+                })
+            );
+
             addToWatchlist({
                 id: tmdbData.id.toString(),
                 type: type,

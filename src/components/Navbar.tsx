@@ -359,18 +359,26 @@ const Navbar = () => {
                                 </Link>
 
                                 <div className="hidden md:flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 min-w-0 overflow-x-auto scrollbar-none py-1">
-                                    {navLinks.map((link) => (
-                                        <Link
-                                            key={link.name}
-                                            href={link.href}
-                                            className={cn(
-                                                "text-[11px] lg:text-[13px] xl:text-[14px] font-semibold text-gray-400 hover:text-white px-1.5 lg:px-2 xl:px-3 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0",
-                                                pathname === link.href ? "bg-white/10 text-white" : ""
-                                            )}
-                                        >
-                                            {link.name}
-                                        </Link>
-                                    ))}
+                                    {navLinks.map((link) => {
+                                        const isActive = pathname === link.href;
+                                        return (
+                                            <Link
+                                                id={link.href === "/watchlist" ? "nav-watchlist" : undefined}
+                                                key={link.name}
+                                                href={link.href}
+                                                className="relative text-[11px] lg:text-[13px] xl:text-[14px] font-semibold px-2.5 lg:px-3.5 py-1.5 rounded-full whitespace-nowrap flex-shrink-0 transition-colors duration-300 text-gray-400 hover:text-white"
+                                            >
+                                                {isActive && (
+                                                    <motion.span
+                                                        layoutId="activeNavTab"
+                                                        className="absolute inset-0 bg-white/10 rounded-full z-[-1]"
+                                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                                    />
+                                                )}
+                                                <span className={cn(isActive && "text-white")}>{link.name}</span>
+                                            </Link>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
