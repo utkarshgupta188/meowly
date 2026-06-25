@@ -24,7 +24,11 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
 
     const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
     const url = new URL(`${BASE_URL}${cleanEndpoint}`);
-    url.searchParams.append("api_key", API_KEY);
+    
+    const isBearer = API_KEY.startsWith("eyJ");
+    if (!isBearer) {
+        url.searchParams.append("api_key", API_KEY);
+    }
     Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value));
 
     const MAX_RETRIES = 3;
@@ -35,12 +39,17 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
+            const headers: Record<string, string> = {
+                "Accept": "application/json",
+                "User-Agent": "MeowlyApp/1.0"
+            };
+            if (isBearer) {
+                headers["Authorization"] = `Bearer ${API_KEY}`;
+            }
+
             const res = await fetch(url.toString(), {
                 next: { revalidate: 3600 },
-                headers: {
-                    "Accept": "application/json",
-                    "User-Agent": "MeowlyApp/1.0"
-                },
+                headers,
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
