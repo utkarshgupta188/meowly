@@ -24,11 +24,6 @@ const Navbar = () => {
 
     const [pwaPrompt, setPwaPrompt] = useState<any>(null);
     const [isListening, setIsListening] = useState(false);
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     const handleVoiceSearch = () => {
         if (typeof window === "undefined") return;
@@ -315,19 +310,17 @@ const Navbar = () => {
                                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                                 className="bg-transparent border-none outline-none text-white text-base w-full placeholder-gray-500 py-2"
                             />
-                            {isMounted && (
-                                <button
-                                    type="button"
-                                    onClick={handleVoiceSearch}
-                                    className={cn(
-                                        "p-2 rounded-full transition-all text-gray-400 hover:text-white mr-1",
-                                        isListening && "text-red-500 animate-pulse bg-red-500/10 scale-110"
-                                    )}
-                                    title="Voice Search"
-                                >
-                                    <Mic className="h-5 w-5" />
-                                </button>
-                            )}
+                            <button
+                                type="button"
+                                onClick={handleVoiceSearch}
+                                className={cn(
+                                    "p-2 rounded-full transition-all text-gray-400 hover:text-white mr-1",
+                                    isListening && "text-red-500 animate-pulse bg-red-500/10 scale-110"
+                                )}
+                                title="Voice Search"
+                            >
+                                <Mic className="h-5 w-5" />
+                            </button>
                             {searchQuery && (
                                 <button
                                     onClick={() => handleSearchInputChange("")}
@@ -394,19 +387,17 @@ const Navbar = () => {
                                         onKeyDown={handleKeyDown}
                                         className="bg-transparent border-none py-1 text-[13px] text-white placeholder-gray-500 outline-none w-20 md:w-24 lg:w-32 focus:w-40 lg:focus:w-48 transition-all duration-300"
                                     />
-                                    {isMounted && (
-                                        <button
-                                            type="button"
-                                            onClick={handleVoiceSearch}
-                                            className={cn(
-                                                "p-1 rounded-full transition-all text-gray-500 hover:text-white flex items-center justify-center",
-                                                isListening && "text-red-500 animate-pulse bg-red-500/10 scale-110"
-                                            )}
-                                            title="Voice Search"
-                                        >
-                                            <Mic className="h-4 w-4" />
-                                        </button>
-                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={handleVoiceSearch}
+                                        className={cn(
+                                            "p-1 rounded-full transition-all text-gray-500 hover:text-white flex items-center justify-center",
+                                            isListening && "text-red-500 animate-pulse bg-red-500/10 scale-110"
+                                        )}
+                                        title="Voice Search"
+                                    >
+                                        <Mic className="h-4 w-4" />
+                                    </button>
                                     <Search className="h-4 w-4 text-gray-500 cursor-pointer hover:text-white transition-colors ml-1" onClick={() => handleSearch()} />
                                 </div>
 
