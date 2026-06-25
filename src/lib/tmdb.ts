@@ -13,7 +13,7 @@ export const TMDB_CONFIG = {
     backdropSizes: {
         small: `${IMAGE_BASE_URL}/w300`,
         medium: `${IMAGE_BASE_URL}/w780`,
-        large: `${IMAGE_BASE_URL}/original`,
+        large: `${IMAGE_BASE_URL}/w1280`,
     },
 };
 

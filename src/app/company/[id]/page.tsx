@@ -51,7 +51,7 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
     // Find the most popular movie/show with a backdrop path to use as a beautiful header background
     const allItems = [...movies, ...tvShows].sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
     const bestBackdrop = allItems.find(item => item.backdrop_path)?.backdrop_path;
-    const backdropUrl = bestBackdrop ? `${TMDB_CONFIG.imageBase}/original${bestBackdrop}` : null;
+    const backdropUrl = bestBackdrop ? `${TMDB_CONFIG.backdropSizes.large}${bestBackdrop}` : null;
 
     return (
         <main className="min-h-screen bg-black pb-20">

@@ -509,7 +509,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                                 <div className="relative h-64 md:h-80 w-full rounded-[2rem] overflow-hidden group shadow-2xl">
                                     <div className="absolute inset-0">
                                         <img
-                                            src={`${TMDB_CONFIG.imageBase}/original${tmdbData.belongs_to_collection.backdrop_path}`}
+                                            src={`${TMDB_CONFIG.backdropSizes.large}${tmdbData.belongs_to_collection.backdrop_path}`}
                                             className="w-full h-full object-cover brightness-50 group-hover:scale-105 transition-transform duration-1000"
                                             alt={tmdbData.belongs_to_collection.name}
                                         />

@@ -49,7 +49,7 @@ export default async function CollectionPage({
             <div className="relative h-[60vh] md:h-[70vh] w-full mb-12">
                 <div className="absolute inset-0">
                     <img 
-                        src={`${TMDB_CONFIG.imageBase}/original${collection.backdrop_path}`}
+                        src={`${TMDB_CONFIG.backdropSizes.large}${collection.backdrop_path}`}
                         className="w-full h-full object-cover brightness-50"
                         alt={collection.name}
                     />

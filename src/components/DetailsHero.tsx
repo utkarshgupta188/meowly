@@ -156,10 +156,10 @@ const DetailsHero = ({ tmdbData, type, onPlay, currentSeason, onSeasonChange, cu
                             className="h-16 sm:h-24 md:h-32 lg:h-40 w-full flex items-start"
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src={`${TMDB_CONFIG.imageBase}/original${tmdbData.images.logos.find((l: LogoImage) => l.iso_639_1 === 'en')?.file_path ||
-                                    tmdbData.images.logos[0].file_path
-                                    }`}
+                             <img
+                                 src={`${TMDB_CONFIG.imageBase}/w500${tmdbData.images.logos.find((l: LogoImage) => l.iso_639_1 === 'en')?.file_path ||
+                                     tmdbData.images.logos[0].file_path
+                                     }`}
                                 alt={tmdbData.title || tmdbData.name}
                                 className="h-full object-contain object-left drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
                             />

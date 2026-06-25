@@ -45,7 +45,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
 
     // Find the most popular show with a backdrop path to use as a beautiful header background
     const bestBackdrop = tvShows.find(item => item.backdrop_path)?.backdrop_path;
-    const backdropUrl = bestBackdrop ? `${TMDB_CONFIG.imageBase}/original${bestBackdrop}` : null;
+    const backdropUrl = bestBackdrop ? `${TMDB_CONFIG.backdropSizes.large}${bestBackdrop}` : null;
 
     return (
         <main className="min-h-screen bg-black pb-20">

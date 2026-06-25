@@ -158,7 +158,7 @@ const Hero = ({ movies }: HeroProps) => {
                                 >
                                     <h2 className="sr-only">{heroMovies[current].title || heroMovies[current].name}</h2>
                                     <img
-                                        src={`${TMDB_CONFIG.imageBase}/original${(heroMovies[current].logos as any[]).find((l: any) => l.iso_639_1 === 'en')?.file_path ||
+                                        src={`${TMDB_CONFIG.imageBase}/w500${(heroMovies[current].logos as any[]).find((l: any) => l.iso_639_1 === 'en')?.file_path ||
                                             (heroMovies[current].logos as any[])[0].file_path
                                             }`}
                                         alt={heroMovies[current].title || heroMovies[current].name}
