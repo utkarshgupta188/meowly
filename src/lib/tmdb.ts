@@ -1,5 +1,5 @@
 const API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY;
-const BASE_URL = "https://api.themoviedb.org/3";
+const BASE_URL = "https://api.tmdb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 
 export const TMDB_CONFIG = {
@@ -31,13 +31,13 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
     }
     Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value));
 
-    const MAX_RETRIES = 3;
+    const MAX_RETRIES = 1;
     let attempt = 0;
 
     while (attempt < MAX_RETRIES) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout
 
             const headers: Record<string, string> = {
                 "Accept": "application/json",
@@ -56,7 +56,7 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
 
             if (!res.ok) {
                 if (res.status === 429) { // Rate limit
-                    await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1)));
+                    await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)));
                     throw new Error(`Rate limited: ${res.status}`);
                 }
                 // If it's a 401, the API key is definitely wrong
@@ -74,7 +74,7 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
             if (attempt >= MAX_RETRIES) {
                 return null;
             }
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Increased wait between retries
+            await new Promise(resolve => setTimeout(resolve, 500)); // Shorter wait between retries
         }
     }
     return null;
