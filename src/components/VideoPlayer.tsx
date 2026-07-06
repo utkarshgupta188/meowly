@@ -20,15 +20,9 @@ interface VideoPlayerProps {
 
 const SERVERS = [
     {
-        name: "Videasy",
-        movie: (id: string) => `https://player.videasy.net/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://player.videasy.net/tv/${id}/${s}/${e}`,
-        useSandbox: false
-    },
-    {
-        name: "Vidking",
-        movie: (id: string) => `https://www.vidking.net/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://www.vidking.net/embed/tv/${id}/${s}/${e}`,
+        name: "VidSrc Embed",
+        movie: (id: string) => `https://vidsrc-embed.ru/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
@@ -62,12 +56,6 @@ const SERVERS = [
         useSandbox: false
     },
     {
-        name: "VidSrc Embed",
-        movie: (id: string) => `https://vidsrc-embed.ru/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}`,
-        useSandbox: false
-    },
-    {
         name: "Vidrock",
         movie: (id: string) => `https://vidrock.net/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}`,
@@ -83,6 +71,18 @@ const SERVERS = [
         name: "Vidify",
         movie: (id: string) => `https://pro.vidify.top/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://pro.vidify.top/embed/tv/${id}/${s}/${e}`,
+        useSandbox: false
+    },
+    {
+        name: "Videasy",
+        movie: (id: string) => `https://player.videasy.net/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://player.videasy.net/tv/${id}/${s}/${e}`,
+        useSandbox: false
+    },
+    {
+        name: "Vidking",
+        movie: (id: string) => `https://www.vidking.net/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://www.vidking.net/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
@@ -188,7 +188,7 @@ export default function VideoPlayer({
         const shareUrl = `${window.location.origin}/watch/${type}/${id}?resume=true` +
             (type === 'tv' ? `&s=${currentSeason}&e=${currentEpisode}` : '') +
             `&server=${selectedServer}`;
-        
+
         navigator.clipboard.writeText(shareUrl)
             .then(() => {
                 setCopied(true);
@@ -270,8 +270,8 @@ export default function VideoPlayer({
                         onClick={handleShare}
                         className={cn(
                             "flex items-center space-x-2 px-3 py-1.5 rounded-lg transition-all border",
-                            copied 
-                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" 
+                            copied
+                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
                                 : "bg-prime-hover text-gray-300 hover:text-white border-white/5 hover:border-white/10"
                         )}
                         title="Copy Playback Link"
@@ -320,7 +320,7 @@ export default function VideoPlayer({
                                 />
                             </div>
 
-                             <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-2">
                                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Episode</span>
                                 <Dropdown
                                     value={currentEpisode}
