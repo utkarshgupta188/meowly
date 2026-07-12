@@ -21,15 +21,9 @@ interface VideoPlayerProps {
 const SERVERS = [
 
     {
-        name: "Peachify",
-        movie: (id: string) => `https://peachify.top/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://peachify.top/embed/tv/${id}/${s}/${e}`,
-        useSandbox: false
-    },
-    {
-        name: "Vidlink",
-        movie: (id: string) => `https://vidlink.pro/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}`,
+        name: "Vidrock",
+        movie: (id: string) => `https://vidrock.net/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
@@ -45,33 +39,21 @@ const SERVERS = [
         useSandbox: false
     },
     {
-        name: "Vidrock",
-        movie: (id: string) => `https://vidrock.net/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}`,
-        useSandbox: false
-    },
-    {
-        name: "VidSrc Embed",
-        movie: (id: string) => `https://vidsrc-embed.ru/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}`,
-        useSandbox: false
-    },
-    {
         name: "VidSrc PM",
         movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "VidSrc CC",
-        movie: (id: string) => `https://vidsrc.cc/v2/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}`,
+        name: "Peachify",
+        movie: (id: string) => `https://peachify.top/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://peachify.top/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
     {
-        name: "Vidify",
-        movie: (id: string) => `https://pro.vidify.top/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://pro.vidify.top/embed/tv/${id}/${s}/${e}`,
+        name: "VidSrc SU",
+        movie: (id: string) => `https://vidsrcme.su/embed/movie?tmdb=${id}`,
+        show: (id: string, s: number, e: number) => `https://vidsrcme.su/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
         useSandbox: false
     },
     {
@@ -87,21 +69,15 @@ const SERVERS = [
         useSandbox: false
     },
     {
-        name: "Vidzee",
-        movie: (id: string) => `https://player.vidzee.wtf/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://player.vidzee.wtf/embed/tv/${id}/${s}/${e}`,
-        useSandbox: false
-    },
-    {
         name: "2Embed",
         movie: (id: string) => `https://www.2embed.skin/embed/${id}`,
         show: (id: string, s: number, e: number) => `https://www.2embed.skin/embedtv/${id}&s=${s}&e=${e}`,
         useSandbox: false
     },
     {
-        name: "HNEmbed",
-        movie: (id: string) => `https://hnembed.cc/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://hnembed.cc/embed/tv/${id}/${s}/${e}`,
+        name: "Vidlink",
+        movie: (id: string) => `https://vidlink.pro/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}`,
         useSandbox: false
     }
 ];
