@@ -7,6 +7,9 @@ const PwaRegister = dynamic(() => import("@/components/PwaRegister"), { ssr: fal
 const DomainRedirectPopup = dynamic(() => import("@/components/DomainRedirectPopup"), { ssr: false });
 const FlyingParticles = dynamic(() => import("@/components/FlyingParticles"), { ssr: false });
 
+const ShortcutsHUD = dynamic(() => import("@/components/ShortcutsHUD"), { ssr: false });
+
+
 export default function ClientOnlyComponents() {
   return (
     <>
@@ -14,6 +17,8 @@ export default function ClientOnlyComponents() {
       <PwaRegister />
       <DomainRedirectPopup />
       <FlyingParticles />
+      <ShortcutsHUD />
+
     </>
   );
 }

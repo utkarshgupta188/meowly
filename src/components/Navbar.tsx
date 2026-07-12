@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Search, Menu, X, ArrowLeft, Dices, Download, Mic, Cat } from "lucide-react";
+import { Search, Menu, X, ArrowLeft, Dices, Download, Mic, Cat, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { surpriseMe } from "@/app/actions";
@@ -449,6 +449,15 @@ const Navbar = () => {
                                         🐾
                                     </motion.span>
                                 </motion.button>
+
+                                {/* Help & Shortcuts */}
+                                <button
+                                    onClick={() => window.dispatchEvent(new CustomEvent("openShortcutsHUD"))}
+                                    className="p-2 text-gray-400 hover:text-accent transition-all duration-300 rounded-full hover:bg-white/10 flex items-center justify-center relative"
+                                    title="Help & Shortcuts"
+                                >
+                                    <HelpCircle className="h-5 w-5" />
+                                </button>
 
                                 {/* PWA Install Action Icon */}
                                 {pwaPrompt && (

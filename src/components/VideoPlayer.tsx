@@ -167,6 +167,37 @@ export default function VideoPlayer({
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
 
+    // Global shortcut event listeners
+    React.useEffect(() => {
+        const handleToggleTheater = () => {
+            setIsTheaterMode(prev => !prev);
+        };
+        const handleReload = () => {
+            setPlayerKey(prev => prev + 1);
+        };
+        const handleShareLink = () => {
+            handleShare();
+        };
+        const handleSelectServer = (e: Event) => {
+            const index = (e as CustomEvent).detail?.index;
+            if (typeof index === "number" && index >= 0 && index < SERVERS.length) {
+                setSelectedServer(index);
+            }
+        };
+
+        window.addEventListener("playerToggleTheater", handleToggleTheater);
+        window.addEventListener("playerReload", handleReload);
+        window.addEventListener("playerShare", handleShareLink);
+        window.addEventListener("playerSelectServer", handleSelectServer);
+
+        return () => {
+            window.removeEventListener("playerToggleTheater", handleToggleTheater);
+            window.removeEventListener("playerReload", handleReload);
+            window.removeEventListener("playerShare", handleShareLink);
+            window.removeEventListener("playerSelectServer", handleSelectServer);
+        };
+    }, [selectedServer, currentSeason, currentEpisode, type, id]);
+
     const handleShare = () => {
         const shareUrl = `${window.location.origin}/watch/${type}/${id}?resume=true` +
             (type === 'tv' ? `&s=${currentSeason}&e=${currentEpisode}` : '') +
