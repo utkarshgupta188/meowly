@@ -26,6 +26,14 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     const [isHovered, setIsHovered] = useState(false);
     const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
     const [isLoadingTrailer, setIsLoadingTrailer] = useState(false);
+    const [isNavigating, setIsNavigating] = useState(false);
+
+    useEffect(() => {
+        if (isNavigating) {
+            const t = setTimeout(() => setIsNavigating(false), 8000);
+            return () => clearTimeout(t);
+        }
+    }, [isNavigating]);
 
     useEffect(() => {
         setInWatchlist(isInWatchlist(movie.id.toString(), movie.media_type || 'movie'));
@@ -116,6 +124,8 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     const handlePlayClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        if (isNavigating) return;
+        setIsNavigating(true);
         const url = playUrl;
         if (typeof document !== "undefined" && (document as any).startViewTransition) {
             try {
@@ -135,6 +145,8 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     const handleInfoClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        if (isNavigating) return;
+        setIsNavigating(true);
         const url = detailsUrl;
         if (typeof document !== "undefined" && (document as any).startViewTransition) {
             try {
@@ -181,6 +193,8 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
     };
 
     const handleCardClick = () => {
+        if (isNavigating) return;
+        setIsNavigating(true);
         const url = isPerson
             ? `/person/${movie.id}`
             : isCompany
@@ -235,6 +249,13 @@ const MovieCard = ({ movie, className, isFluid = false, isResume = false, onRemo
                 "relative aspect-video w-full overflow-hidden bg-white/5 border border-white/10 group-hover:border-white/30 transition-all duration-300",
                 isHovered ? "rounded-t-xl border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.8)]" : "rounded-xl"
             )}>
+                {/* Navigation Loader Overlay */}
+                {isNavigating && (
+                    <div className="absolute inset-0 bg-black/80 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
+                        <div className="w-8 h-8 rounded-full border-2 border-accent border-t-transparent animate-spin mb-2" />
+                        <span className="text-[10px] text-accent font-bold tracking-wider uppercase">Loading Player...</span>
+                    </div>
+                )}
                 {/* Remove button for recently played */}
                 {isResume && onRemove && (
                     <button

@@ -75,6 +75,12 @@ const SERVERS = [
         useSandbox: false
     },
     {
+        name: "AutoEmbed",
+        movie: (id: string) => `https://autoembed.co/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://autoembed.co/tv/${id}/${s}/${e}`,
+        useSandbox: false
+    },
+    {
         name: "Vidlink",
         movie: (id: string) => `https://vidlink.pro/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}`,
