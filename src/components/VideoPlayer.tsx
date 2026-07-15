@@ -21,9 +21,9 @@ interface VideoPlayerProps {
 const SERVERS = [
 
     {
-        name: "Vidrock",
-        movie: (id: string) => `https://vidrock.net/embed/movie/${id}`,
-        show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}`,
+        name: "PrimeSRC",
+        movie: (id: string) => `https://primesrc.me/embed/movie?tmdb=${id}`,
+        show: (id: string, s: number, e: number) => `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
         useSandbox: false
     },
     {
@@ -32,12 +32,7 @@ const SERVERS = [
         show: (id: string, s: number, e: number) => `https://vidfast.net/tv/${id}/${s}/${e}`,
         useSandbox: false
     },
-    {
-        name: "PrimeSRC",
-        movie: (id: string) => `https://primesrc.me/embed/movie?tmdb=${id}`,
-        show: (id: string, s: number, e: number) => `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
-        useSandbox: false
-    },
+
     {
         name: "VidSrc PM",
         movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`,
@@ -84,6 +79,12 @@ const SERVERS = [
         name: "Vidlink",
         movie: (id: string) => `https://vidlink.pro/movie/${id}`,
         show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}`,
+        useSandbox: false
+    },
+    {
+        name: "Vidrock",
+        movie: (id: string) => `https://vidrock.net/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}`,
         useSandbox: false
     }
 ];
