@@ -103,19 +103,7 @@ export default function RootLayout({
             gtag('config', 'G-CSBPEBZBJF');
           `}
         </Script>
-        {/* Ad Scripts */}
-        <Script src="https://pl30335701.effectivecpmnetwork.com/15/2b/7f/152b7ff6c42de3b653581c70fa6210f6.js" strategy="afterInteractive" />
-        <Script src="https://pl30335702.effectivecpmnetwork.com/6a/ce/0e/6ace0eee91d7b590319fc93e711ef882.js" strategy="afterInteractive" />
-        <Script id="ad-popunder" strategy="afterInteractive">
-          {`
-            document.addEventListener('click', function handleAdClick() {
-              if (!sessionStorage.getItem('ad_triggered')) {
-                window.open('https://www.effectivecpmnetwork.com/cxkmxuan?key=21bd0f6c25d4948246ed5ecdb4dbe149', '_blank');
-                sessionStorage.setItem('ad_triggered', 'true');
-              }
-            });
-          `}
-        </Script>
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
