@@ -1,7 +1,6 @@
 # 🐈 Meowly
 
 <div align="center">
-  <img src="./public/favicon.ico" width="80" height="80" alt="Meowly Logo" />
   
   <h3>An ultra-minimalist, luxury dark cinematic streaming and media discovery platform built using Next.js, React 19, Tailwind CSS v4, and the TMDB API.</h3>
 
