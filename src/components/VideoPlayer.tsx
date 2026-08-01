@@ -19,7 +19,12 @@ interface VideoPlayerProps {
 }
 
 const SERVERS = [
-
+    {
+        name: "APIPlayer",
+        movie: (id: string) => `https://apiplayer.ru/embed/movie/${id}`,
+        show: (id: string, s: number, e: number) => `https://apiplayer.ru/embed/tv/${id}/${s}/${e}`,
+        useSandbox: false
+    },
     {
         name: "PrimeSRC",
         movie: (id: string) => `https://primesrc.me/embed/movie?tmdb=${id}`,
