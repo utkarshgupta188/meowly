@@ -80,6 +80,8 @@ import dynamic from 'next/dynamic';
 import PageTransition from "@/components/PageTransition";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+import HelpBot from "@/components/HelpBot";
 
 import ClientOnlyComponents from "@/components/ClientOnlyComponents";
 
@@ -138,16 +140,19 @@ export default function RootLayout({
         />
       </head>
       <body className={`${plusJakartaSans.className} antialiased flex flex-col min-h-screen bg-prime-dark text-white relative`}>
-        <Suspense fallback={null}>
-          <Navbar />
-        </Suspense>
-        <div className="flex-grow relative z-10">
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </div>
-        <Footer />
-        <ClientOnlyComponents />
+        <GlobalErrorBoundary>
+          <Suspense fallback={null}>
+            <Navbar />
+          </Suspense>
+          <div className="flex-grow relative z-10">
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </div>
+          <Footer />
+          <ClientOnlyComponents />
+          <HelpBot />
+        </GlobalErrorBoundary>
       </body>
     </html>
   );

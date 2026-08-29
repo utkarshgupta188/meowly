@@ -9,6 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.83",
+    "@ai-sdk/groq": "^3.0.42",
+    "@ai-sdk/openai": "^3.0.74",
+    "@ai-sdk/react": "^3.0.210",
+    "ai": "^6.0.208",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.2",
     "got-scraping": "^4.2.1",
