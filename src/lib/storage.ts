@@ -57,6 +57,9 @@ export function saveToRecentlyPlayed(item: RecentItem) {
         
         // Dispatch a custom event to notify other components
         window.dispatchEvent(new Event("recentlyPlayedUpdated"));
+
+        // Automatically remove played item from the watchlist / My List if present
+        removeFromWatchlist(item.id, item.type);
     } catch {
         // Silently fail
     }
@@ -122,11 +125,14 @@ export function removeFromWatchlist(id: string, type: string) {
         if (!stored) return;
 
         let items: RecentItem[] = JSON.parse(stored);
+        const originalLength = items.length;
         items = items.filter(i => !(i.id === id && i.type === type));
 
-        localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
-        cachedWatchlist = items;
-        window.dispatchEvent(new Event("watchlistUpdated"));
+        if (items.length !== originalLength) {
+            localStorage.setItem(WATCHLIST_KEY, JSON.stringify(items));
+            cachedWatchlist = items;
+            window.dispatchEvent(new Event("watchlistUpdated"));
+        }
     } catch {
         // Silently fail
     }

@@ -12,6 +12,7 @@ import { getSeasonDetailsAction } from "@/app/actions";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import MoctaleReviews from "@/components/MoctaleReviews";
+import { removeFromWatchlist } from "@/lib/storage";
 
 interface TabButtonProps {
     name: "episodes" | "related" | "details" | "clips" | "photos" | "reviews";
@@ -239,7 +240,10 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
                     <DetailsHero
                         tmdbData={tmdbData}
                         type={type}
-                        onPlay={() => setIsPlaying(true)}
+                        onPlay={() => {
+                            removeFromWatchlist(id, type);
+                            setIsPlaying(true);
+                        }}
                         currentSeason={season}
                         onSeasonChange={(s) => {
                             setSeason(s);
