@@ -24,7 +24,7 @@ Meowly is a state-of-the-art cinematic web application that redefines digital me
 ## ✨ Features
 
 ### 🎬 1. Cinematic Watch Experience
-* **Adaptive Multi-Server Video Player:** Stream movies and TV shows instantly through a custom `VideoPlayer` supporting multiple source servers, theater mode, autoplay overrides, and seamless quality selection.
+* **Adaptive Multi-Server Video Player:** Stream movies and TV shows instantly through a custom `VideoPlayer` supporting multiple source servers, default immersive theater mode, Picture-in-Picture (PiP) mini-player, autoplay overrides, and seamless quality selection.
 * **Resume Playback:** Pick up exactly where you left off. The app remembers your viewing progress across multiple seasons and movies.
 * **Trailer Modals:** Instant overlays that play high-definition YouTube trailers, teasers, and clips directly inside the browser.
 * **Season & Episode Trackers:** Elegant interactive episode dropdowns and carousels showcasing episode runtimes, release dates, and high-res stills.

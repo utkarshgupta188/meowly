@@ -233,7 +233,7 @@ export default function WatchContainer({ type, id, tmdbData, initialSeason = 1, 
             </button>
 
             {/* Hero / Player Section */}
-            <div className={`relative w-full z-40 transition-all duration-700 ${isPlaying ? "md:min-h-[85vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
+            <div className={`relative w-full z-40 transition-all duration-700 ${isPlaying ? "md:min-h-[90vh] shadow-[0_4px_40px_rgba(0,0,0,0.5)]" : "h-auto"}`}>
 
                 {!isPlaying ? (
                     <DetailsHero

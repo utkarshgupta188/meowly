@@ -34,8 +34,8 @@ export default function ShortcutsHUD() {
             } else {
                 // Delegate keys to active video player page if active
                 const keyUpper = e.key.toUpperCase();
-                if (keyUpper === "T") {
-                    window.dispatchEvent(new CustomEvent("playerToggleTheater"));
+                if (keyUpper === "P") {
+                    window.dispatchEvent(new CustomEvent("playerTogglePip"));
                 } else if (keyUpper === "R") {
                     window.dispatchEvent(new CustomEvent("playerReload"));
                 } else if (keyUpper === "S") {
@@ -101,8 +101,8 @@ export default function ShortcutsHUD() {
                                         <kbd className="px-2.5 py-1 text-xs font-bold bg-white/15 border border-white/20 rounded shadow-md text-white">Space</kbd>
                                     </div>
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-400">Toggle Theater Mode</span>
-                                        <kbd className="px-2.5 py-1 text-xs font-bold bg-white/15 border border-white/20 rounded shadow-md text-white">T</kbd>
+                                        <span className="text-gray-400">Picture-in-Picture</span>
+                                        <kbd className="px-2.5 py-1 text-xs font-bold bg-white/15 border border-white/20 rounded shadow-md text-white">P</kbd>
                                     </div>
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="text-gray-400">Reload Player</span>
