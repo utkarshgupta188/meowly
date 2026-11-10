@@ -19,12 +19,13 @@ export async function POST(req: Request) {
 
   const title = cleanTitle(b.title);
   const tmdbId = Number(b.tmdbId);
-  const runtimeMinutes = Math.min(300, Math.max(5, Math.round(Number(b.runtimeMinutes) || 0)));
+  const rawRuntime = Math.round(Number(b.runtimeMinutes));
+  const runtimeMinutes = Math.min(300, rawRuntime);
   const genres = Array.isArray(b.genres)
     ? (b.genres as unknown[]).filter((g): g is string => typeof g === "string").map((g) => g.trim().slice(0, 40)).filter(Boolean).slice(0, 5)
     : [];
 
-  if ((b.type !== "movie" && b.type !== "tv") || !Number.isInteger(tmdbId) || tmdbId <= 0 || !title || runtimeMinutes < 5) {
+  if ((b.type !== "movie" && b.type !== "tv") || !Number.isInteger(tmdbId) || tmdbId <= 0 || !title || !Number.isFinite(rawRuntime) || rawRuntime < 5) {
     return NextResponse.json({ ok: false, error: "invalid event" }, { status: 400 });
   }
 
