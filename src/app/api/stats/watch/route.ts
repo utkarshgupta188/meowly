@@ -22,13 +22,13 @@ export async function POST(req: Request) {
 
   const title = cleanTitle(b.title);
   const tmdbId = Number(b.tmdbId);
-  const rawRuntime = Math.round(Number(b.runtimeMinutes));
-  const runtimeMinutes = Math.min(300, rawRuntime);
+  const minutes = Math.round(Number(b.minutes));
+  const isPlay = b.isPlay === true;
   const genres = Array.isArray(b.genres)
     ? (b.genres as unknown[]).filter((g): g is string => typeof g === "string").map((g) => g.trim().slice(0, 40)).filter(Boolean).slice(0, 5)
     : [];
 
-  if ((b.type !== "movie" && b.type !== "tv") || !Number.isInteger(tmdbId) || tmdbId <= 0 || !title || !Number.isFinite(rawRuntime) || rawRuntime < 5) {
+  if ((b.type !== "movie" && b.type !== "tv") || !Number.isInteger(tmdbId) || tmdbId <= 0 || !title || !Number.isInteger(minutes) || minutes < 1 || minutes > 10) {
     return NextResponse.json({ ok: false, error: "invalid event" }, { status: 400 });
   }
 
@@ -38,7 +38,8 @@ export async function POST(req: Request) {
     title,
     posterPath: typeof b.posterPath === "string" ? b.posterPath.slice(0, 120) : null,
     genres,
-    runtimeMinutes,
+    minutes,
+    isPlay,
   };
   const season = Number(b.season);
   const episode = Number(b.episode);

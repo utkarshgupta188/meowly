@@ -25,6 +25,9 @@ function eventsFile(): string {
 
 interface StoredEvent extends WatchEvent {
   day: string;
+  // Lines written before heartbeats existed carry runtimeMinutes instead of
+  // minutes/isPlay; those count as one play of the full runtime.
+  runtimeMinutes?: number;
 }
 
 // Serialise writes so concurrent plays can't interleave lines.
@@ -81,8 +84,15 @@ export async function getSiteStats(range: StatsRange): Promise<SiteStats> {
   const titleTotals = new Map<string, { event: StoredEvent; plays: number }>();
   const genreTotals = new Map<string, number>();
   let minutes = 0;
+  let plays = 0;
   for (const e of inRange) {
-    minutes += e.runtimeMinutes;
+    // Heartbeat line: minutes counted, play only on the first heartbeat.
+    // Old-format line: one play of the full runtime.
+    const isPlay = e.isPlay ?? true;
+    const mins = e.minutes ?? e.runtimeMinutes ?? 0;
+    minutes += mins;
+    if (!isPlay) continue;
+    plays += 1;
     const key = `${e.type}:${e.tmdbId}`;
     const existing = titleTotals.get(key);
     if (existing) existing.plays += 1;
@@ -108,7 +118,7 @@ export async function getSiteStats(range: StatsRange): Promise<SiteStats> {
 
   return {
     range,
-    plays: inRange.length,
+    plays,
     watchHours: Math.round((minutes / 60) * 10) / 10,
     titles,
     genres,

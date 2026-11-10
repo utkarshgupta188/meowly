@@ -1,33 +1,40 @@
 import type { WatchEvent } from "@/lib/stats";
 
-const REPORT_DELAY_MS = 60_000;
-const DEDUPE_WINDOW_MS = 30 * 60_000;
+// One heartbeat per 5 minutes the player stays open. Each heartbeat records
+// 5 minutes — nothing is credited for just opening a title, and a 2-hour
+// movie only reaches 2 hours if the player stays open for 2 hours.
+const HEARTBEAT_MS = 5 * 60_000;
+const HEARTBEAT_MINUTES = 5;
+// A viewing counts as one play at most once per title/episode per 30 minutes.
+const PLAY_DEDUPE_MS = 30 * 60_000;
 
-export function reportWatch(event: WatchEvent): () => void {
+function playKey(event: WatchEvent): string {
+  return `meowly_stats_play:${event.type}:${event.tmdbId}:${event.season ?? ""}:${event.episode ?? ""}`;
+}
+
+export function reportWatch(event: Omit<WatchEvent, "minutes" | "isPlay">): () => void {
   if (typeof window === "undefined") return () => {};
-  // Dedupe per episode, not per show: bingeing episode 2 within 30 minutes
-  // of episode 1 must still count episode 2. Movies have no season/episode.
-  const key = `meowly_stats_reported:${event.type}:${event.tmdbId}:${event.season ?? ""}:${event.episode ?? ""}`;
-  try {
-    const last = Number(sessionStorage.getItem(key) || 0);
-    if (Date.now() - last < DEDUPE_WINDOW_MS) return () => {};
-  } catch {
-    return () => {};
-  }
 
-  const timer = window.setTimeout(() => {
+  const sendHeartbeat = () => {
+    let isPlay = false;
     try {
-      sessionStorage.setItem(key, String(Date.now()));
+      const key = playKey(event as WatchEvent);
+      const last = Number(sessionStorage.getItem(key) || 0);
+      if (Date.now() - last >= PLAY_DEDUPE_MS) {
+        isPlay = true;
+        sessionStorage.setItem(key, String(Date.now()));
+      }
     } catch {
-      // ignore
+      // No storage (e.g. private mode): still record minutes, never a play.
     }
     fetch("/api/stats/watch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(event),
+      body: JSON.stringify({ ...event, minutes: HEARTBEAT_MINUTES, isPlay }),
       keepalive: true,
     }).catch(() => {});
-  }, REPORT_DELAY_MS);
+  };
 
-  return () => window.clearTimeout(timer);
+  const timer = window.setInterval(sendHeartbeat, HEARTBEAT_MS);
+  return () => window.clearInterval(timer);
 }

@@ -161,10 +161,6 @@ export default function VideoPlayer({
                 title: tmdbData.title || tmdbData.name,
                 posterPath: tmdbData.poster_path ?? null,
                 genres: (tmdbData.genres || []).map((g: any) => g.name).filter(Boolean),
-                runtimeMinutes:
-                    tmdbData.runtime ||
-                    (Array.isArray(tmdbData.episode_run_time) ? tmdbData.episode_run_time[0] : undefined) ||
-                    45,
                 season: type === "tv" ? currentSeason : undefined,
                 episode: type === "tv" ? currentEpisode : undefined,
             });

@@ -53,9 +53,9 @@ Meowly is a state-of-the-art cinematic web application that redefines digital me
 
 ### 📈 7. Site Stats (anonymous, everyone can see)
 * **Stats page (`/stats`):** most watched titles and genres, and total watch hours — today, yesterday, this week, this month, and all time.
-* **How it counts:** when a player has been open for a minute, the browser sends one anonymous event — title, genres, runtime only. No accounts, no names, no emails, no IP addresses, no device info. One event per title per 30 minutes in the same browser, so refreshes don't inflate the numbers.
-* **Storage:** counts live in a local file on the VPS (`data/stats/events.jsonl`, one line per anonymous watch event). No external database. Without write access to that folder the site still works and `/stats` just shows empty totals.
-* **Watch hours are estimated** from title runtimes, because the video is embedded from another source and Meowly cannot see actual playback time.
+* **How it counts:** while a title plays, the browser sends one heartbeat every 5 minutes, each recording 5 minutes — nothing is credited for just opening a title, and a 2-hour movie only reaches 2 hours if the player stays open for 2 hours. A title counts as one play on its first heartbeat, at most once every 30 minutes in the same browser, so refreshes don't inflate the numbers.
+* **Storage:** counts live in a local file on the VPS (`data/stats/events.jsonl`, one line per anonymous heartbeat). No external database. Without write access to that folder the site still works and `/stats` just shows empty totals.
+* **Watch hours are player-open time,** not exact playback time, because the video is embedded from another source and pauses inside the player are not visible to Meowly.
 
 ---
 

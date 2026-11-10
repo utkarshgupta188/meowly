@@ -6,7 +6,11 @@ export interface WatchEvent {
   title: string;
   posterPath: string | null;
   genres: string[];
-  runtimeMinutes: number;
+  // Minutes actually counted by this heartbeat (5 per heartbeat).
+  minutes: number;
+  // True only on the first heartbeat of a viewing: that is when the title
+  // counts as one play. Later heartbeats add minutes only.
+  isPlay: boolean;
   season?: number;
   episode?: number;
 }
