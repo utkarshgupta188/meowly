@@ -15,6 +15,9 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ ok: false, error: "invalid json" }, { status: 400 });
   }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ ok: false, error: "invalid event" }, { status: 400 });
+  }
   const b = body as Record<string, unknown>;
 
   const title = cleanTitle(b.title);
@@ -37,6 +40,10 @@ export async function POST(req: Request) {
     genres,
     runtimeMinutes,
   };
+  const season = Number(b.season);
+  const episode = Number(b.episode);
+  if (Number.isInteger(season) && season >= 1) event.season = season;
+  if (Number.isInteger(episode) && episode >= 1) event.episode = episode;
 
   const stored = await recordWatch(event);
   return NextResponse.json({ ok: true, stored });

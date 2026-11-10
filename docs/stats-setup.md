@@ -35,7 +35,7 @@ browser tab session, so refreshes don't inflate the numbers.
 
 ## 3. How it is stored
 
-One JSONL line per event, with a UTC date (`day`) on each line. The
+One JSONL line per event, with an Asia/Kolkata date (`day`) on each line. The
 `/stats` page and `GET /api/stats?range=week` read the file and aggregate
 in memory — plays, watch hours, top titles, top genres. `GET /api/stats`
 is cached for 5 minutes.

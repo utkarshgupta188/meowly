@@ -7,6 +7,8 @@ export interface WatchEvent {
   posterPath: string | null;
   genres: string[];
   runtimeMinutes: number;
+  season?: number;
+  episode?: number;
 }
 
 export interface TitleStat {
@@ -40,30 +42,39 @@ export const RANGE_LABELS: Record<StatsRange, string> = {
   all: "All time",
 };
 
+// Day buckets use Asia/Kolkata, not UTC: most viewers are in India, so
+// "today" should flip at midnight IST (05:30 UTC), not at midnight UTC.
+const TIMEZONE = "Asia/Kolkata";
+
+const dayFormat = new Intl.DateTimeFormat("en-CA", {
+  timeZone: TIMEZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 export function dayKey(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  return dayFormat.format(date);
 }
 
 export function datesForRange(range: StatsRange, now = new Date()): string[] {
   const days: string[] = [];
-  const start = new Date(now);
+  // The IST calendar date, treated as a UTC date so plain day arithmetic
+  // steps through IST days (midnight UTC is 05:30 IST, same IST date).
+  const base = new Date(`${dayKey(now)}T00:00:00Z`);
+  const pushDay = (offset: number) => {
+    const d = new Date(base);
+    d.setUTCDate(d.getUTCDate() - offset);
+    days.push(dayKey(d));
+  };
   if (range === "today") {
-    days.push(dayKey(start));
+    pushDay(0);
   } else if (range === "yesterday") {
-    start.setUTCDate(start.getUTCDate() - 1);
-    days.push(dayKey(start));
+    pushDay(1);
   } else if (range === "week") {
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(now);
-      d.setUTCDate(d.getUTCDate() - i);
-      days.push(dayKey(d));
-    }
+    for (let i = 0; i < 7; i++) pushDay(i);
   } else if (range === "month") {
-    for (let i = 0; i < 30; i++) {
-      const d = new Date(now);
-      d.setUTCDate(d.getUTCDate() - i);
-      days.push(dayKey(d));
-    }
+    for (let i = 0; i < 30; i++) pushDay(i);
   }
   return days;
 }

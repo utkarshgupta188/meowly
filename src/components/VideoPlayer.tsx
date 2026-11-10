@@ -165,6 +165,8 @@ export default function VideoPlayer({
                     tmdbData.runtime ||
                     (Array.isArray(tmdbData.episode_run_time) ? tmdbData.episode_run_time[0] : undefined) ||
                     45,
+                season: type === "tv" ? currentSeason : undefined,
+                episode: type === "tv" ? currentEpisode : undefined,
             });
             return stopReporting;
         }

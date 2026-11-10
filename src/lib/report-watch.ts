@@ -5,7 +5,9 @@ const DEDUPE_WINDOW_MS = 30 * 60_000;
 
 export function reportWatch(event: WatchEvent): () => void {
   if (typeof window === "undefined") return () => {};
-  const key = `meowly_stats_reported:${event.type}:${event.tmdbId}`;
+  // Dedupe per episode, not per show: bingeing episode 2 within 30 minutes
+  // of episode 1 must still count episode 2. Movies have no season/episode.
+  const key = `meowly_stats_reported:${event.type}:${event.tmdbId}:${event.season ?? ""}:${event.episode ?? ""}`;
   try {
     const last = Number(sessionStorage.getItem(key) || 0);
     if (Date.now() - last < DEDUPE_WINDOW_MS) return () => {};
