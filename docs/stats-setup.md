@@ -21,31 +21,37 @@ Without write access to that folder, the site still builds and runs;
 
 ## 2. What gets counted
 
-When a player has been open for 60 seconds, the browser sends one event to
+While a title plays, the browser sends one heartbeat every 5 minutes to
 `POST /api/stats/watch` with only:
 
 - `type` — `movie` or `tv`
 - `tmdbId`, `title`, `posterPath`
 - `genres` — names only, max 5
-- `runtimeMinutes` — capped at 5–300
+- `minutes` — 5 per heartbeat
+- `isPlay` — true only on the first heartbeat of a viewing
+- `season` / `episode` — for TV only
 
 No accounts, no names, no emails, no IP addresses, no device info, no
-cookies, no fingerprint. One event per title per 30 minutes in the same
-browser tab session, so refreshes don't inflate the numbers.
+cookies, no fingerprint. A viewing counts as one play at most once per
+title/episode per 30 minutes in the same browser, so refreshes don't
+inflate the numbers. Nothing is credited for just opening a title.
 
 ## 3. How it is stored
 
-One JSONL line per event, with an Asia/Kolkata date (`day`) on each line. The
+One JSONL line per heartbeat, with an Asia/Kolkata date (`day`) on each line. The
 `/stats` page and `GET /api/stats?range=week` read the file and aggregate
-in memory — plays, watch hours, top titles, top genres. `GET /api/stats`
+in memory — plays (first-heartbeat lines only), watch hours (sum of
+heartbeat minutes), top titles, top genres. `GET /api/stats`
 is cached for 5 minutes.
 
 At ~10k plays a month the file stays small. If traffic grows a lot, swap
 `src/lib/stats-store.ts` for SQLite/Redis and keep the same
 `recordWatch` / `getSiteStats` API.
 
-## 4. Watch hours are estimates
+## 4. Watch hours are player-open time
 
 The video is embedded from another source, so Meowly cannot see actual
-playback time. Watch hours = sum of title runtimes for counted plays.
+playback time or pauses inside the player. Watch hours = sum of 5-minute
+heartbeats while the player stayed open. A 2-hour movie only reaches
+2 hours if the player stayed open for 2 hours.
 The `/stats` page says this plainly.

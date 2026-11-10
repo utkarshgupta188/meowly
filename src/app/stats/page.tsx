@@ -156,12 +156,15 @@ export default async function StatsPage({
           <div>
             <h3 className="font-black text-lg">Privacy: no personal data</h3>
             <p className="text-gray-400 mt-1 leading-relaxed">
-              Stats count anonymous watch events only: which title was played, its genres, and its
-              runtime. No accounts, no names, no emails, no IP addresses, no device info, and
-              nothing that can identify a viewer. A play is counted once, after a minute of the
-              player being open, and at most once per title every 30 minutes in the same browser.
-              Watch hours are estimated from title runtimes, because the video itself is embedded
-              from another source and Meowly cannot see actual playback time.
+              Stats count anonymous watch events only: which title was played, its genres, and
+              how long the player stayed open. No accounts, no names, no emails, no IP addresses,
+              no device info, and nothing that can identify a viewer. While a title plays, the
+              browser sends one heartbeat every 5 minutes, each recording 5 minutes — so a
+              2-hour movie only counts as 2 hours if the player stays open for 2 hours, and
+              closing it early records only the minutes actually played. A title counts as one
+              play on its first heartbeat, at most once every 30 minutes in the same browser.
+              Watch hours are player-open time, not exact playback time: the video is embedded
+              from another source, so pauses inside the player are not visible to Meowly.
             </p>
           </div>
         </section>
