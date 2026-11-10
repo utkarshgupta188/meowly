@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Server, Maximize2, RefreshCcw, Share2, Check, PictureInPicture2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { saveToRecentlyPlayed } from "@/lib/storage";
+import { reportWatch } from "@/lib/report-watch";
 import Dropdown from "@/components/ui/Dropdown";
 
 interface VideoPlayerProps {
@@ -154,6 +155,18 @@ export default function VideoPlayer({
                 episode: type === "tv" ? currentEpisode : undefined,
                 tagline: tmdbData.tagline,
             });
+            const stopReporting = reportWatch({
+                type,
+                tmdbId: Number(id),
+                title: tmdbData.title || tmdbData.name,
+                posterPath: tmdbData.poster_path ?? null,
+                genres: (tmdbData.genres || []).map((g: any) => g.name).filter(Boolean),
+                runtimeMinutes:
+                    tmdbData.runtime ||
+                    (Array.isArray(tmdbData.episode_run_time) ? tmdbData.episode_run_time[0] : undefined) ||
+                    45,
+            });
+            return stopReporting;
         }
     }, [id, type, tmdbData, currentSeason, currentEpisode]);
 

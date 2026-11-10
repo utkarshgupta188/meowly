@@ -255,6 +255,7 @@ const Navbar = () => {
         { name: "Companies", href: "/companies" },
         { name: "Categories", href: "/categories" },
         { name: "Awards", href: "/awards" },
+        { name: "Stats", href: "/stats" },
         { name: "My List", href: "/watchlist" },
     ];
 
