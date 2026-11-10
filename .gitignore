@@ -42,3 +42,5 @@ next-env.d.ts
 
 src/scratch/
 .vercel
+# stats data (VPS disk, not in git)
+/data/

@@ -51,6 +51,12 @@ Meowly is a state-of-the-art cinematic web application that redefines digital me
 * **Ad Blocker Detection:** A subtle, helpful overlay dialog that alerts users if aggressive ad blockers are interfering with streaming server endpoints, ensuring reliable video playback.
 * **Exit Page Transitions:** Fluid entry and exit page animations designed with `framer-motion` for a true app-like experience.
 
+### 📈 7. Site Stats (anonymous, everyone can see)
+* **Stats page (`/stats`):** most watched titles and genres, and total watch hours — today, yesterday, this week, this month, and all time.
+* **How it counts:** when a player has been open for a minute, the browser sends one anonymous event — title, genres, runtime only. No accounts, no names, no emails, no IP addresses, no device info. One event per title per 30 minutes in the same browser, so refreshes don't inflate the numbers.
+* **Storage:** counts live in a local file on the VPS (`data/stats/events.jsonl`, one line per anonymous watch event). No external database. Without write access to that folder the site still works and `/stats` just shows empty totals.
+* **Watch hours are estimated** from title runtimes, because the video is embedded from another source and Meowly cannot see actual playback time.
+
 ---
 
 ## 🏗️ Repository Architecture
