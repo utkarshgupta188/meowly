@@ -3,7 +3,6 @@ import { BarChart3, Clock, Play, ShieldCheck, TrendingUp } from "lucide-react";
 import { getSiteStats } from "@/lib/stats-store";
 import { RANGE_LABELS, type StatsRange } from "@/lib/stats";
 import { TMDB_CONFIG } from "@/lib/tmdb";
-import BackButton from "@/components/BackButton";
 
 export const metadata = {
   title: "Stats | Meowly",
@@ -35,7 +34,6 @@ export default async function StatsPage({
 
   return (
     <main className="min-h-screen bg-prime-dark text-white pb-20">
-      <BackButton />
       <div className="pt-24 sm:pt-28 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto">
         <header className="mb-10">
           <p className="text-accent text-xs font-black uppercase tracking-[0.3em] flex items-center gap-2">
