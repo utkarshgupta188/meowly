@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { tmdb } from "@/lib/tmdb";
+import { isBlocked } from "@/lib/blocklist";
 import WatchContainer from "@/components/WatchContainer";
 
 interface WatchPageProps {
@@ -18,6 +20,14 @@ interface WatchPageProps {
 
 export async function generateMetadata({ params }: WatchPageProps) {
     const { type, id } = await params;
+
+    if (isBlocked(type, id)) {
+        return {
+            title: "Not Found | Meowly",
+            robots: { index: false, follow: false },
+        };
+    }
+
     const movie = await tmdb.getDetails(type, id);
     
     if (!movie) return { title: "Meowly" };
@@ -53,7 +63,9 @@ export async function generateMetadata({ params }: WatchPageProps) {
 export default async function WatchPage({ params, searchParams }: WatchPageProps) {
     const { type, id } = await params;
     const { s, e, resume, server } = await searchParams;
-    
+
+    if (isBlocked(type, id)) notFound();
+
     const movie = await tmdb.getDetails(type, id);
 
     if (!movie || !movie.id) {

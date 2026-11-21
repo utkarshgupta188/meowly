@@ -1,5 +1,7 @@
 "use client";
 
+import { isBlocked } from "@/lib/blocklist";
+
 const RECENTLY_PLAYED_KEY = "meowly_recently_played";
 const WATCHLIST_KEY = "meowly_watchlist";
 const MAX_RECENT = 20;
@@ -36,6 +38,7 @@ if (typeof window !== "undefined") {
 
 export function saveToRecentlyPlayed(item: RecentItem) {
     if (typeof window === "undefined") return;
+    if (isBlocked(item.type, item.id)) return;
 
     try {
         const stored = localStorage.getItem(RECENTLY_PLAYED_KEY);
@@ -71,7 +74,9 @@ export function getRecentlyPlayed(): RecentItem[] {
 
     try {
         const stored = localStorage.getItem(RECENTLY_PLAYED_KEY);
-        cachedRecentlyPlayed = stored ? JSON.parse(stored) : [];
+        const items: RecentItem[] = stored ? JSON.parse(stored) : [];
+        // Hide anything that has been blocked, even if it was saved earlier.
+        cachedRecentlyPlayed = items.filter(i => !isBlocked(i.type, i.id));
         return cachedRecentlyPlayed!;
     } catch {
         return [];
@@ -99,6 +104,7 @@ export function removeFromRecentlyPlayed(id: string, type: string) {
 // Watchlist Functions
 export function addToWatchlist(item: RecentItem) {
     if (typeof window === "undefined") return;
+    if (isBlocked(item.type, item.id)) return;
 
     try {
         const stored = localStorage.getItem(WATCHLIST_KEY);
@@ -149,7 +155,9 @@ export function getWatchlist(): RecentItem[] {
 
     try {
         const stored = localStorage.getItem(WATCHLIST_KEY);
-        cachedWatchlist = stored ? JSON.parse(stored) : [];
+        const items: RecentItem[] = stored ? JSON.parse(stored) : [];
+        // Hide anything that has been blocked, even if it was saved earlier.
+        cachedWatchlist = items.filter(i => !isBlocked(i.type, i.id));
         return cachedWatchlist!;
     } catch {
         return [];

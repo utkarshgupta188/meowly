@@ -9,6 +9,7 @@ import {
   type TitleStat,
   type WatchEvent,
 } from "@/lib/stats";
+import { isBlocked } from "@/lib/blocklist";
 
 // VPS deployment: no external database. Events are appended to a local
 // JSONL file on the server disk and aggregated on read. One line per
@@ -34,6 +35,8 @@ interface StoredEvent extends WatchEvent {
 let writeQueue: Promise<void> = Promise.resolve();
 
 export async function recordWatch(event: WatchEvent): Promise<boolean> {
+  if (isBlocked(event.type, event.tmdbId)) return false;
+
   const line = JSON.stringify({ ...event, day: dayKey(new Date()) }) + "\n";
   const run = writeQueue.then(async () => {
     await fs.mkdir(dataDir(), { recursive: true });
@@ -101,6 +104,7 @@ export async function getSiteStats(range: StatsRange): Promise<SiteStats> {
   }
 
   const titles: TitleStat[] = [...titleTotals.values()]
+    .filter(({ event }) => !isBlocked(event.type, event.tmdbId))
     .sort((a, b) => b.plays - a.plays)
     .slice(0, 10)
     .map(({ event, plays }) => ({

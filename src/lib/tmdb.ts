@@ -1,3 +1,5 @@
+import { filterBlocked, isBlocked } from "./blocklist";
+
 const API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
@@ -97,22 +99,34 @@ export type Movie = {
 export const tmdb = {
     getTrending: async (type: "movie" | "tv" | "all" = "all"): Promise<Movie[]> => {
         const data = await fetchTMDB(`/trending/${type}/day`);
-        return data?.results || [];
+        return filterBlocked(data?.results, type === "all" ? undefined : type);
     },
     getTopRated: async (type: "movie" | "tv"): Promise<Movie[]> => {
         const data = await fetchTMDB(`/${type}/top_rated`);
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: type })));
     },
     getPopular: async (type: "movie" | "tv"): Promise<Movie[]> => {
         const data = await fetchTMDB(`/${type}/popular`);
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: type })));
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
+        if (isBlocked(type, id)) return null;
+
         const data = await fetchTMDB(`/${type}/${id}`, {
             append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords,external_ids",
             include_image_language: "en,null"
         });
-        return data || {};
+        if (!data || isBlocked(type, data.id ?? id)) return null;
+
+        // Keep blocked titles out of related rows on the details page.
+        if (data.recommendations?.results) {
+            data.recommendations.results = filterBlocked(data.recommendations.results, type);
+        }
+        if (data.similar?.results) {
+            data.similar.results = filterBlocked(data.similar.results, type);
+        }
+
+        return data;
     },
     search: async (query: string): Promise<Movie[]> => {
         const [multiData, companyData] = await Promise.all([
@@ -125,13 +139,22 @@ export const tmdb = {
                 item.media_type === "movie" ||
                 item.media_type === "tv" ||
                 item.media_type === "person"
-            );
+            )
+            .filter((item: any) => !isBlocked(item.media_type, item.id))
+            .map((item: any) => {
+                // People results carry a `known_for` list that may include a blocked title.
+                if (Array.isArray(item.known_for)) {
+                    return { ...item, known_for: filterBlocked(item.known_for) };
+                }
+                return item;
+            });
 
         const companyResults = (companyData?.results || [])
             .map((item: any) => ({
                 ...item,
                 media_type: "company" as const
-            }));
+            }))
+            .filter((item: any) => !isBlocked(item.media_type, item.id));
 
         return [...multiResults, ...companyResults];
     },
@@ -152,27 +175,54 @@ export const tmdb = {
         }
 
         const data = await fetchTMDB(`/discover/${type}`, params);
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: type })));
     },
     getSeasonDetails: async (tvId: string, seasonNumber: number) => {
+        if (isBlocked("tv", tvId)) return {};
+
         const data = await fetchTMDB(`/tv/${tvId}/season/${seasonNumber}`);
         return data || {};
     },
     getPersonDetails: async (id: string) => {
+        if (isBlocked("person", id)) return null;
+
         const data = await fetchTMDB(`/person/${id}`, { append_to_response: "external_ids,images" });
         return data || {};
     },
     getPersonCredits: async (id: string) => {
+        if (isBlocked("person", id)) return {};
+
         const data = await fetchTMDB(`/person/${id}/combined_credits`);
-        return data || {};
+        if (!data) return {};
+
+        // Cast/crew entries link straight to /watch/:type/:id, so remove blocked titles.
+        return {
+            ...data,
+            cast: filterBlocked(data.cast),
+            crew: filterBlocked(data.crew),
+        };
     },
     getPopularPeople: async (page = 1) => {
         const data = await fetchTMDB("/person/popular", { page: page.toString() });
-        return data || {};
+        if (!data) return {};
+
+        return {
+            ...data,
+            results: (data.results || []).map((person: any) =>
+                Array.isArray(person.known_for)
+                    ? { ...person, known_for: filterBlocked(person.known_for) }
+                    : person
+            ),
+        };
     },
     getCollection: async (id: string) => {
         const data = await fetchTMDB(`/collection/${id}`);
-        return data || {};
+        if (!data) return {};
+
+        return {
+            ...data,
+            parts: filterBlocked(data.parts),
+        };
     },
     getListDetails: async (listId: string | number): Promise<Movie[]> => {
         const data = await fetchTMDB(`/list/${listId}`);
@@ -194,38 +244,40 @@ export const tmdb = {
             });
         }
 
-        return allItems.map((item: any) => ({
+        return filterBlocked(allItems.map((item: any) => ({
             ...item,
             media_type: item.media_type || "movie"
-        }));
+        })));
     },
     getUpcoming: async (): Promise<Movie[]> => {
         const data = await fetchTMDB("/movie/upcoming");
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: "movie" }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: "movie" })));
     },
     getNowPlaying: async (): Promise<Movie[]> => {
         const data = await fetchTMDB("/movie/now_playing");
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: "movie" }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: "movie" })));
     },
     getAiringToday: async (): Promise<Movie[]> => {
         const data = await fetchTMDB("/tv/airing_today");
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: "tv" })));
     },
     getOnTheAir: async (): Promise<Movie[]> => {
         const data = await fetchTMDB("/tv/on_the_air");
-        return (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+        return filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: "tv" })));
     },
     getRandomContent: async (): Promise<Movie | null> => {
         const types: ("movie" | "tv")[] = ["movie", "tv"];
         const type = types[Math.floor(Math.random() * types.length)];
         const page = Math.floor(Math.random() * 5) + 1; // Randomly pick from first 5 pages
         const data = await fetchTMDB(`/${type}/popular`, { page: page.toString() });
-        const results = data?.results || [];
+        const results = filterBlocked(data?.results, type);
         if (results.length === 0) return null;
         const movie = results[Math.floor(Math.random() * results.length)];
         return { ...movie, media_type: type };
     },
     getTrailer: async (type: "movie" | "tv", id: string) => {
+        if (isBlocked(type, id)) return null;
+
         const data = await fetchTMDB(`/${type}/${id}/videos`);
         const videos = data?.results || [];
         // Priority: Trailer > Teaser > Clip
@@ -249,7 +301,7 @@ export const tmdb = {
             include_adult: "false",
             page: page.toString()
         });
-        const results = (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+        const results = filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: type })));
         return {
             results,
             totalPages: data?.total_pages || 1,
@@ -263,7 +315,7 @@ export const tmdb = {
             include_adult: "false",
             page: page.toString()
         });
-        const results = (data?.results || []).map((item: any) => ({ ...item, media_type: "tv" }));
+        const results = filterBlocked((data?.results || []).map((item: any) => ({ ...item, media_type: "tv" })));
         return {
             results,
             totalPages: data?.total_pages || 1,

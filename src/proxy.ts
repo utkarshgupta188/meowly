@@ -1,5 +1,17 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { isBlocked } from '@/lib/blocklist';
+
+function isBlockedWatchPath(pathname: string): boolean {
+  const match = pathname.match(/^\/watch\/(movie|tv)\/([^/]+)\/?$/i);
+  if (!match) return false;
+
+  try {
+    return isBlocked(match[1].toLowerCase(), decodeURIComponent(match[2]));
+  } catch {
+    return false;
+  }
+}
 
 export function proxy(request: NextRequest) {
   const hostname = request.headers.get('host');
@@ -13,6 +25,13 @@ export function proxy(request: NextRequest) {
     const redirectUrl = new URL(url.pathname + url.search, `https://${newHostname}`);
     
     return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  // Blocked titles must not be reachable. Rewriting to a route that does not
+  // exist renders the 404 page and, unlike a page-level notFound() call, keeps
+  // the real 404 HTTP status so search engines drop the URL.
+  if (isBlockedWatchPath(request.nextUrl.pathname)) {
+    return NextResponse.rewrite(new URL('/not-found', request.url));
   }
 
   return NextResponse.next();
