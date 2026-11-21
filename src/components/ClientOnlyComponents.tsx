@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
+import VisitorTracker from '@/components/VisitorTracker';
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
@@ -42,6 +43,7 @@ export default function ClientOnlyComponents() {
 
   return (
     <>
+      <VisitorTracker />
       <AdBlockerPopup />
       <PwaRegister />
       <DomainRedirectPopup />
